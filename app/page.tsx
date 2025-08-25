@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import caisLogo from "@/assets/cais_logo.svg";
 import { BIBTEX_CITATION } from "@/app/constants";

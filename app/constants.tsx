@@ -36,6 +36,23 @@ export const LOGO_MAP = {
   xai_logo: xai_logo,
 };
 
+// Provider to logo mapping
+export const PROVIDER_LOGO_MAP = {
+  openai: { src: openai_logo, width: 18, height: 18 },
+  meta: { src: meta_logo, width: 18, height: 18 },
+  anthropic: { src: claude_logo, width: 18, height: 18 },
+  google: { src: gemini_logo, width: 18, height: 18 },
+  xai: { src: grok_logo, width: 18, height: 18 },
+  qwen: { src: qwen_logo, width: 18, height: 18 },
+  deepseek: { src: deepseek_logo, width: 18, height: 18 },
+  moonshot: { src: kimi_logo, width: 18, height: 18 },
+};
+
+// Utility function to get provider logo
+export const getProviderLogo = (provider: string) => {
+  return PROVIDER_LOGO_MAP[provider as keyof typeof PROVIDER_LOGO_MAP] || PROVIDER_LOGO_MAP.openai;
+};
+
 // Datasets for the leaderboard
 export const CAPABILITIES_DATASETS: Dataset[] = [
   {
@@ -109,11 +126,7 @@ export const SAFETY_DATASETS: Dataset[] = [
 export const MODELS: Model[] = [
   {
     name: "GPT-5",
-    logo: {
-      src: "openai_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "openai",
     scores: {
       "HLE": 25.32,
       "EnigmaEval": 10.47, // gpt-5-2025-08-07
@@ -127,15 +140,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: true,
-    modelGeneration: "gold"
+    modelGeneration: "gold",
+
   },
   {
     name: "Claude Opus 4.1",
-    logo: {
-      src: "claude_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "anthropic",
     scores: {
       "HLE": 7.92, // claude-opus-4-1-20250805
       "EnigmaEval": 7.18, // claude-opus-4-1-20250805-thinking
@@ -149,15 +159,13 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: true,
-    modelGeneration: "gold"
+    modelGeneration: "gold",
+
+
   },
   {
     name: "Grok 4",
-    logo: {
-      src: "grok_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "xai",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -171,15 +179,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: true,
-    modelGeneration: "silver"
+    modelGeneration: "silver",
+
   },
   {
     name: "o3",
-    logo: {
-      src: "openai_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "openai",
     scores: {
       "HLE": 20.32, // o3 (high) (April 2025)
       "EnigmaEval": 11.91, // o3 (high) (April 2025)
@@ -193,15 +198,12 @@ export const MODELS: Model[] = [
       "VCT": 43.8 // o3
     },
     isTopModel: true,
-    modelGeneration: "silver"
+    modelGeneration: "silver",
+
   },
   {
     name: "Claude Opus 4",
-    logo: {
-      src: "claude_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "anthropic",
     scores: {
       "HLE": 6.68, // Claude Opus 4
       "EnigmaEval": 3.21, // Claude Opus 4
@@ -215,15 +217,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: true,
-    modelGeneration: "silver"
+    modelGeneration: "silver",
+
   },
   {
     name: "Gemini 2.5 Pro",
-    logo: {
-      src: "gemini_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "google",
     scores: {
       "HLE": 21.64, // gemini-2.5-pro-preview-06-05
       "EnigmaEval": 5.57, // gemini-2.5-pro-preview-06-05
@@ -237,15 +236,12 @@ export const MODELS: Model[] = [
       "VCT": 37.6 // Gemini 2.5 Pro
     },
     isTopModel: true,
-    modelGeneration: "silver"
+    modelGeneration: "silver",
+
   },
   {
     name: "Claude Sonnet 4",
-    logo: {
-      src: "claude_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "anthropic",
     scores: {
       "HLE": 5.52, // Claude Sonnet 4
       "EnigmaEval": 2.20, // Claude Sonnet 4
@@ -259,15 +255,12 @@ export const MODELS: Model[] = [
       "VCT": 30.8 // Claude 3.7 Sonnet (closest match)
     },
     isTopModel: false,
-    modelGeneration: "silver"
+    modelGeneration: "silver",
+
   },
   {
     name: "Grok 3",
-    logo: {
-      src: "grok_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "xai",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -280,15 +273,13 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": null
     },
-    isTopModel: false
+    isTopModel: false,
+
+    isTextOnlyModel: true
   },
   {
     name: "GPT-5-mini",
-    logo: {
-      src: "openai_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "openai",
     scores: {
       "HLE": 19.44, // gpt-5-mini-2025-08-07
       "EnigmaEval": 8.19, // gpt-5-mini-2025-08-07
@@ -301,15 +292,12 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": null
     },
-    isTopModel: false
+    isTopModel: false,
+
   },
   {
     name: "GPT-4.1",
-    logo: {
-      src: "openai_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "openai",
     scores: {
       "HLE": 5.40, // GPT-4.1
       "EnigmaEval": 2.17, // GPT-4.1
@@ -322,15 +310,12 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": 28.3 // GPT-4.5 Preview (closest match)
     },
-    isTopModel: false
+    isTopModel: false,
+
   },
   {
     name: "Grok 3 mini",
-    logo: {
-      src: "grok_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "xai",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -343,15 +328,13 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": null
     },
-    isTopModel: false
+    isTopModel: false,
+
+    isTextOnlyModel: true
   },
   {
     name: "Qwen 3 Thinking",
-    logo: {
-      src: "qwen_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "qwen",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -365,15 +348,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: false,
+    isTextOnlyModel: true,
     modelWeights: "Qwen/Qwen3-235B-A22B-Thinking-2507"
   },
   {
     name: "Gemini 2.5 Flash",
-    logo: {
-      src: "gemini_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "google",
     scores: {
       "HLE": 12.08, // Gemini 2.5 Flash (April 2025)
       "EnigmaEval": null,
@@ -386,15 +366,12 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": null
     },
-    isTopModel: false
+    isTopModel: false,
+
   },
   {
     name: "DeepSeek R1",
-    logo: {
-      src: "deepseek_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "deepseek",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -408,15 +385,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: false,
-    modelWeights: "deepseek-ai/DeepSeek-R1"
+    modelWeights: "deepseek-ai/DeepSeek-R1",
+    isTextOnlyModel: true
   },
   {
     name: "o4-mini",
-    logo: {
-      src: "openai_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "openai",
     scores: {
       "HLE": 18.08, // o4-mini (high) (April 2025)
       "EnigmaEval": 9.21, // o4-mini (high) (April 2025)
@@ -429,15 +403,13 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": 37.0 // o4-mini
     },
-    isTopModel: false
+    isTopModel: false,
+
+    isTextOnlyModel: true
   },
   {
     name: "Qwen 3 Instruct",
-    logo: {
-      src: "qwen_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "qwen",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -451,15 +423,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: false,
-    modelWeights: "Qwen/Qwen3-235B-A22B-Instruct-2507"
+    modelWeights: "Qwen/Qwen3-235B-A22B-Instruct-2507",
+    isTextOnlyModel: true
   },
   {
     name: "Kimi K2",
-    logo: {
-      src: "kimi_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "moonshot",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -473,15 +442,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: false,
-    modelWeights: "moonshotai/Kimi-K2-Instruct"
+    modelWeights: "moonshotai/Kimi-K2-Instruct",
+    isTextOnlyModel: true
   },
   {
     name: "GPT-OSS-120B",
-    logo: {
-      src: "openai_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "openai",
     scores: {
       "HLE": 9.04, // gpt-oss-120b
       "EnigmaEval": null,
@@ -495,15 +461,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: false,
-    modelWeights: "openai/gpt-oss-120b"
+    modelWeights: "openai/gpt-oss-120b",
+    isTextOnlyModel: true
   },
   {
     name: "Gemini 2.5 Flash-Lite",
-    logo: {
-      src: "gemini_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "google",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -516,15 +479,12 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": null
     },
-    isTopModel: false
+    isTopModel: false,
+
   },
   {
     name: "GPT-4.1-mini",
-    logo: {
-      src: "openai_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "openai",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -537,15 +497,12 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": null
     },
-    isTopModel: false
+    isTopModel: false,
+
   },
   {
     name: "Llama 4 Maverick",
-    logo: {
-      src: "meta_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "meta",
     scores: {
       "HLE": 5.68, // Llama 4 Maverick
       "EnigmaEval": 0.58, // Llama 4 Maverick
@@ -559,15 +516,12 @@ export const MODELS: Model[] = [
       "VCT": null
     },
     isTopModel: false,
-    modelWeights: "meta-llama/Llama-4-Maverick-17B-128E-Instruct"
+    modelWeights: "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+
   },
   {
     name: "Claude Haiku 3.5",
-    logo: {
-      src: "claude_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "anthropic",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
@@ -580,15 +534,12 @@ export const MODELS: Model[] = [
       "MACHIAVELLI": null,
       "VCT": null
     },
-    isTopModel: false
+    isTopModel: false,
+
   },
   {
     name: "Llama 4 Scout",
-    logo: {
-      src: "meta_logo",
-      width: 18,
-      height: 18,
-    },
+    provider: "meta",
     scores: {
       "HLE": null,
       "EnigmaEval": null,
