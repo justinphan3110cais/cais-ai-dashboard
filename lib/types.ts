@@ -15,6 +15,7 @@ export interface Model {
   provider: string; // Provider name (e.g., 'openai', 'deepseek', 'qwen', etc.)
   scores: ModelScore;
   modelWeights?: string; // for HuggingFace link
+  modelCardUrl?: string; // URL to model card/announcement
   isTopModel?: boolean;
   modelGeneration?: 'gold' | 'silver';
   isTextOnlyModel?: boolean; // true for text-only models, false/null for vision-capable models

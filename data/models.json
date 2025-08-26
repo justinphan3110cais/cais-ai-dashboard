@@ -1,0 +1,321 @@
+[
+  {
+    "name": "GPT-5",
+    "provider": "openai",
+    "scores": {
+      "HLE": 25.32,
+      "EnigmaEval": 10.47,
+      "TextQuests Progress": 37.8,
+      "SWE-Bench Verified": 74.9,
+      "HealthBench Hard": 46.2,
+      "MASKS": 79.33,
+      "TextQuests Harm": 17.2,
+      "VCT": null
+    },
+    "isTopModel": true,
+    "modelGeneration": "gold",
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-5/"
+  },
+  {
+    "name": "Claude Opus 4.1",
+    "provider": "anthropic",
+    "scores": {
+      "HLE": 7.92,
+      "EnigmaEval": 7.18,
+      "TextQuests Progress": 33.9,
+      "SWE-Bench Verified": 74.5,
+      "HealthBench Hard": null,
+      "MASKS": 94.2,
+      "TextQuests Harm": 19.1,
+      "VCT": null
+    },
+    "isTopModel": true,
+    "modelGeneration": "gold",
+    "modelCardUrl": "https://www.anthropic.com/news/claude-opus-4-1"
+  },
+  {
+    "name": "Grok 4",
+    "provider": "xai",
+    "scores": {
+      "HLE": 25.4,
+      "EnigmaEval": null,
+      "TextQuests Progress": 31.2,
+      "SWE-Bench Verified": null,
+      "HealthBench Hard": null,
+      "MASKS": null,
+      "TextQuests Harm": 30.4,
+      "VCT": null
+    },
+    "isTopModel": true,
+    "modelGeneration": "silver",
+    "modelCardUrl": "https://x.ai/news/grok-4"
+  },
+  {
+    "name": "o3",
+    "provider": "openai",
+    "scores": {
+      "HLE": 20.32,
+      "EnigmaEval": 11.91,
+      "TextQuests Progress": 30.9,
+      "SWE-Bench Verified": 69.1,
+      "HealthBench Hard": 31.6,
+      "MASKS": 84.47,
+      "TextQuests Harm": 18.7,
+      "VCT": 0
+    },
+    "isTopModel": true,
+    "modelGeneration": "silver",
+    "modelCardUrl": "https://openai.com/index/introducing-o3-and-o4-mini"
+  },
+  {
+    "name": "Claude Opus 4",
+    "provider": "anthropic",
+    "scores": {
+      "HLE": 6.68,
+      "EnigmaEval": 3.21,
+      "TextQuests Progress": 26.4,
+      "SWE-Bench Verified": 72.5,
+      "HealthBench Hard": null,
+      "MASKS": 80.28,
+      "TextQuests Harm": 16.5,
+      "VCT": null
+    },
+    "isTopModel": true,
+    "modelGeneration": "silver",
+    "modelCardUrl": "https://www.anthropic.com/news/claude-4"
+  },
+  {
+    "name": "Gemini 2.5 Pro",
+    "provider": "google",
+    "scores": {
+      "HLE": 21.64,
+      "EnigmaEval": 5.57,
+      "TextQuests Progress": 23.2,
+      "SWE-Bench Verified": 67.2,
+      "HealthBench Hard": null,
+      "MASKS": 55.67,
+      "TextQuests Harm": 15.9,
+      "VCT": 0
+    },
+    "isTopModel": true,
+    "modelGeneration": "silver",
+    "modelCardUrl": "https://arxiv.org/abs/2507.06261"
+  },
+  {
+    "name": "Claude Sonnet 4",
+    "provider": "anthropic",
+    "scores": {
+      "HLE": 5.52,
+      "EnigmaEval": 2.2,
+      "TextQuests Progress": 24.7,
+      "SWE-Bench Verified": 72.7,
+      "HealthBench Hard": null,
+      "MASKS": 89.27,
+      "TextQuests Harm": 16,
+      "VCT": 0
+    },
+    "isTopModel": false,
+    "modelGeneration": "silver",
+    "modelCardUrl": "https://www.anthropic.com/news/claude-4"
+  },
+  {
+    "name": "GPT-5-mini",
+    "provider": "openai",
+    "scores": {
+      "HLE": 19.44,
+      "EnigmaEval": 8.19,
+      "TextQuests Progress": 15.9,
+      "SWE-Bench Verified": 72,
+      "HealthBench Hard": 40.3,
+      "MASKS": 82.6,
+      "TextQuests Harm": 12,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-5/"
+  },
+  {
+    "name": "GPT-4.1",
+    "provider": "openai",
+    "scores": {
+      "HLE": 5.4,
+      "EnigmaEval": 2.17,
+      "TextQuests Progress": 22.8,
+      "SWE-Bench Verified": 54.6,
+      "HealthBench Hard": null,
+      "MASKS": 51.13,
+      "TextQuests Harm": 11.4,
+      "VCT": 0
+    },
+    "isTopModel": false,
+    "modelCardUrl": "https://openai.com/index/gpt-4-1"
+  },
+  {
+    "name": "Grok 3 mini",
+    "provider": "xai",
+    "scores": {
+      "HLE": null,
+      "EnigmaEval": null,
+      "TextQuests Progress": 22.4,
+      "SWE-Bench Verified": null,
+      "HealthBench Hard": null,
+      "MASKS": null,
+      "TextQuests Harm": 17.8,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "modelCardUrl": "https://x.ai/news/grok-3",
+    "isTextOnlyModel": true
+  },
+  {
+    "name": "Qwen 3 Thinking",
+    "provider": "qwen",
+    "scores": {
+      "HLE": 15.4,
+      "EnigmaEval": null,
+      "TextQuests Progress": 15.1,
+      "SWE-Bench Verified": null,
+      "HealthBench Hard": null,
+      "MASKS": null,
+      "TextQuests Harm": 16.4,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "isTextOnlyModel": true,
+    "modelWeights": "Qwen/Qwen3-235B-A22B-Thinking-2507"
+  },
+  {
+    "name": "Gemini 2.5 Flash",
+    "provider": "google",
+    "scores": {
+      "HLE": 12.08,
+      "EnigmaEval": null,
+      "TextQuests Progress": 14.4,
+      "SWE-Bench Verified": 60.3,
+      "HealthBench Hard": null,
+      "MASKS": null,
+      "TextQuests Harm": 11.7,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "modelCardUrl": "https://arxiv.org/abs/2507.06261"
+  },
+  {
+    "name": "DeepSeek R1",
+    "provider": "deepseek",
+    "scores": {
+      "HLE": 14,
+      "EnigmaEval": null,
+      "TextQuests Progress": 15.2,
+      "SWE-Bench Verified": 57.6,
+      "HealthBench Hard": null,
+      "MASKS": null,
+      "TextQuests Harm": 15.4,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "modelWeights": "deepseek-ai/DeepSeek-R1",
+    "modelCardUrl": "https://api-docs.deepseek.com/news/news250528",
+    "isTextOnlyModel": true
+  },
+  {
+    "name": "o4-mini",
+    "provider": "openai",
+    "scores": {
+      "HLE": 18.08,
+      "EnigmaEval": 9.21,
+      "TextQuests Progress": 12.8,
+      "SWE-Bench Verified": 68.1,
+      "HealthBench Hard": 17.5,
+      "MASKS": 78.6,
+      "TextQuests Harm": 18.6,
+      "VCT": 0
+    },
+    "isTopModel": false,
+    "isTextOnlyModel": true
+  },
+  {
+    "name": "Kimi K2",
+    "provider": "moonshot",
+    "scores": {
+      "HLE": 4.7,
+      "EnigmaEval": null,
+      "TextQuests Progress": 10.5,
+      "SWE-Bench Verified": 71.6,
+      "HealthBench Hard": null,
+      "MASKS": null,
+      "TextQuests Harm": 8.3,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "modelWeights": "moonshotai/Kimi-K2-Instruct",
+    "modelCardUrl": "https://moonshotai.github.io/Kimi-K2/",
+    "isTextOnlyModel": true
+  },
+  {
+    "name": "GPT-OSS-120B",
+    "provider": "openai",
+    "scores": {
+      "HLE": 9.04,
+      "EnigmaEval": null,
+      "TextQuests Progress": 12,
+      "SWE-Bench Verified": 62,
+      "HealthBench Hard": 30,
+      "MASKS": null,
+      "TextQuests Harm": 21.2,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "modelWeights": "openai/gpt-oss-120b",
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-oss/",
+    "isTextOnlyModel": true
+  },
+  {
+    "name": "Gemini 2.5 Flash-Lite",
+    "provider": "google",
+    "scores": {
+      "HLE": 6.9,
+      "EnigmaEval": null,
+      "TextQuests Progress": 11.7,
+      "SWE-Bench Verified": 44.9,
+      "HealthBench Hard": null,
+      "MASKS": null,
+      "TextQuests Harm": 22.8,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "modelCardUrl": "https://arxiv.org/abs/2507.06261"
+  },
+  {
+    "name": "GPT-4.1-mini",
+    "provider": "openai",
+    "scores": {
+      "HLE": 2.7,
+      "EnigmaEval": null,
+      "TextQuests Progress": 10.6,
+      "SWE-Bench Verified": 24,
+      "HealthBench Hard": null,
+      "MASKS": null,
+      "TextQuests Harm": 11.7,
+      "VCT": null
+    },
+    "modelCardUrl": "https://openai.com/index/gpt-4-1",
+    "isTopModel": false
+  },
+  {
+    "name": "Llama 4 Maverick",
+    "provider": "meta",
+    "scores": {
+      "HLE": 5.68,
+      "EnigmaEval": 0.58,
+      "TextQuests Progress": 9.2,
+      "SWE-Bench Verified": null,
+      "HealthBench Hard": null,
+      "MASKS": 49.73,
+      "TextQuests Harm": 13.1,
+      "VCT": null
+    },
+    "isTopModel": false,
+    "modelWeights": "meta-llama/Llama-4-Maverick-17B-128E-Instruct"
+  }
+]

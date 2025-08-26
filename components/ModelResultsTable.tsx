@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { EyeOff } from "lucide-react";
+import { EyeOff, ChevronDown, ChevronUp, Save } from "lucide-react";
 import hf_logo from "@/assets/hf-logo.png";
 import { MODELS, CAPABILITIES_DATASETS, SAFETY_DATASETS, getProviderLogo } from "@/app/constants";
 import { Dataset, Model } from "@/lib/types";
@@ -14,26 +14,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { FilterBar, FilterState } from "@/components/FilterBar";
+import { EditableTableCell } from "@/components/EditableTableCell";
 
 interface SortConfig {
   key: string | null;
   direction: 'asc' | 'desc' | null;
 }
 
-interface FilterState {
-  search: string;
-  showVisionModels: boolean;
-  showTextModels: boolean;
-  showOpenWeight: boolean;
-}
 
-type TabType = 'capabilities' | 'safety';
+
+interface ExpandState {
+  capabilities: boolean;
+  safety: boolean;
+}
 
 const DatasetHeader = ({ 
   dataset, 
@@ -68,7 +69,12 @@ const DatasetHeader = ({
                   height={16}
                 />
               )}
-              <span className="text-xs font-medium">{dataset.name}</span>
+              <span className="text-xs font-medium">
+                {dataset.name === "TextQuests Harm" ? "TextQuests Harm" : 
+                 dataset.name === "VCT" ? "VCT - Refusal" :
+                 dataset.name.includes("TextQuests") ? "TextQuests" : 
+                 dataset.name}
+              </span>
               <span className="text-xs ml-1">{getSortIcon()}</span>
             </div>
           </button>
@@ -81,104 +87,26 @@ const DatasetHeader = ({
   );
 };
 
-const FilterBar = ({ 
-  filters, 
-  onFiltersChange,
-  activeTab,
-  onTabChange
-}: { 
-  filters: FilterState; 
-  onFiltersChange: (filters: FilterState) => void;
-  activeTab: TabType;
-  onTabChange: (tab: TabType) => void;
-}) => {
-  return (
-         <div className="p-4 rounded-lg border border-gray-200 mb-6">
-      <div className="flex flex-wrap items-center gap-4 mb-4">
-        {/* Search Bar - Made shorter */}
-        <div className="w-64">
-          <input
-            type="text"
-            placeholder="Search models..."
-            value={filters.search}
-            onChange={(e) => onFiltersChange({ ...filters, search: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        
-        {/* Filter Checkboxes */}
-        <div className="flex flex-wrap gap-4">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={filters.showVisionModels}
-              onChange={(e) => onFiltersChange({ ...filters, showVisionModels: e.target.checked })}
-              className="rounded"
-            />
-            <span className="text-sm">Vision Models</span>
-          </label>
-          
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={filters.showTextModels}
-              onChange={(e) => onFiltersChange({ ...filters, showTextModels: e.target.checked })}
-              className="rounded"
-            />
-            <span className="text-sm">Text-Only Models</span>
-          </label>
-          
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={filters.showOpenWeight}
-              onChange={(e) => onFiltersChange({ ...filters, showOpenWeight: e.target.checked })}
-              className="rounded"
-            />
-            <span className="text-sm">Open-Weight Models</span>
-          </label>
-        </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-gray-200">
-        <button
-          onClick={() => onTabChange('capabilities')}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'capabilities'
-              ? 'border-blue-500 text-blue-600 bg-blue-50'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-          }`}
-        >
-          Capabilities
-        </button>
-        <button
-          onClick={() => onTabChange('safety')}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'safety'
-              ? 'border-red-500 text-red-600 bg-red-50'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-          }`}
-        >
-          Safety
-        </button>
-      </div>
-    </div>
-  );
-};
 
 const LeaderboardTable = ({ 
   datasets, 
   models, 
   bgColor, 
   sortConfig, 
-  onSort 
+  onSort,
+  expanded = false,
+  isEditMode = false,
+  onUpdateScore
 }: { 
   datasets: Dataset[];
   models: Model[];
   bgColor: string;
   sortConfig: SortConfig;
   onSort: (datasetName: string) => void;
+  expanded?: boolean;
+  isEditMode?: boolean;
+  onUpdateScore?: (modelName: string, datasetName: string, newValue: number | null) => void;
 }) => {
   const formatValue = (value: number | null) => {
     if (value === null) return "-";
@@ -194,134 +122,152 @@ const LeaderboardTable = ({
     return scores.reduce((sum, score) => sum + score, 0) / scores.length;
   };
 
+  const getRowStyling = (model: Model) => {
+    if (model.modelGeneration === 'gold') {
+      return 'bg-amber-50 hover:bg-amber-100';
+    } else if (model.modelGeneration === 'silver') {
+      return 'bg-gray-100 hover:bg-gray-200 border-gray-300';
+    } else {
+      return 'hover:bg-gray-50';
+    }
+  };
+
+  const tableContent = (
+    <Table>
+      <TableHeader className="sticky top-0 bg-background z-10">
+        <TableRow>
+          <TableHead className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 bg-gray-50 z-30`}>
+            Model
+          </TableHead>
+          {datasets.map((dataset, index) => (
+            <TableHead 
+              key={dataset.name} 
+              className={`text-center ${bgColor} min-w-[80px] border-b-2 border-b-gray-300 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
+            >
+              <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} />
+            </TableHead>
+          ))}
+          <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300`}>
+            <button 
+              onClick={() => onSort('average')}
+              className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
+            >
+              <div className="flex items-center justify-center gap-1">
+                <span className="text-xs font-medium">Average</span>
+                <span className="text-xs ml-1">
+                  {sortConfig.key === 'average' && sortConfig.direction === 'asc' && '↑'}
+                  {sortConfig.key === 'average' && sortConfig.direction === 'desc' && '↓'}
+                </span>
+              </div>
+            </button>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {models.map((model) => (
+          <TableRow 
+            key={model.name} 
+            className={`border-b border-gray-200 ${getRowStyling(model)} ${model.modelCardUrl ? 'group' : ''}`}
+          >
+              <TableCell 
+                className={`text-center ${bgColor}/30 border-r border-gray-300`}
+              >              <div className="flex items-center gap-2">
+                <Image
+                  src={getProviderLogo(model.provider).src}
+                  alt={`${model.provider} logo`}
+                  width={getProviderLogo(model.provider).width}
+                  height={getProviderLogo(model.provider).height}
+                  className="flex-shrink-0"
+                />
+                <span 
+                  className={`text-sm font-medium ${model.modelCardUrl ? 'cursor-pointer group-hover:border-b group-hover:border-dashed group-hover:border-gray-600' : ''}`}
+                  onClick={() => model.modelCardUrl && window.open(model.modelCardUrl, '_blank')}
+                >
+                  {model.name}
+                </span>
+                {model.isTextOnlyModel && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex-shrink-0">
+                          <EyeOff className="w-4 h-4 text-gray-500" />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-gray-800 text-white">
+                        <p>Text-only model</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+                {model.modelWeights && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() => window.open(`https://huggingface.co/${model.modelWeights}`, '_blank')}
+                          className="flex-shrink-0 hover:opacity-80 transition-opacity"
+                        >
+                          <Image
+                            src={hf_logo}
+                            alt="Hugging Face"
+                            width={14}
+                            height={14}
+                          />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-gray-100 text-foreground border border-gray-300">
+                        <div className="flex items-center gap-2">
+                          <Image
+                            src={getProviderLogo(model.provider).src}
+                            alt={`${model.provider} logo`}
+                            width={16}
+                            height={16}
+                          />
+                          <span className="text-sm">{model.modelWeights}</span>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+            </TableCell>
+            
+                             {datasets.map((dataset, index) => (
+                   <TableCell 
+                     key={dataset.name} 
+                     className={`text-center ${bgColor}/30 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
+                   >
+                     <EditableTableCell
+                       value={model.scores[dataset.name]}
+                       onSave={(newValue) => onUpdateScore?.(model.name, dataset.name, newValue)}
+                       isEditable={isEditMode}
+                     />
+                   </TableCell>
+                 ))}
+            
+            <TableCell className={`text-center ${bgColor}/30 font-bold`}>
+              <span className="font-mono text-sm">
+                {formatValue(calculateAverage(model, datasets))}
+              </span>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+
   return (
-    <div className="border border-gray-300 overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px] border-r border-gray-300 sticky left-0 bg-white z-10">
-                Model
-              </TableHead>
-              {datasets.map((dataset, index) => (
-                <TableHead 
-                  key={dataset.name} 
-                  className={`text-center ${bgColor} min-w-[80px] ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
-                >
-                  <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} />
-                </TableHead>
-              ))}
-              <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold`}>
-                <button 
-                  onClick={() => onSort('average')}
-                  className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
-                >
-                  <div className="flex items-center justify-center gap-1">
-                    <span className="text-xs font-medium">Average</span>
-                    <span className="text-xs ml-1">
-                      {sortConfig.key === 'average' && sortConfig.direction === 'asc' && '↑'}
-                      {sortConfig.key === 'average' && sortConfig.direction === 'desc' && '↓'}
-                    </span>
-                  </div>
-                </button>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {models.map((model) => {
-              const getRowStyling = () => {
-                if (model.modelGeneration === 'gold') {
-                  return 'bg-amber-50 hover:bg-amber-100';
-                } else if (model.modelGeneration === 'silver') {
-                  return 'bg-gray-100 hover:bg-gray-200 border-gray-300';
-                } else {
-                  return 'hover:bg-gray-50';
-                }
-              };
-              
-              return (
-                <TableRow 
-                  key={model.name} 
-                  className={`border-b border-gray-200 ${getRowStyling()}`}
-                >
-                  <TableCell className="border-r border-gray-300 sticky left-0 bg-inherit z-10">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={getProviderLogo(model.provider).src}
-                        alt={`${model.provider} logo`}
-                        width={getProviderLogo(model.provider).width}
-                        height={getProviderLogo(model.provider).height}
-                        className="flex-shrink-0"
-                      />
-                      <span className="text-sm font-medium">{model.name}</span>
-                      {model.isTextOnlyModel && (
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="flex-shrink-0">
-                                <EyeOff className="w-4 h-4 text-gray-500" />
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent className="bg-gray-800 text-white">
-                              <p>Text-only model</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                      {model.modelWeights && (
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                onClick={() => window.open(`https://huggingface.co/${model.modelWeights}`, '_blank')}
-                                className="flex-shrink-0 hover:opacity-80 transition-opacity"
-                              >
-                                <Image
-                                  src={hf_logo}
-                                  alt="Hugging Face"
-                                  width={14}
-                                  height={14}
-                                />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent className="bg-gray-100 text-foreground border border-gray-300">
-                              <div className="flex items-center gap-2">
-                                <Image
-                                  src={getProviderLogo(model.provider).src}
-                                  alt={`${model.provider} logo`}
-                                  width={16}
-                                  height={16}
-                                />
-                                <span className="text-sm">{model.modelWeights}</span>
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                    </div>
-                  </TableCell>
-                  
-                  {datasets.map((dataset, index) => (
-                    <TableCell 
-                      key={dataset.name} 
-                      className={`text-center ${bgColor}/30 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
-                    >
-                      <span className="font-mono text-sm">
-                        {formatValue(model.scores[dataset.name])}
-                      </span>
-                    </TableCell>
-                  ))}
-                  
-                  <TableCell className={`text-center ${bgColor}/30 font-bold`}>
-                    <span className="font-mono text-sm">
-                      {formatValue(calculateAverage(model, datasets))}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+    <div className="border border-gray-300 rounded-md">
+      {expanded ? (
+        <div className="overflow-auto">
+          {tableContent}
+        </div>
+      ) : (
+        <ScrollArea className="h-96">
+          {tableContent}
+        </ScrollArea>
+      )}
+    </div>
   );
 };
 
@@ -333,7 +279,10 @@ export function ModelResultsTable() {
     showOpenWeight: false,
   });
 
-  const [activeTab, setActiveTab] = useState<TabType>('capabilities');
+  const [expandState, setExpandState] = useState<ExpandState>({
+    capabilities: false,
+    safety: false,
+  });
 
   const [capabilitiesSortConfig, setCapabilitiesSortConfig] = useState<SortConfig>({
     key: null,
@@ -345,8 +294,54 @@ export function ModelResultsTable() {
     direction: null,
   });
 
+  // Edit mode state
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [models, setModels] = useState<Model[]>(MODELS);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Check if edit mode is enabled from environment variable
+  useEffect(() => {
+    const editModeEnabled = process.env.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
+    setIsEditMode(editModeEnabled);
+  }, []);
+
+  // Save models to JSON file
+  const saveModels = async () => {
+    try {
+      const response = await fetch('/api/save-models', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(models),
+      });
+
+      if (response.ok) {
+        setHasUnsavedChanges(false);
+        alert('Models saved successfully!');
+      } else {
+        alert('Failed to save models');
+      }
+    } catch (error) {
+      console.error('Error saving models:', error);
+      alert('Error saving models');
+    }
+  };
+
+  // Update a model's score
+  const updateModelScore = (modelName: string, datasetName: string, newValue: number | null) => {
+    setModels(prevModels => 
+      prevModels.map(model => 
+        model.name === modelName 
+          ? { ...model, scores: { ...model.scores, [datasetName]: newValue } }
+          : model
+      )
+    );
+    setHasUnsavedChanges(true);
+  };
+
   const filteredModels = useMemo(() => {
-    return MODELS.filter(model => {
+    return models.filter(model => {
       // Search filter
       if (filters.search && !model.name.toLowerCase().includes(filters.search.toLowerCase())) {
         return false;
@@ -369,7 +364,7 @@ export function ModelResultsTable() {
 
       return true;
     });
-  }, [filters]);
+  }, [filters, models]);
 
   const sortModels = (models: Model[], datasets: Dataset[], sortConfig: SortConfig) => {
     if (!sortConfig.key || !sortConfig.direction) return models;
@@ -437,28 +432,114 @@ export function ModelResultsTable() {
     });
   };
 
-  const currentDatasets = activeTab === 'capabilities' ? CAPABILITIES_DATASETS : SAFETY_DATASETS;
-  const currentBgColor = activeTab === 'capabilities' ? 'bg-blue-50' : 'bg-red-50';
-  const currentSortConfig = activeTab === 'capabilities' ? capabilitiesSortConfig : safetySortConfig;
-  const currentOnSort = activeTab === 'capabilities' ? handleCapabilitiesSort : handleSafetySort;
-  const sortedModels = sortModels(filteredModels, currentDatasets, currentSortConfig);
+  const capabilitiesSortedModels = sortModels(filteredModels, CAPABILITIES_DATASETS, capabilitiesSortConfig);
+  const safetySortedModels = sortModels(filteredModels, SAFETY_DATASETS, safetySortConfig);
 
   return (
-    <div className="w-full space-y-4">
-      <FilterBar 
-        filters={filters} 
-        onFiltersChange={setFilters}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
+    <div className="w-full space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <FilterBar 
+            filters={filters} 
+            onFiltersChange={setFilters}
+          />
+        </div>
+        {isEditMode && (
+          <button
+            onClick={saveModels}
+            disabled={!hasUnsavedChanges}
+            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium ml-4 ${
+              hasUnsavedChanges 
+                ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            <Save className="w-4 h-4" />
+            Save Changes
+            {hasUnsavedChanges && (
+              <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+            )}
+          </button>
+        )}
+      </div>
       
-      <LeaderboardTable
-        datasets={currentDatasets}
-        models={sortedModels}
-        bgColor={currentBgColor}
-        sortConfig={currentSortConfig}
-        onSort={currentOnSort}
-      />
+      {/* Capabilities Card */}
+      <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-blue-50 px-6 py-4 border-b border-gray-200">
+          <h3 className="text-xl font-semibold text-blue-700">Capabilities</h3>
+        </div>
+        <LeaderboardTable
+          datasets={CAPABILITIES_DATASETS}
+          models={capabilitiesSortedModels}
+          bgColor="bg-blue-50"
+          sortConfig={capabilitiesSortConfig}
+          onSort={handleCapabilitiesSort}
+          expanded={expandState.capabilities}
+          isEditMode={isEditMode}
+          onUpdateScore={updateModelScore}
+        />
+        {!expandState.capabilities && (
+          <div className="border-t border-gray-200 bg-gray-50">
+            <button
+              onClick={() => setExpandState(prev => ({ ...prev, capabilities: true }))}
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+            >
+              <span className="text-sm font-medium">View All</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+        {expandState.capabilities && (
+          <div className="border-t border-gray-200 bg-gray-50">
+            <button
+              onClick={() => setExpandState(prev => ({ ...prev, capabilities: false }))}
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+            >
+              <span className="text-sm font-medium">Collapse</span>
+              <ChevronUp className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Safety Card */}
+      <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-red-50 px-6 py-4 border-b border-gray-200">
+          <h3 className="text-xl font-semibold text-red-700">Safety</h3>
+        </div>
+        <LeaderboardTable
+          datasets={SAFETY_DATASETS}
+          models={safetySortedModels}
+          bgColor="bg-red-50"
+          sortConfig={safetySortConfig}
+          onSort={handleSafetySort}
+          expanded={expandState.safety}
+          isEditMode={isEditMode}
+          onUpdateScore={updateModelScore}
+        />
+        {!expandState.safety && (
+          <div className="border-t border-gray-200 bg-gray-50">
+            <button
+              onClick={() => setExpandState(prev => ({ ...prev, safety: true }))}
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+            >
+              <span className="text-sm font-medium">View All</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+        {expandState.safety && (
+          <div className="border-t border-gray-200 bg-gray-50">
+            <button
+              onClick={() => setExpandState(prev => ({ ...prev, safety: false }))}
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+            >
+              <span className="text-sm font-medium">Collapse</span>
+              <ChevronUp className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
 
       <div className="space-y-4 text-center">
         <p className="text-sm text-gray-600">
