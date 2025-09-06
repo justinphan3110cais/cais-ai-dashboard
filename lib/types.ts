@@ -1,13 +1,15 @@
 export interface Dataset {
+  id: string; // Unique identifier for the dataset
   name: string;
   link: string;
   description: string;
   logo?: string;
   category: 'capabilities' | 'safety';
+  capabilities?: string[]; // List of capability IDs this dataset tests
 }
 
 export interface ModelScore {
-  [datasetName: string]: number | null; // null for missing scores
+  [datasetId: string]: number | null; // null for missing scores
 }
 
 export interface Model {

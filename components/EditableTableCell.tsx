@@ -6,13 +6,15 @@ interface EditableTableCellProps {
   value: number | null | undefined;
   onSave: (newValue: number | null) => void;
   isEditable: boolean;
+  isGrayedOut?: boolean;
 }
 
-export const EditableTableCell = ({ value, onSave, isEditable }: EditableTableCellProps) => {
+export const EditableTableCell = ({ value, onSave, isEditable, isGrayedOut }: EditableTableCellProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value?.toString() || "");
 
   const formatValue = (val: number | null | undefined) => {
+    if (isGrayedOut) return "";
     if (val === null || val === undefined) return "-";
     return val.toFixed(1);
   };

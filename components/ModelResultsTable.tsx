@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { EyeOff, ChevronDown, ChevronUp, Save } from "lucide-react";
+import { EyeOff, Eye, ChevronDown, ChevronUp, Save } from "lucide-react";
 import hf_logo from "@/assets/hf-logo.png";
-import { MODELS, CAPABILITIES_DATASETS, SAFETY_DATASETS, getProviderLogo } from "@/app/constants";
+import { MODELS, CAPABILITIES_DATASETS, SAFETY_DATASETS, getProviderLogo, BENCHMARK_TYPES } from "@/app/constants";
 import { Dataset, Model } from "@/lib/types";
 import {
   Table,
@@ -42,11 +42,11 @@ const DatasetHeader = ({
   sortConfig 
 }: { 
   dataset: Dataset; 
-  onSort: (datasetName: string) => void;
+  onSort: (datasetId: string) => void;
   sortConfig: SortConfig;
 }) => {
   const getSortIcon = () => {
-    if (sortConfig.key !== dataset.name) return null;
+    if (sortConfig.key !== dataset.id) return null;
     if (sortConfig.direction === 'asc') return '↑';
     if (sortConfig.direction === 'desc') return '↓';
     return null; // No sort indicator when direction is null
@@ -57,7 +57,7 @@ const DatasetHeader = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <button 
-            onClick={() => onSort(dataset.name)}
+            onClick={() => onSort(dataset.id)}
             className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
           >
             <div className="flex items-center justify-center gap-1">
@@ -70,17 +70,40 @@ const DatasetHeader = ({
                 />
               )}
               <span className="text-xs font-medium">
-                {dataset.name === "TextQuests Harm" ? "TextQuests Harm" : 
-                 dataset.name === "VCT" ? "VCT - Refusal" :
-                 dataset.name.includes("TextQuests") ? "TextQuests" : 
+                {dataset.id === "textquests_harm" ? "TextQuests Harm" : 
+                 dataset.id === "vct_refusal" ? "VCT - Refusal" :
+                 dataset.id === "enigmaeval" ? "EnigmaEval" :
+                 dataset.id === "intphys2" ? "IntPhys2" :
+                 dataset.id === "textquests" ? "TextQuests" : 
                  dataset.name}
               </span>
+              {dataset.capabilities?.map((capabilityId) => {
+                const benchmarkType = BENCHMARK_TYPES[capabilityId];
+                if (!benchmarkType) return null;
+                
+                const IconComponent = benchmarkType.icon;
+                
+                return (
+                  <TooltipProvider key={capabilityId}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex-shrink-0">
+                          <IconComponent className="w-3 h-3 text-gray-500" />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-white text-black border border-gray-200 shadow-lg">
+                        <p>{benchmarkType.tooltipText}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                );
+              })}
               <span className="text-xs ml-1">{getSortIcon()}</span>
             </div>
           </button>
         </TooltipTrigger>
-        <TooltipContent className="max-w-sm bg-gray-800 text-white">
-          <p>{dataset.description}</p>
+        <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg">
+          <div dangerouslySetInnerHTML={{ __html: dataset.description }} style={{ lineHeight: '1.6' }} />
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -103,10 +126,10 @@ const LeaderboardTable = ({
   models: Model[];
   bgColor: string;
   sortConfig: SortConfig;
-  onSort: (datasetName: string) => void;
+  onSort: (datasetId: string) => void;
   expanded?: boolean;
   isEditMode?: boolean;
-  onUpdateScore?: (modelName: string, datasetName: string, newValue: number | null) => void;
+  onUpdateScore?: (modelName: string, datasetId: string, newValue: number | null) => void;
 }) => {
   const formatValue = (value: number | null) => {
     if (value === null) return "-";
@@ -115,7 +138,7 @@ const LeaderboardTable = ({
 
   const calculateAverage = (model: Model, datasets: Dataset[]) => {
     const scores = datasets
-      .map(dataset => model.scores[dataset.name])
+      .map(dataset => model.scores[dataset.id])
       .filter((score): score is number => score !== null);
     
     if (scores.length === 0) return null;
@@ -232,18 +255,25 @@ const LeaderboardTable = ({
               </div>
             </TableCell>
             
-                             {datasets.map((dataset, index) => (
-                   <TableCell 
-                     key={dataset.name} 
-                     className={`text-center ${bgColor}/30 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
-                   >
-                     <EditableTableCell
-                       value={model.scores[dataset.name]}
-                       onSave={(newValue) => onUpdateScore?.(model.name, dataset.name, newValue)}
-                       isEditable={isEditMode}
-                     />
-                   </TableCell>
-                 ))}
+            {datasets.map((dataset, index) => {
+              const isTextOnlyModel = model.isTextOnlyModel === true;
+              const requiresVision = dataset.capabilities?.includes('vision') || false;
+              const isGrayedOut = requiresVision && isTextOnlyModel;
+              
+              return (
+                <TableCell 
+                  key={dataset.name} 
+                  className={`text-center ${bgColor}/30 ${index < datasets.length ? 'border-r border-gray-300' : ''} ${isGrayedOut ? 'bg-gray-200 opacity-50' : ''}`}
+                >
+                                      <EditableTableCell
+                      value={model.scores[dataset.id]}
+                      onSave={(newValue) => onUpdateScore?.(model.name, dataset.id, newValue)}
+                      isEditable={isEditMode && !isGrayedOut}
+                      isGrayedOut={isGrayedOut}
+                    />
+                </TableCell>
+              );
+            })}
             
             <TableCell className={`text-center ${bgColor}/30 font-bold`}>
               <span className="font-mono text-sm">
@@ -277,6 +307,7 @@ export function ModelResultsTable() {
     showVisionModels: false,
     showTextModels: false,
     showOpenWeight: false,
+    selectedProviders: [],
   });
 
   const [expandState, setExpandState] = useState<ExpandState>({
@@ -329,11 +360,11 @@ export function ModelResultsTable() {
   };
 
   // Update a model's score
-  const updateModelScore = (modelName: string, datasetName: string, newValue: number | null) => {
+  const updateModelScore = (modelName: string, datasetId: string, newValue: number | null) => {
     setModels(prevModels => 
       prevModels.map(model => 
         model.name === modelName 
-          ? { ...model, scores: { ...model.scores, [datasetName]: newValue } }
+          ? { ...model, scores: { ...model.scores, [datasetId]: newValue } }
           : model
       )
     );
@@ -362,6 +393,11 @@ export function ModelResultsTable() {
         return false;
       }
 
+      // Provider filter - if any providers are selected, only show models from those providers
+      if (filters.selectedProviders.length > 0 && !filters.selectedProviders.includes(model.provider)) {
+        return false;
+      }
+
       return true;
     });
   }, [filters, models]);
@@ -373,12 +409,12 @@ export function ModelResultsTable() {
       if (sortConfig.key === 'average') {
         // Calculate averages for sorting
         const avgA = datasets
-          .map(d => a.scores[d.name])
+          .map(d => a.scores[d.id])
           .filter((score): score is number => score !== null)
           .reduce((sum, score, _, arr) => sum + score / arr.length, 0) || 0;
         
         const avgB = datasets
-          .map(d => b.scores[d.name])
+          .map(d => b.scores[d.id])
           .filter((score): score is number => score !== null)
           .reduce((sum, score, _, arr) => sum + score / arr.length, 0) || 0;
 
@@ -396,38 +432,38 @@ export function ModelResultsTable() {
     });
   };
 
-  const handleCapabilitiesSort = (datasetName: string) => {
+  const handleCapabilitiesSort = (datasetId: string) => {
     setCapabilitiesSortConfig(prev => {
-      if (prev.key !== datasetName) {
+      if (prev.key !== datasetId) {
         // First click on new column: desc
-        return { key: datasetName, direction: 'desc' };
+        return { key: datasetId, direction: 'desc' };
       } else if (prev.direction === 'desc') {
         // Second click: asc
-        return { key: datasetName, direction: 'asc' };
+        return { key: datasetId, direction: 'asc' };
       } else if (prev.direction === 'asc') {
         // Third click: no sort
         return { key: null, direction: null };
       } else {
         // Back to desc (shouldn't happen but fallback)
-        return { key: datasetName, direction: 'desc' };
+        return { key: datasetId, direction: 'desc' };
       }
     });
   };
 
-  const handleSafetySort = (datasetName: string) => {
+  const handleSafetySort = (datasetId: string) => {
     setSafetySortConfig(prev => {
-      if (prev.key !== datasetName) {
+      if (prev.key !== datasetId) {
         // First click on new column: desc
-        return { key: datasetName, direction: 'desc' };
+        return { key: datasetId, direction: 'desc' };
       } else if (prev.direction === 'desc') {
         // Second click: asc
-        return { key: datasetName, direction: 'asc' };
+        return { key: datasetId, direction: 'asc' };
       } else if (prev.direction === 'asc') {
         // Third click: no sort
         return { key: null, direction: null };
       } else {
         // Back to desc (shouldn't happen but fallback)
-        return { key: datasetName, direction: 'desc' };
+        return { key: datasetId, direction: 'desc' };
       }
     });
   };
