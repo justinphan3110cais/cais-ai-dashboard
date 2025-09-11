@@ -14,7 +14,7 @@ export interface Dataset {
   citation?: string; // Direct citation text
   examples?: {
     type: 'image' | 'video';
-    src: any; // Can be string (for videos) or StaticImageData (for images)
+    src: string | import('next/image').StaticImageData; // Can be string (for videos) or StaticImageData (for images)
     alt?: string;
   }[];
 }
@@ -30,7 +30,7 @@ export interface Model {
   modelWeights?: string; // for HuggingFace link
   modelCardUrl?: string; // URL to model card/announcement
   isTopModel?: boolean;
-  modelGeneration?: 'gold' | 'silver';
+  modelGeneration?: 'green';
   isTextOnlyModel?: boolean; // true for text-only models, false/null for vision-capable models
 }
 

@@ -19,13 +19,11 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
   const [copied, setCopied] = useState(false);
   const [citation, setCitation] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!isOpen || (!dataset?.citationUrl && !dataset?.citation)) {
       setCitation('');
       setLoading(false);
-      setError('');
       return;
     }
 
@@ -33,7 +31,6 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
     if (dataset.citation) {
       setCitation(dataset.citation);
       setLoading(false);
-      setError('');
       return;
     }
 
@@ -42,7 +39,6 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
       const fetchCitation = async () => {
         try {
           setLoading(true);
-          setError('');
           const response = await fetch(dataset.citationUrl!);
           if (!response.ok) {
             throw new Error('Failed to fetch citation');
@@ -51,7 +47,6 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
           setCitation(citationText.trim());
         } catch (err) {
           console.error('Error fetching citation:', err);
-          setError('Failed to load citation');
         } finally {
           setLoading(false);
         }
@@ -165,7 +160,7 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
                         />
                       ) : example.type === 'video' ? (
                         <video
-                          src={example.src}
+                          src={example.src as string}
                           controls
                           className="max-w-full max-h-96 w-auto h-auto rounded-md"
                         >
@@ -203,10 +198,6 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
                   <div className="flex items-center justify-center py-8">
                     <Loader className="w-6 h-6 text-gray-500 animate-spin" />
                     <span className="ml-2 text-gray-500">Loading latest citation...</span>
-                  </div>
-                ) : error ? (
-                  <div className="text-red-600 text-sm py-2">
-                    {error} - Using fallback citation
                   </div>
                 ) : null}
                 

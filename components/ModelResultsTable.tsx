@@ -393,7 +393,7 @@ export function ModelResultsTable() {
   };
 
   // Dataset details dialog handlers
-  const handleShowDetails = (datasetId: string, datasetName: string) => {
+  const handleShowDetails = (datasetId: string) => {
     // Find the dataset object from all dataset arrays
     const allDatasets = [...TEXT_CAPABILITIES_DATASETS, ...MULTIMODAL_DATASETS, ...SAFETY_DATASETS];
     const dataset = allDatasets.find(d => d.id === datasetId);
