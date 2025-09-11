@@ -1,11 +1,22 @@
 export interface Dataset {
   id: string; // Unique identifier for the dataset
   name: string;
+  title?: string; // Title for the dialog (defaults to name if not provided)
   link: string;
   description: string;
   logo?: string;
-  category: 'capabilities' | 'safety';
+  category: 'text' | 'vision' | 'safety';
   capabilities?: string[]; // List of capability IDs this dataset tests
+  paperLink?: string;
+  githubLink?: string;
+  huggingfaceLink?: string; // Full URL to Hugging Face dataset
+  citationUrl?: string; // URL to fetch citation from
+  citation?: string; // Direct citation text
+  examples?: {
+    type: 'image' | 'video';
+    src: any; // Can be string (for videos) or StaticImageData (for images)
+    alt?: string;
+  }[];
 }
 
 export interface ModelScore {

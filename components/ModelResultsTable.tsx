@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { EyeOff, Eye, ChevronDown, ChevronUp, Save } from "lucide-react";
+import { EyeOff, ChevronDown, ChevronUp, Save } from "lucide-react";
 import hf_logo from "@/assets/hf-logo.png";
-import { MODELS, CAPABILITIES_DATASETS, SAFETY_DATASETS, getProviderLogo, BENCHMARK_TYPES } from "@/app/constants";
+import { MODELS, TEXT_CAPABILITIES_DATASETS, MULTIMODAL_DATASETS, SAFETY_DATASETS, getProviderLogo, BENCHMARK_TYPES } from "@/app/constants";
 import { Dataset, Model } from "@/lib/types";
 import {
   Table,
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import { FilterBar, FilterState } from "@/components/FilterBar";
 import { EditableTableCell } from "@/components/EditableTableCell";
+import DatasetDetailsDialog from "@/components/DatasetDetailsDialog";
 
 interface SortConfig {
   key: string | null;
@@ -32,18 +33,21 @@ interface SortConfig {
 
 
 interface ExpandState {
-  capabilities: boolean;
+  textCapabilities: boolean;
+  multimodal: boolean;
   safety: boolean;
 }
 
 const DatasetHeader = ({ 
   dataset, 
   onSort, 
-  sortConfig 
+  sortConfig,
+  onShowDetails
 }: { 
   dataset: Dataset; 
   onSort: (datasetId: string) => void;
   sortConfig: SortConfig;
+  onShowDetails: (datasetId: string, datasetName: string) => void;
 }) => {
   const getSortIcon = () => {
     if (sortConfig.key !== dataset.id) return null;
@@ -104,6 +108,15 @@ const DatasetHeader = ({
         </TooltipTrigger>
         <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg">
           <div dangerouslySetInnerHTML={{ __html: dataset.description }} style={{ lineHeight: '1.6' }} />
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onShowDetails(dataset.id, dataset.name);
+            }}
+            className="mt-3 px-3 py-1 bg-background text-foreground border border-foreground text-xs rounded hover:bg-foreground hover:text-background transition-colors"
+          >
+            Examples and Details
+          </button>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -120,7 +133,8 @@ const LeaderboardTable = ({
   onSort,
   expanded = false,
   isEditMode = false,
-  onUpdateScore
+  onUpdateScore,
+  onShowDetails
 }: { 
   datasets: Dataset[];
   models: Model[];
@@ -130,6 +144,7 @@ const LeaderboardTable = ({
   expanded?: boolean;
   isEditMode?: boolean;
   onUpdateScore?: (modelName: string, datasetId: string, newValue: number | null) => void;
+  onShowDetails: (datasetId: string, datasetName: string) => void;
 }) => {
   const formatValue = (value: number | null) => {
     if (value === null) return "-";
@@ -146,10 +161,8 @@ const LeaderboardTable = ({
   };
 
   const getRowStyling = (model: Model) => {
-    if (model.modelGeneration === 'gold') {
-      return 'bg-amber-50 hover:bg-amber-100';
-    } else if (model.modelGeneration === 'silver') {
-      return 'bg-gray-100 hover:bg-gray-200 border-gray-300';
+    if (model.modelGeneration === 'green') {
+      return 'bg-slate-50 hover:bg-slate-100';
     } else {
       return 'hover:bg-gray-50';
     }
@@ -167,7 +180,7 @@ const LeaderboardTable = ({
               key={dataset.name} 
               className={`text-center ${bgColor} min-w-[80px] border-b-2 border-b-gray-300 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
             >
-              <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} />
+              <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} />
             </TableHead>
           ))}
           <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300`}>
@@ -256,21 +269,17 @@ const LeaderboardTable = ({
             </TableCell>
             
             {datasets.map((dataset, index) => {
-              const isTextOnlyModel = model.isTextOnlyModel === true;
-              const requiresVision = dataset.capabilities?.includes('vision') || false;
-              const isGrayedOut = requiresVision && isTextOnlyModel;
-              
               return (
                 <TableCell 
                   key={dataset.name} 
-                  className={`text-center ${bgColor}/30 ${index < datasets.length ? 'border-r border-gray-300' : ''} ${isGrayedOut ? 'bg-gray-200 opacity-50' : ''}`}
+                  className={`text-center ${bgColor}/30 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
                 >
-                                      <EditableTableCell
-                      value={model.scores[dataset.id]}
-                      onSave={(newValue) => onUpdateScore?.(model.name, dataset.id, newValue)}
-                      isEditable={isEditMode && !isGrayedOut}
-                      isGrayedOut={isGrayedOut}
-                    />
+                  <EditableTableCell
+                    value={model.scores[dataset.id]}
+                    onSave={(newValue) => onUpdateScore?.(model.name, dataset.id, newValue)}
+                    isEditable={isEditMode}
+                    isGrayedOut={false}
+                  />
                 </TableCell>
               );
             })}
@@ -311,11 +320,17 @@ export function ModelResultsTable() {
   });
 
   const [expandState, setExpandState] = useState<ExpandState>({
-    capabilities: false,
+    textCapabilities: false,
+    multimodal: false,
     safety: false,
   });
 
-  const [capabilitiesSortConfig, setCapabilitiesSortConfig] = useState<SortConfig>({
+  const [textCapabilitiesSortConfig, setTextCapabilitiesSortConfig] = useState<SortConfig>({
+    key: null,
+    direction: null,
+  });
+
+  const [multimodalSortConfig, setMultimodalSortConfig] = useState<SortConfig>({
     key: null,
     direction: null,
   });
@@ -327,6 +342,12 @@ export function ModelResultsTable() {
 
   // Edit mode state
   const [isEditMode, setIsEditMode] = useState(false);
+
+  // Dataset details dialog state
+  const [dialogState, setDialogState] = useState({
+    isOpen: false,
+    dataset: null as Dataset | null
+  });
   const [models, setModels] = useState<Model[]>(MODELS);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
@@ -369,6 +390,25 @@ export function ModelResultsTable() {
       )
     );
     setHasUnsavedChanges(true);
+  };
+
+  // Dataset details dialog handlers
+  const handleShowDetails = (datasetId: string, datasetName: string) => {
+    // Find the dataset object from all dataset arrays
+    const allDatasets = [...TEXT_CAPABILITIES_DATASETS, ...MULTIMODAL_DATASETS, ...SAFETY_DATASETS];
+    const dataset = allDatasets.find(d => d.id === datasetId);
+    
+    setDialogState({
+      isOpen: true,
+      dataset: dataset || null
+    });
+  };
+
+  const handleCloseDetails = () => {
+    setDialogState({
+      isOpen: false,
+      dataset: null
+    });
   };
 
   const filteredModels = useMemo(() => {
@@ -432,8 +472,26 @@ export function ModelResultsTable() {
     });
   };
 
-  const handleCapabilitiesSort = (datasetId: string) => {
-    setCapabilitiesSortConfig(prev => {
+  const handleTextCapabilitiesSort = (datasetId: string) => {
+    setTextCapabilitiesSortConfig(prev => {
+      if (prev.key !== datasetId) {
+        // First click on new column: desc
+        return { key: datasetId, direction: 'desc' };
+      } else if (prev.direction === 'desc') {
+        // Second click: asc
+        return { key: datasetId, direction: 'asc' };
+      } else if (prev.direction === 'asc') {
+        // Third click: no sort
+        return { key: null, direction: null };
+      } else {
+        // Back to desc (shouldn't happen but fallback)
+        return { key: datasetId, direction: 'desc' };
+      }
+    });
+  };
+
+  const handleMultimodalSort = (datasetId: string) => {
+    setMultimodalSortConfig(prev => {
       if (prev.key !== datasetId) {
         // First click on new column: desc
         return { key: datasetId, direction: 'desc' };
@@ -468,7 +526,11 @@ export function ModelResultsTable() {
     });
   };
 
-  const capabilitiesSortedModels = sortModels(filteredModels, CAPABILITIES_DATASETS, capabilitiesSortConfig);
+  // Filter out text-only models from vision table
+  const visionCapableModels = filteredModels.filter(model => model.isTextOnlyModel !== true);
+  
+  const textCapabilitiesSortedModels = sortModels(filteredModels, TEXT_CAPABILITIES_DATASETS, textCapabilitiesSortConfig);
+  const multimodalSortedModels = sortModels(visionCapableModels, MULTIMODAL_DATASETS, multimodalSortConfig);
   const safetySortedModels = sortModels(filteredModels, SAFETY_DATASETS, safetySortConfig);
 
   return (
@@ -499,25 +561,26 @@ export function ModelResultsTable() {
         )}
       </div>
       
-      {/* Capabilities Card */}
+      {/* Text-based Capabilities Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
         <div className="bg-blue-50 px-6 py-4 border-b border-gray-200">
-          <h3 className="text-xl font-semibold text-blue-700">Capabilities</h3>
+          <h3 className="text-xl font-semibold text-blue-700">Text</h3>
         </div>
         <LeaderboardTable
-          datasets={CAPABILITIES_DATASETS}
-          models={capabilitiesSortedModels}
+          datasets={TEXT_CAPABILITIES_DATASETS}
+          models={textCapabilitiesSortedModels}
           bgColor="bg-blue-50"
-          sortConfig={capabilitiesSortConfig}
-          onSort={handleCapabilitiesSort}
-          expanded={expandState.capabilities}
+          sortConfig={textCapabilitiesSortConfig}
+          onSort={handleTextCapabilitiesSort}
+          expanded={expandState.textCapabilities}
           isEditMode={isEditMode}
           onUpdateScore={updateModelScore}
+          onShowDetails={handleShowDetails}
         />
-        {!expandState.capabilities && (
+        {!expandState.textCapabilities && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setExpandState(prev => ({ ...prev, capabilities: true }))}
+              onClick={() => setExpandState(prev => ({ ...prev, textCapabilities: true }))}
               className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
             >
               <span className="text-sm font-medium">View All</span>
@@ -525,10 +588,50 @@ export function ModelResultsTable() {
             </button>
           </div>
         )}
-        {expandState.capabilities && (
+        {expandState.textCapabilities && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setExpandState(prev => ({ ...prev, capabilities: false }))}
+              onClick={() => setExpandState(prev => ({ ...prev, textCapabilities: false }))}
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+            >
+              <span className="text-sm font-medium">Collapse</span>
+              <ChevronUp className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Multimodal Capabilities Card */}
+      <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-green-50 px-6 py-4 border-b border-gray-200">
+          <h3 className="text-xl font-semibold text-green-700">Vision</h3>
+        </div>
+        <LeaderboardTable
+          datasets={MULTIMODAL_DATASETS}
+          models={multimodalSortedModels}
+          bgColor="bg-green-50"
+          sortConfig={multimodalSortConfig}
+          onSort={handleMultimodalSort}
+          expanded={expandState.multimodal}
+          isEditMode={isEditMode}
+          onUpdateScore={updateModelScore}
+          onShowDetails={handleShowDetails}
+        />
+        {!expandState.multimodal && (
+          <div className="border-t border-gray-200 bg-gray-50">
+            <button
+              onClick={() => setExpandState(prev => ({ ...prev, multimodal: true }))}
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+            >
+              <span className="text-sm font-medium">View All</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+        {expandState.multimodal && (
+          <div className="border-t border-gray-200 bg-gray-50">
+            <button
+              onClick={() => setExpandState(prev => ({ ...prev, multimodal: false }))}
               className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
             >
               <span className="text-sm font-medium">Collapse</span>
@@ -552,6 +655,7 @@ export function ModelResultsTable() {
           expanded={expandState.safety}
           isEditMode={isEditMode}
           onUpdateScore={updateModelScore}
+          onShowDetails={handleShowDetails}
         />
         {!expandState.safety && (
           <div className="border-t border-gray-200 bg-gray-50">
@@ -588,6 +692,13 @@ export function ModelResultsTable() {
           </a>
         </p>
       </div>
+
+      {/* Dataset Details Dialog */}
+      <DatasetDetailsDialog
+        isOpen={dialogState.isOpen}
+        onClose={handleCloseDetails}
+        dataset={dialogState.dataset}
+      />
     </div>
   );
 }

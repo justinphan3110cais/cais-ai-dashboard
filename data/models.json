@@ -5,15 +5,18 @@
     "scores": {
       "hle": 25.32,
       "textquests": 37.8,
-      "swebench_verified": 65,
+      "swebench_verified": 67.2,
       "masks": 79.33,
       "textquests_harm": 17.2,
       "vct_refusal": null,
       "enigmaeval": 10.47,
-      "intphys2": 56.1
+      "intphys2": 56.1,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": true,
-    "modelGeneration": "gold",
+    "modelGeneration": "green",
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/"
   },
   {
@@ -27,10 +30,13 @@
       "textquests_harm": 19.1,
       "vct_refusal": null,
       "enigmaeval": 7.18,
-      "intphys2": null
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": true,
-    "modelGeneration": "gold",
+    "modelGeneration": "green",
     "modelCardUrl": "https://www.anthropic.com/news/claude-opus-4-1"
   },
   {
@@ -44,10 +50,12 @@
       "textquests_harm": 30.4,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": 54.9
+      "intphys2": 54.9,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": true,
-    "modelGeneration": "silver",
     "modelCardUrl": "https://x.ai/news/grok-4"
   },
   {
@@ -61,10 +69,12 @@
       "textquests_harm": 18.7,
       "vct_refusal": 0,
       "enigmaeval": 11.91,
-      "intphys2": 54.7
+      "intphys2": 54.7,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": true,
-    "modelGeneration": "silver",
     "modelCardUrl": "https://openai.com/index/introducing-o3-and-o4-mini"
   },
   {
@@ -78,10 +88,12 @@
       "textquests_harm": 16.5,
       "vct_refusal": null,
       "enigmaeval": 3.21,
-      "intphys2": null
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": true,
-    "modelGeneration": "silver",
     "modelCardUrl": "https://www.anthropic.com/news/claude-4"
   },
   {
@@ -95,10 +107,12 @@
       "textquests_harm": 15.9,
       "vct_refusal": 0,
       "enigmaeval": 5.57,
-      "intphys2": 56
+      "intphys2": 56,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": true,
-    "modelGeneration": "silver",
     "modelCardUrl": "https://arxiv.org/abs/2507.06261"
   },
   {
@@ -112,10 +126,12 @@
       "textquests_harm": 16,
       "vct_refusal": 0,
       "enigmaeval": 2.2,
-      "intphys2": 50.5
+      "intphys2": 50.5,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
-    "modelGeneration": "silver",
     "modelCardUrl": "https://www.anthropic.com/news/claude-4"
   },
   {
@@ -124,12 +140,15 @@
     "scores": {
       "hle": 19.44,
       "textquests": 15.9,
-      "swebench_verified": 59.8,
+      "swebench_verified": 60.6,
       "masks": 82.6,
       "textquests_harm": 12,
       "vct_refusal": null,
       "enigmaeval": 8.19,
-      "intphys2": 59.2
+      "intphys2": 59.2,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/"
@@ -145,7 +164,10 @@
       "textquests_harm": 11.4,
       "vct_refusal": 0,
       "enigmaeval": 2.17,
-      "intphys2": 55.7
+      "intphys2": 55.7,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelCardUrl": "https://openai.com/index/gpt-4-1"
@@ -161,7 +183,10 @@
       "textquests_harm": 17.8,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": null
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelCardUrl": "https://x.ai/news/grok-3",
@@ -178,7 +203,10 @@
       "textquests_harm": 16.4,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": null
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "isTextOnlyModel": true,
@@ -195,7 +223,10 @@
       "textquests_harm": 11.7,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": 58
+      "intphys2": 58,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261"
@@ -211,7 +242,10 @@
       "textquests_harm": 15.4,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": null
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelWeights": "deepseek-ai/DeepSeek-R1-0528",
@@ -229,7 +263,10 @@
       "textquests_harm": 18.6,
       "vct_refusal": 0,
       "enigmaeval": 9.21,
-      "intphys2": 53.6
+      "intphys2": 53.6,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "isTextOnlyModel": false
@@ -245,7 +282,10 @@
       "textquests_harm": 8.3,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": null
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelWeights": "moonshotai/Kimi-K2-Instruct",
@@ -263,7 +303,10 @@
       "textquests_harm": 21.2,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": null
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelWeights": "openai/gpt-oss-120b",
@@ -281,7 +324,10 @@
       "textquests_harm": 22.8,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": 54.1
+      "intphys2": 54.1,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261"
@@ -297,7 +343,10 @@
       "textquests_harm": 11.7,
       "vct_refusal": null,
       "enigmaeval": null,
-      "intphys2": 51.7
+      "intphys2": 51.7,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "modelCardUrl": "https://openai.com/index/gpt-4-1",
     "isTopModel": false
@@ -313,7 +362,10 @@
       "textquests_harm": 13.1,
       "vct_refusal": null,
       "enigmaeval": 0.58,
-      "intphys2": null
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
     },
     "isTopModel": false,
     "modelWeights": "meta-llama/Llama-4-Maverick-17B-128E-Instruct"
