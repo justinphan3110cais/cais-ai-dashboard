@@ -11,8 +11,8 @@
       "vct_refusal": null,
       "enigmaeval": 10.47,
       "intphys2": 56.1,
-      "erqa": null,
-      "mindcube": null,
+      "erqa": 58.5,
+      "mindcube": 59.7,
       "omnispatial": null
     },
     "isTopModel": true,
@@ -70,8 +70,8 @@
       "vct_refusal": 0,
       "enigmaeval": 11.91,
       "intphys2": 54.7,
-      "erqa": null,
-      "mindcube": null,
+      "erqa": 57,
+      "mindcube": 57.6,
       "omnispatial": null
     },
     "isTopModel": true,
@@ -108,8 +108,8 @@
       "vct_refusal": 0,
       "enigmaeval": 5.57,
       "intphys2": 56,
-      "erqa": null,
-      "mindcube": null,
+      "erqa": 61.8,
+      "mindcube": 59.6,
       "omnispatial": null
     },
     "isTopModel": true,
@@ -146,8 +146,8 @@
       "vct_refusal": null,
       "enigmaeval": 8.19,
       "intphys2": 59.2,
-      "erqa": null,
-      "mindcube": null,
+      "erqa": 56.3,
+      "mindcube": 59.3,
       "omnispatial": null
     },
     "isTopModel": false,
@@ -165,8 +165,8 @@
       "vct_refusal": 0,
       "enigmaeval": 2.17,
       "intphys2": 55.7,
-      "erqa": null,
-      "mindcube": null,
+      "erqa": 47.6,
+      "mindcube": 48.9,
       "omnispatial": null
     },
     "isTopModel": false,
@@ -224,7 +224,7 @@
       "vct_refusal": null,
       "enigmaeval": null,
       "intphys2": 58,
-      "erqa": null,
+      "erqa": 58.6,
       "mindcube": null,
       "omnispatial": null
     },
@@ -264,7 +264,7 @@
       "vct_refusal": 0,
       "enigmaeval": 9.21,
       "intphys2": 53.6,
-      "erqa": null,
+      "erqa": 47.5,
       "mindcube": null,
       "omnispatial": null
     },
@@ -326,7 +326,7 @@
       "enigmaeval": null,
       "intphys2": 54.1,
       "erqa": null,
-      "mindcube": null,
+      "mindcube": 49.2,
       "omnispatial": null
     },
     "isTopModel": false,
@@ -344,8 +344,8 @@
       "vct_refusal": null,
       "enigmaeval": null,
       "intphys2": 51.7,
-      "erqa": null,
-      "mindcube": null,
+      "erqa": 47.5,
+      "mindcube": 50.9,
       "omnispatial": null
     },
     "modelCardUrl": "https://openai.com/index/gpt-4-1",

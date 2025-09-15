@@ -147,6 +147,31 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     }]
   },
   {
+    id: "swebench_verified",
+    name: "SWE-Bench",
+    link: "https://www.swebench.com/bash-only.html",
+    description: "<a href='https://www.swebench.com' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-Bench Verified</a> <i>(Bash Only)</i> tests LLMs ability to solve 500 real Python GitHub issues. <a href='https://www.swebench.com' target='_blank' style='text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-bench Bash Only</a> only use a minimal bash shell (no tools or special scaffold structure).<br><br>Scoring high would show a model can reliably understand and resolve real-world software engineering issues.",
+    logo: swebench_logo.src,
+    category: "text",
+    capabilities: ["agent"],
+    paperLink: "https://arxiv.org/abs/2310.06770",
+    githubLink: "https://github.com/SWE-agent/SWE-agent",
+    huggingfaceLink: "https://huggingface.co/datasets/princeton-nlp/SWE-bench_Verified",
+    examples: [{
+      type: "image",
+      src: swebench_examples,
+      alt: "SWE-bench sources task instances from real-world Python repositories by connecting GitHub issues to merged pull request solutions that resolve related tests. Provided with the issue text and a codebase snapshot, models generate a patch that is evaluated against real tests."
+    }],
+    citation: `@inproceedings{
+    jimenez2024swebench,
+    title={{SWE}-bench: Can Language Models Resolve Real-world Github Issues?},
+    author={Carlos E Jimenez and John Yang and Alexander Wettig and Shunyu Yao and Kexin Pei and Ofir Press and Karthik R Narasimhan},
+    booktitle={The Twelfth International Conference on Learning Representations},
+    year={2024},
+    url={https://openreview.net/forum?id=VTF8yNQM66}
+}`
+  },
+  {
     id: "textquests",
     name: "TextQuests Progress",
     link: "https://textquests.ai/",
@@ -178,58 +203,34 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
       src: textquests_examples,
       alt: "Examples showing the diverse reasoning challenges in TextQuests."
     }]
-  },
-  {
-    id: "swebench_verified",
-    name: "SWE-Bench",
-    link: "https://www.swebench.com/bash-only.html",
-    description: "<a href='https://www.swebench.com' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-Bench Verified</a> <i>(Bash Only)</i> tests LLMs ability to solve 500 real Python GitHub issues. <a href='https://www.swebench.com' target='_blank' style='text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-bench Bash Only</a> only use a minimal bash shell (no tools or special scaffold structure).<br><br>Scoring high would show a model can reliably understand and resolve real-world software engineering issues.",
-    logo: swebench_logo.src,
-    category: "text",
-    capabilities: ["agent"],
-    paperLink: "https://arxiv.org/abs/2310.06770",
-    githubLink: "https://github.com/SWE-agent/SWE-agent",
-    huggingfaceLink: "https://huggingface.co/datasets/princeton-nlp/SWE-bench_Verified",
-    examples: [{
-      type: "image",
-      src: swebench_examples,
-      alt: "SWE-bench sources task instances from real-world Python repositories by connecting GitHub issues to merged pull request solutions that resolve related tests. Provided with the issue text and a codebase snapshot, models generate a patch that is evaluated against real tests."
-    }],
-    citation: `@inproceedings{
-    jimenez2024swebench,
-    title={{SWE}-bench: Can Language Models Resolve Real-world Github Issues?},
-    author={Carlos E Jimenez and John Yang and Alexander Wettig and Shunyu Yao and Kexin Pei and Ofir Press and Karthik R Narasimhan},
-    booktitle={The Twelfth International Conference on Learning Representations},
-    year={2024},
-    url={https://openreview.net/forum?id=VTF8yNQM66}
-}`
   }
 ];
 
 // Multimodal capabilities datasets
 export const MULTIMODAL_DATASETS: Dataset[] = [
   {
-    id: "enigmaeval",
-    name: "EnigmaEval",
-    link: "https://scale.com/leaderboard/enigma_eval",
-    description: "<a href='https://scale.com/leaderboard/enigma_eval' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>EnigmaEval</a> evaluates LLMs on 1,184 extremely hard multimodal puzzles from competitions like the MIT Mystery Hunt, one of the world's toughest puzzle competitions. These puzzles often take teams of expert humans several days to solve, requiring lateral, multi-step reasoning over images and text.<br><br>Scoring high on EnigmaEval would show that a LLM is sufficiently capable of solving extremely complex puzzles and problems that push the limits of reasoning ability.",
+    id: "erqa",
+    name: "ERQA",
+    link: "https://github.com/embodiedreasoning/ERQA",
+    description: "<a href='https://github.com/embodiedreasoning/ERQA' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ERQA</a> evaluates Vision-Language Models on 400 multiple-choice embodied reasoning questions designed around the capabilities needed by an embodied agent interacting with the physical world, particularly in robotics. The benchmark spans spatial reasoning, trajectory reasoning, action reasoning, state estimation, pointing, multi-view reasoning, and task reasoning.<br><br>Scoring high on ERQA would indicate a model has a broad capability to reason about the physical world in ways critical for embodied robotics.",
     category: "vision",
-    capabilities: ["expert_puzzle"],
-    paperLink: "https://arxiv.org/abs/2502.08859",
+    capabilities: ["embodied_reasoning"],
+    paperLink: "https://arxiv.org/abs/2503.20020",
+    githubLink: "https://github.com/embodiedreasoning/ERQA",
     examples: [{
       type: "image",
-      src: enigmaeval_examples,
-      alt: "A sample of puzzles and solutions in EnigmaEval."
+      src: erqa_examples,
+      alt: "Example questions from the Embodied Reasoning Question Answering (ERQA) benchmark"
     }],
-    citation: `@misc{wang2025enigmaevalbenchmarklongmultimodal,
-      title={EnigmaEval: A Benchmark of Long Multimodal Reasoning Challenges}, 
-      author={Clinton J. Wang and Dean Lee and Cristina Menghini and Johannes Mols and Jack Doughty and Adam Khoja and Jayson Lynch and Sean Hendryx and Summer Yue and Dan Hendrycks},
+    citation: `@misc{geminiroboticsteam2025geminiroboticsbringingai,
+      title={Gemini Robotics: Bringing AI into the Physical World}, 
+      author={Gemini Robotics Team and Saminda Abeyruwan and Joshua Ainslie and Jean-Baptiste Alayrac and Montserrat Gonzalez Arenas and Travis Armstrong and Ashwin Balakrishna and Robert Baruch and Maria Bauza and Michiel Blokzijl and Steven Bohez and Konstantinos Bousmalis and Anthony Brohan and Thomas Buschmann and Arunkumar Byravan and Serkan Cabi and Ken Caluwaerts and Federico Casarini and Oscar Chang and Jose Enrique Chen and Xi Chen and Hao-Tien Lewis Chiang and Krzysztof Choromanski and David D'Ambrosio and Sudeep Dasari and Todor Davchev and Coline Devin and Norman Di Palo and Tianli Ding and Adil Dostmohamed and Danny Driess and Yilun Du and Debidatta Dwibedi and Michael Elabd and Claudio Fantacci and Cody Fong and Erik Frey and Chuyuan Fu and Marissa Giustina and Keerthana Gopalakrishnan and Laura Graesser and Leonard Hasenclever and Nicolas Heess and Brandon Hernaez and Alexander Herzog and R. Alex Hofer and Jan Humplik and Atil Iscen and Mithun George Jacob and Deepali Jain and Ryan Julian and Dmitry Kalashnikov and M. Emre Karagozler and Stefani Karp and Chase Kew and Jerad Kirkland and Sean Kirmani and Yuheng Kuang and Thomas Lampe and Antoine Laurens and Isabel Leal and Alex X. Lee and Tsang-Wei Edward Lee and Jacky Liang and Yixin Lin and Sharath Maddineni and Anirudha Majumdar and Assaf Hurwitz Michaely and Robert Moreno and Michael Neunert and Francesco Nori and Carolina Parada and Emilio Parisotto and Peter Pastor and Acorn Pooley and Kanishka Rao and Krista Reymann and Dorsa Sadigh and Stefano Saliceti and Pannag Sanketi and Pierre Sermanet and Dhruv Shah and Mohit Sharma and Kathryn Shea and Charles Shu and Vikas Sindhwani and Sumeet Singh and Radu Soricut and Jost Tobias Springenberg and Rachel Sterneck and Razvan Surdulescu and Jie Tan and Jonathan Tompson and Vincent Vanhoucke and Jake Varley and Grace Vesom and Giulia Vezzani and Oriol Vinyals and Ayzaan Wahid and Stefan Welker and Paul Wohlhart and Fei Xia and Ted Xiao and Annie Xie and Jinyu Xie and Peng Xu and Sichun Xu and Ying Xu and Zhuo Xu and Yuxiang Yang and Rui Yao and Sergey Yaroshenko and Wenhao Yu and Wentao Yuan and Jingwei Zhang and Tingnan Zhang and Allan Zhou and Yuxiang Zhou},
       year={2025},
-      eprint={2502.08859},
+      eprint={2503.20020},
       archivePrefix={arXiv},
-      primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2502.08859}, 
-}`,
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2503.20020}, 
+}`
   },
   {
     id: "intphys2",
@@ -257,28 +258,27 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
 }`
   },
   {
-    id: "erqa",
-    name: "ERQA",
-    link: "https://github.com/embodiedreasoning/ERQA",
-    description: "<a href='https://github.com/embodiedreasoning/ERQA' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ERQA</a> evaluates Vision-Language Models on 400 multiple-choice embodied reasoning questions designed around the capabilities needed by an embodied agent interacting with the physical world, particularly in robotics. The benchmark spans spatial reasoning, trajectory reasoning, action reasoning, state estimation, pointing, multi-view reasoning, and task reasoning.<br><br>Scoring high on ERQA would indicate a model has a broad capability to reason about the physical world in ways critical for embodied robotics.",
+    id: "enigmaeval",
+    name: "EnigmaEval",
+    link: "https://scale.com/leaderboard/enigma_eval",
+    description: "<a href='https://scale.com/leaderboard/enigma_eval' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>EnigmaEval</a> evaluates LLMs on 1,184 extremely hard multimodal puzzles from competitions like the MIT Mystery Hunt, one of the world's toughest puzzle competitions. These puzzles often take teams of expert humans several days to solve, requiring lateral, multi-step reasoning over images and text.<br><br>Scoring high on EnigmaEval would show that a LLM is sufficiently capable of solving extremely complex puzzles and problems that push the limits of reasoning ability.",
     category: "vision",
-    capabilities: ["embodied_reasoning"],
-    paperLink: "https://arxiv.org/abs/2503.20020",
-    githubLink: "https://github.com/embodiedreasoning/ERQA",
+    capabilities: ["expert_puzzle"],
+    paperLink: "https://arxiv.org/abs/2502.08859",
     examples: [{
       type: "image",
-      src: erqa_examples,
-      alt: "Example questions from the Embodied Reasoning Question Answering (ERQA) benchmark"
+      src: enigmaeval_examples,
+      alt: "A sample of puzzles and solutions in EnigmaEval."
     }],
-    citation: `@misc{geminiroboticsteam2025geminiroboticsbringingai,
-      title={Gemini Robotics: Bringing AI into the Physical World}, 
-      author={Gemini Robotics Team and Saminda Abeyruwan and Joshua Ainslie and Jean-Baptiste Alayrac and Montserrat Gonzalez Arenas and Travis Armstrong and Ashwin Balakrishna and Robert Baruch and Maria Bauza and Michiel Blokzijl and Steven Bohez and Konstantinos Bousmalis and Anthony Brohan and Thomas Buschmann and Arunkumar Byravan and Serkan Cabi and Ken Caluwaerts and Federico Casarini and Oscar Chang and Jose Enrique Chen and Xi Chen and Hao-Tien Lewis Chiang and Krzysztof Choromanski and David D'Ambrosio and Sudeep Dasari and Todor Davchev and Coline Devin and Norman Di Palo and Tianli Ding and Adil Dostmohamed and Danny Driess and Yilun Du and Debidatta Dwibedi and Michael Elabd and Claudio Fantacci and Cody Fong and Erik Frey and Chuyuan Fu and Marissa Giustina and Keerthana Gopalakrishnan and Laura Graesser and Leonard Hasenclever and Nicolas Heess and Brandon Hernaez and Alexander Herzog and R. Alex Hofer and Jan Humplik and Atil Iscen and Mithun George Jacob and Deepali Jain and Ryan Julian and Dmitry Kalashnikov and M. Emre Karagozler and Stefani Karp and Chase Kew and Jerad Kirkland and Sean Kirmani and Yuheng Kuang and Thomas Lampe and Antoine Laurens and Isabel Leal and Alex X. Lee and Tsang-Wei Edward Lee and Jacky Liang and Yixin Lin and Sharath Maddineni and Anirudha Majumdar and Assaf Hurwitz Michaely and Robert Moreno and Michael Neunert and Francesco Nori and Carolina Parada and Emilio Parisotto and Peter Pastor and Acorn Pooley and Kanishka Rao and Krista Reymann and Dorsa Sadigh and Stefano Saliceti and Pannag Sanketi and Pierre Sermanet and Dhruv Shah and Mohit Sharma and Kathryn Shea and Charles Shu and Vikas Sindhwani and Sumeet Singh and Radu Soricut and Jost Tobias Springenberg and Rachel Sterneck and Razvan Surdulescu and Jie Tan and Jonathan Tompson and Vincent Vanhoucke and Jake Varley and Grace Vesom and Giulia Vezzani and Oriol Vinyals and Ayzaan Wahid and Stefan Welker and Paul Wohlhart and Fei Xia and Ted Xiao and Annie Xie and Jinyu Xie and Peng Xu and Sichun Xu and Ying Xu and Zhuo Xu and Yuxiang Yang and Rui Yao and Sergey Yaroshenko and Wenhao Yu and Wentao Yuan and Jingwei Zhang and Tingnan Zhang and Allan Zhou and Yuxiang Zhou},
+    citation: `@misc{wang2025enigmaevalbenchmarklongmultimodal,
+      title={EnigmaEval: A Benchmark of Long Multimodal Reasoning Challenges}, 
+      author={Clinton J. Wang and Dean Lee and Cristina Menghini and Johannes Mols and Jack Doughty and Adam Khoja and Jayson Lynch and Sean Hendryx and Summer Yue and Dan Hendrycks},
       year={2025},
-      eprint={2503.20020},
+      eprint={2502.08859},
       archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2503.20020}, 
-}`
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2502.08859}, 
+}`,
   },
   {
     id: "mindcube",
