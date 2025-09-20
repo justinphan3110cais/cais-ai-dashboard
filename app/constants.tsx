@@ -158,7 +158,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     name: "ARC-AGI-2",
     link: "https://arcprize.org/",
     description: "<a href='https://arcprize.org/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ARC-AGI-2</a> measures fluid intelligence—the ability to reason, solve novel problems, and adapt to new situations—rather than crystallized intelligence that relies on accumulated knowledge. The benchmark uses abstract visual puzzles based on core knowledge priors (cognitive building blocks present at birth) to evaluate genuine skill-acquisition efficiency on tasks the AI has never encountered.<br><br>Scoring high on ARC-AGI-2 demonstrates that a system can efficiently acquire new skills outside its training data, marking true progress toward artificial general intelligence.",
-    logo: arc_agi_logo,
+    logo: arc_agi_logo.src,
     category: "text",
     capabilities: ["fluid_reasoning"],
     paperLink: "https://arxiv.org/abs/1911.01547",
