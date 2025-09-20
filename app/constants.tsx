@@ -11,6 +11,7 @@ import xai_logo from "@/assets/provider-logos/xai_logo.svg";
 import hle_examples from "@/assets/dataset-examples/hle_examples.png";
 import textquests_logo from "@/assets/dataset-logos/textquests_logo.svg";
 import hle_logo from "@/assets/dataset-logos/hle_logo.svg";
+import arc_agi_logo from "@/assets/dataset-logos/arc_agi_logo.png";
 import vct_logo from "@/assets/dataset-logos/vct_logo.svg";
 import swebench_logo from "@/assets/dataset-logos/swebench_logo.png";
 import mindcube_logo from "@/assets/dataset-logos/mindcube_logo.png";
@@ -58,6 +59,12 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     name: "Expert-Level Reasoning", 
     icon: GraduationCap,
     tooltipText: "Expert-Level Reasoning Benchmark"
+  },
+  fluid_reasoning: {
+    id: "fluid_reasoning",
+    name: "Fluid Reasoning",
+    icon: Bot,
+    tooltipText: "Fluid Reasoning Benchmark"
   },
   expert_puzzle: {
     id: "expert_puzzle",
@@ -145,6 +152,26 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
       src: hle_examples,
       alt: "Samples of the diverse and challenging questions submitted to Humanity's Last Exam."
     }]
+  },
+  {
+    id: "arc_agi_2",
+    name: "ARC-AGI-2",
+    link: "https://arcprize.org/",
+    description: "<a href='https://arcprize.org/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ARC-AGI-2</a> measures fluid intelligence—the ability to reason, solve novel problems, and adapt to new situations—rather than crystallized intelligence that relies on accumulated knowledge. The benchmark uses abstract visual puzzles based on core knowledge priors (cognitive building blocks present at birth) to evaluate genuine skill-acquisition efficiency on tasks the AI has never encountered.<br><br>Scoring high on ARC-AGI-2 demonstrates that a system can efficiently acquire new skills outside its training data, marking true progress toward artificial general intelligence.",
+    logo: arc_agi_logo,
+    category: "text",
+    capabilities: ["fluid_reasoning"],
+    paperLink: "https://arxiv.org/abs/1911.01547",
+    githubLink: "https://github.com/fchollet/ARC-AGI",
+    citation: `@misc{chollet2019measure,
+      title={On the Measure of Intelligence}, 
+      author={François Chollet},
+      year={2019},
+      eprint={1911.01547},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/1911.01547}, 
+}`
   },
   {
     id: "swebench_verified",

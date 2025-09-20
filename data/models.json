@@ -4,6 +4,7 @@
     "provider": "openai",
     "scores": {
       "hle": 25.32,
+      "arc_agi_2": 9.9,
       "textquests": 37.8,
       "swebench_verified": 67.2,
       "masks": 79.33,
@@ -24,6 +25,7 @@
     "provider": "anthropic",
     "scores": {
       "hle": 7.92,
+      "arc_agi_2": 8.6,
       "textquests": 33.9,
       "swebench_verified": null,
       "masks": 94.2,
@@ -44,6 +46,7 @@
     "provider": "xai",
     "scores": {
       "hle": 25.4,
+      "arc_agi_2": 16.0,
       "textquests": 31.2,
       "swebench_verified": null,
       "masks": null,
@@ -63,6 +66,7 @@
     "provider": "openai",
     "scores": {
       "hle": 20.32,
+      "arc_agi_2": 6.5,
       "textquests": 30.9,
       "swebench_verified": 58.4,
       "masks": 84.47,
@@ -82,6 +86,7 @@
     "provider": "anthropic",
     "scores": {
       "hle": 6.68,
+      "arc_agi_2": 4.5,
       "textquests": 26.4,
       "swebench_verified": 67.6,
       "masks": 80.28,
@@ -101,6 +106,7 @@
     "provider": "google",
     "scores": {
       "hle": 21.64,
+      "arc_agi_2": 4.0,
       "textquests": 23.2,
       "swebench_verified": 53.6,
       "masks": 55.67,
@@ -120,6 +126,7 @@
     "provider": "anthropic",
     "scores": {
       "hle": 5.52,
+      "arc_agi_2": 5.9,
       "textquests": 24.7,
       "swebench_verified": 64.93,
       "masks": 89.27,
@@ -139,6 +146,7 @@
     "provider": "openai",
     "scores": {
       "hle": 19.44,
+      "arc_agi_2": 4.4,
       "textquests": 15.9,
       "swebench_verified": 60.6,
       "masks": 82.6,
@@ -158,6 +166,7 @@
     "provider": "openai",
     "scores": {
       "hle": 5.4,
+      "arc_agi_2": 0.4,
       "textquests": 22.8,
       "swebench_verified": 54.6,
       "masks": 51.13,
@@ -177,6 +186,7 @@
     "provider": "xai",
     "scores": {
       "hle": null,
+      "arc_agi_2": 0.4,
       "textquests": 22.4,
       "swebench_verified": null,
       "masks": null,
@@ -197,6 +207,7 @@
     "provider": "qwen",
     "scores": {
       "hle": 15.4,
+      "arc_agi_2": null,
       "textquests": 15.1,
       "swebench_verified": null,
       "masks": null,
@@ -217,6 +228,7 @@
     "provider": "google",
     "scores": {
       "hle": 12.08,
+      "arc_agi_2": 2.1,
       "textquests": 14.4,
       "swebench_verified": null,
       "masks": null,
@@ -236,6 +248,7 @@
     "provider": "deepseek",
     "scores": {
       "hle": 14,
+      "arc_agi_2": 1.1,
       "textquests": 15.2,
       "swebench_verified": null,
       "masks": null,
@@ -257,6 +270,7 @@
     "provider": "openai",
     "scores": {
       "hle": 18.08,
+      "arc_agi_2": 6.1,
       "textquests": 12.8,
       "swebench_verified": 45,
       "masks": 78.6,
@@ -276,6 +290,7 @@
     "provider": "moonshot",
     "scores": {
       "hle": 4.7,
+      "arc_agi_2": null,
       "textquests": 10.5,
       "swebench_verified": 43.8,
       "masks": 46.7,
@@ -297,6 +312,7 @@
     "provider": "openai",
     "scores": {
       "hle": 9.04,
+      "arc_agi_2": null,
       "textquests": 12,
       "swebench_verified": 26,
       "masks": 92,
@@ -318,6 +334,7 @@
     "provider": "google",
     "scores": {
       "hle": 6.9,
+      "arc_agi_2": null,
       "textquests": 11.7,
       "swebench_verified": null,
       "masks": null,
@@ -337,6 +354,7 @@
     "provider": "openai",
     "scores": {
       "hle": 2.7,
+      "arc_agi_2": 0.0,
       "textquests": 10.6,
       "swebench_verified": null,
       "masks": null,
@@ -356,6 +374,7 @@
     "provider": "meta",
     "scores": {
       "hle": 5.68,
+      "arc_agi_2": 0.0,
       "textquests": 9.2,
       "swebench_verified": null,
       "masks": 49.73,
