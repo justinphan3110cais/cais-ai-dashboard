@@ -28,6 +28,18 @@ import { Dataset, Model } from "@/lib/types";
 import { Image as ImageIcon, SquareTerminal, GraduationCap, Bot, Earth, Puzzle, Gamepad, Map, Code } from "lucide-react";
 import React from "react";
 
+// Provider color mapping for charts (single color per provider)
+export const PROVIDER_COLORS: Record<string, string> = {
+  openai: '#22c55e', // Green
+  anthropic: '#f97316', // Orange
+  xai: '#374151', // Gray/Black
+  google: '#1e40af', // Dark blue
+  deepseek: '#06b6d4', // Cyan/Light blue
+  meta: '#38bdf8', // Sky blue
+  qwen: '#a855f7', // Purple
+  moonshot: '#6b7280', // Gray
+};
+
 // Benchmark type definitions
 export interface BenchmarkType {
   id: string;

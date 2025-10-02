@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import Image from "next/image";
 import { Dataset, Model } from "@/lib/types";
-import { getProviderLogo } from "@/app/constants";
+import { getProviderLogo, PROVIDER_COLORS } from "@/app/constants";
 
 interface InlineBarChartProps {
   datasets: Dataset[];
@@ -34,20 +34,9 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     }))
     .sort((a, b) => (b.score || 0) - (a.score || 0)); // Sort by score descending
 
-  // Color mapping for different providers
-  const providerColors: { [key: string]: string } = {
-    'openai': '#10B981',
-    'anthropic': '#F59E0B',
-    'google': '#3B82F6',
-    'xai': '#8B5CF6',
-    'meta': '#EF4444',
-    'deepseek': '#06B6D4',
-    'qwen': '#F97316',
-    'moonshot': '#84CC16'
-  };
-
+  // Get single color for provider
   const getBarColor = (provider: string) => {
-    return providerColors[provider] || '#6B7280';
+    return PROVIDER_COLORS[provider] || PROVIDER_COLORS['moonshot']; // Default to gray
   };
 
   // Custom label component for bars
