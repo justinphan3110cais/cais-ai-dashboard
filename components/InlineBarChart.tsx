@@ -39,20 +39,42 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     return PROVIDER_COLORS[provider] || PROVIDER_COLORS['moonshot']; // Default to gray
   };
 
-  // Custom label component for bars
+  // Custom label component for bars with provider logo
   const CustomLabel = (props: any) => {
-    const { x, y, width, value } = props;
+    const { x, y, width, value, index } = props;
+    const entry = chartData[index];
+    
     return (
-      <text 
-        x={x + width / 2} 
-        y={y - 5} 
-        fill="#374151" 
-        textAnchor="middle" 
-        fontSize="12"
-        fontWeight="500"
-      >
-        {value}%
-      </text>
+      <g>
+        {/* Provider logo */}
+        <foreignObject 
+          x={x + width / 2 - 20} 
+          y={y - 18} 
+          width={14} 
+          height={14}
+        >
+          <div className="flex justify-center items-center">
+            <Image
+              src={entry?.providerLogo.src || ''}
+              alt={`${entry?.provider} logo`}
+              width={12}
+              height={12}
+              className="rounded"
+            />
+          </div>
+        </foreignObject>
+        {/* Score text */}
+        <text 
+          x={x + width / 2 - 4} 
+          y={y - 8} 
+          fill="#374151" 
+          textAnchor="start" 
+          fontSize="12"
+          fontWeight="500"
+        >
+          {value}
+        </text>
+      </g>
     );
   };
 
