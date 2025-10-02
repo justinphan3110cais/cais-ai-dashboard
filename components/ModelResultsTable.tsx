@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { EyeOff, ChevronDown, ChevronUp, Save } from "lucide-react";
+import { EyeOff, ChevronDown, ChevronUp, Save, BarChart3, Table as TableIcon } from "lucide-react";
 import hf_logo from "@/assets/hf-logo.png";
 import { MODELS, TEXT_CAPABILITIES_DATASETS, MULTIMODAL_DATASETS, SAFETY_DATASETS, getProviderLogo, BENCHMARK_TYPES } from "@/app/constants";
 import { Dataset, Model } from "@/lib/types";
@@ -22,6 +22,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { FilterBar, FilterState } from "@/components/FilterBar";
+import { InlineBarChart } from "@/components/InlineBarChart";
 import { EditableTableCell } from "@/components/EditableTableCell";
 import DatasetDetailsDialog from "@/components/DatasetDetailsDialog";
 
@@ -353,6 +354,13 @@ export function ModelResultsTable() {
     isOpen: false,
     dataset: null as Dataset | null
   });
+
+  // View mode state for each table
+  const [viewModes, setViewModes] = useState({
+    textCapabilities: 'table' as 'table' | 'chart',
+    multimodal: 'table' as 'table' | 'chart',
+    safety: 'table' as 'table' | 'chart'
+  });
   const [models, setModels] = useState<Model[]>(MODELS);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
@@ -414,6 +422,14 @@ export function ModelResultsTable() {
       isOpen: false,
       dataset: null
     });
+  };
+
+  // View mode handlers
+  const toggleViewMode = (section: 'textCapabilities' | 'multimodal' | 'safety') => {
+    setViewModes(prev => ({
+      ...prev,
+      [section]: prev[section] === 'table' ? 'chart' : 'table'
+    }));
   };
 
   const filteredModels = useMemo(() => {
@@ -573,20 +589,45 @@ export function ModelResultsTable() {
       
       {/* Text-based Capabilities Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-blue-50 px-6 py-4 border-b border-gray-200">
+        <div className="bg-blue-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <h3 className="text-xl font-semibold text-blue-700">Text</h3>
+          <button
+            onClick={() => toggleViewMode('textCapabilities')}
+            className="flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium"
+          >
+            {viewModes.textCapabilities === 'table' ? (
+              <>
+                <BarChart3 className="w-4 h-4" />
+                Bar Chart
+              </>
+            ) : (
+              <>
+                <TableIcon className="w-4 h-4" />
+                Table View
+              </>
+            )}
+          </button>
         </div>
-        <LeaderboardTable
-          datasets={TEXT_CAPABILITIES_DATASETS}
-          models={textCapabilitiesSortedModels}
-          bgColor="bg-blue-50"
-          sortConfig={textCapabilitiesSortConfig}
-          onSort={handleTextCapabilitiesSort}
-          expanded={expandState.textCapabilities}
-          isEditMode={isEditMode}
-          onUpdateScore={updateModelScore}
-          onShowDetails={handleShowDetails}
-        />
+        {viewModes.textCapabilities === 'table' ? (
+          <LeaderboardTable
+            datasets={TEXT_CAPABILITIES_DATASETS}
+            models={textCapabilitiesSortedModels}
+            bgColor="bg-blue-50"
+            sortConfig={textCapabilitiesSortConfig}
+            onSort={handleTextCapabilitiesSort}
+            expanded={expandState.textCapabilities}
+            isEditMode={isEditMode}
+            onUpdateScore={updateModelScore}
+            onShowDetails={handleShowDetails}
+          />
+        ) : (
+          <InlineBarChart
+            datasets={TEXT_CAPABILITIES_DATASETS}
+            models={textCapabilitiesSortedModels}
+            bgColor="bg-blue-50"
+            onShowDetails={handleShowDetails}
+          />
+        )}
         {!expandState.textCapabilities && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
@@ -635,20 +676,45 @@ export function ModelResultsTable() {
 
       {/* Multimodal Capabilities Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-green-50 px-6 py-4 border-b border-gray-200">
+        <div className="bg-green-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <h3 className="text-xl font-semibold text-green-700">Vision</h3>
+          <button
+            onClick={() => toggleViewMode('multimodal')}
+            className="flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium"
+          >
+            {viewModes.multimodal === 'table' ? (
+              <>
+                <BarChart3 className="w-4 h-4" />
+                Bar Chart
+              </>
+            ) : (
+              <>
+                <TableIcon className="w-4 h-4" />
+                Table View
+              </>
+            )}
+          </button>
         </div>
-        <LeaderboardTable
-          datasets={MULTIMODAL_DATASETS}
-          models={multimodalSortedModels}
-          bgColor="bg-green-50"
-          sortConfig={multimodalSortConfig}
-          onSort={handleMultimodalSort}
-          expanded={expandState.multimodal}
-          isEditMode={isEditMode}
-          onUpdateScore={updateModelScore}
-          onShowDetails={handleShowDetails}
-        />
+        {viewModes.multimodal === 'table' ? (
+          <LeaderboardTable
+            datasets={MULTIMODAL_DATASETS}
+            models={multimodalSortedModels}
+            bgColor="bg-green-50"
+            sortConfig={multimodalSortConfig}
+            onSort={handleMultimodalSort}
+            expanded={expandState.multimodal}
+            isEditMode={isEditMode}
+            onUpdateScore={updateModelScore}
+            onShowDetails={handleShowDetails}
+          />
+        ) : (
+          <InlineBarChart
+            datasets={MULTIMODAL_DATASETS}
+            models={multimodalSortedModels}
+            bgColor="bg-green-50"
+            onShowDetails={handleShowDetails}
+          />
+        )}
         {!expandState.multimodal && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
@@ -697,20 +763,45 @@ export function ModelResultsTable() {
  
       {/* Safety Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-red-50 px-6 py-4 border-b border-gray-200">
+        <div className="bg-red-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <h3 className="text-xl font-semibold text-red-700">Safety</h3>
+          <button
+            onClick={() => toggleViewMode('safety')}
+            className="flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium"
+          >
+            {viewModes.safety === 'table' ? (
+              <>
+                <BarChart3 className="w-4 h-4" />
+                Bar Chart
+              </>
+            ) : (
+              <>
+                <TableIcon className="w-4 h-4" />
+                Table View
+              </>
+            )}
+          </button>
         </div>
-        <LeaderboardTable
-          datasets={SAFETY_DATASETS}
-          models={safetySortedModels}
-          bgColor="bg-red-50"
-          sortConfig={safetySortConfig}
-          onSort={handleSafetySort}
-          expanded={expandState.safety}
-          isEditMode={isEditMode}
-          onUpdateScore={updateModelScore}
-          onShowDetails={handleShowDetails}
-        />
+        {viewModes.safety === 'table' ? (
+          <LeaderboardTable
+            datasets={SAFETY_DATASETS}
+            models={safetySortedModels}
+            bgColor="bg-red-50"
+            sortConfig={safetySortConfig}
+            onSort={handleSafetySort}
+            expanded={expandState.safety}
+            isEditMode={isEditMode}
+            onUpdateScore={updateModelScore}
+            onShowDetails={handleShowDetails}
+          />
+        ) : (
+          <InlineBarChart
+            datasets={SAFETY_DATASETS}
+            models={safetySortedModels}
+            bgColor="bg-red-50"
+            onShowDetails={handleShowDetails}
+          />
+        )}
         {!expandState.safety && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
@@ -775,6 +866,7 @@ export function ModelResultsTable() {
         onClose={handleCloseDetails}
         dataset={dialogState.dataset}
       />
+ 
     </div>
   );
 }
