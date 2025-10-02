@@ -32,6 +32,8 @@ export interface Model {
   isTopModel?: boolean;
   modelGeneration?: 'green';
   isTextOnlyModel?: boolean; // true for text-only models, false/null for vision-capable models
+  model_size?: 'standard' | 'mini' | 'nano'; // Model size classification
+  flagship?: boolean; // true for current flagship models, false for older versions
 }
 
 export interface LeaderboardData {

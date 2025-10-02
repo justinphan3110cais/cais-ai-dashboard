@@ -58,15 +58,15 @@ const DatasetHeader = ({
 
   return (
     <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button 
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
             onClick={() => onSort(dataset.id)}
             className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
           >
             <div className="flex items-center justify-center gap-1">
               {dataset.logo && (
-                <Image
+                    <Image
                   src={dataset.logo}
                   alt={`${dataset.name} logo`}
                   width={16}
@@ -94,16 +94,16 @@ const DatasetHeader = ({
                         <div className="flex-shrink-0">
                           <IconComponent className="w-3 h-3 text-gray-500" />
                         </div>
-                      </TooltipTrigger>
+              </TooltipTrigger>
                       <TooltipContent className="bg-white text-black border border-gray-200 shadow-lg">
                         <p>{benchmarkType.tooltipText}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                );
-              })}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      })}
               <span className="text-xs ml-1">{getSortIcon()}</span>
-            </div>
+    </div>
           </button>
         </TooltipTrigger>
         <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg">
@@ -169,9 +169,9 @@ const LeaderboardTable = ({
   };
 
   const tableContent = (
-    <Table>
+        <Table>
       <TableHeader className="sticky top-0 bg-background z-10">
-        <TableRow>
+            <TableRow>
           <TableHead className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 bg-gray-50 z-30`}>
             Model
           </TableHead>
@@ -184,7 +184,7 @@ const LeaderboardTable = ({
             </TableHead>
           ))}
           <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300`}>
-            <button 
+                        <button
               onClick={() => onSort('average')}
               className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
             >
@@ -195,9 +195,9 @@ const LeaderboardTable = ({
                   {sortConfig.key === 'average' && sortConfig.direction === 'desc' && '↓'}
                 </span>
               </div>
-            </button>
-          </TableHead>
-        </TableRow>
+                        </button>
+              </TableHead>
+            </TableRow>
       </TableHeader>
       <TableBody>
         {models.map((model) => (
@@ -236,37 +236,37 @@ const LeaderboardTable = ({
                   </TooltipProvider>
                 )}
                 {model.modelWeights && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
                           onClick={() => window.open(`https://huggingface.co/${model.modelWeights}`, '_blank')}
-                          className="flex-shrink-0 hover:opacity-80 transition-opacity"
-                        >
-                          <Image
-                            src={hf_logo}
-                            alt="Hugging Face"
+                              className="flex-shrink-0 hover:opacity-80 transition-opacity"
+                            >
+                              <Image
+                                src={hf_logo}
+                                alt="Hugging Face"
                             width={14}
                             height={14}
-                          />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-gray-100 text-foreground border border-gray-300">
-                        <div className="flex items-center gap-2">
-                          <Image
+                              />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-gray-100 text-foreground border border-gray-300">
+                            <div className="flex items-center gap-2">
+                              <Image
                             src={getProviderLogo(model.provider).src}
                             alt={`${model.provider} logo`}
-                            width={16}
-                            height={16}
-                          />
+                                width={16}
+                                height={16}
+                              />
                           <span className="text-sm">{model.modelWeights}</span>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
-            </TableCell>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
+                </TableCell>
             
             {datasets.map((dataset, index) => {
               return (
@@ -281,7 +281,7 @@ const LeaderboardTable = ({
                     isGrayedOut={false}
                   />
                 </TableCell>
-              );
+            );
             })}
             
             <TableCell className={`text-center ${bgColor}/30 font-bold`}>
@@ -291,8 +291,8 @@ const LeaderboardTable = ({
             </TableCell>
           </TableRow>
         ))}
-      </TableBody>
-    </Table>
+          </TableBody>
+        </Table>
   );
 
   return (
@@ -313,10 +313,15 @@ const LeaderboardTable = ({
 export function ModelResultsTable() {
   const [filters, setFilters] = useState<FilterState>({
     search: '',
-    showVisionModels: false,
     showTextModels: false,
     showOpenWeight: false,
+    showFlagship: true,
     selectedProviders: [],
+    modelSizes: {
+      standard: true,
+      mini: true,
+      nano: false,
+    },
   });
 
   const [expandState, setExpandState] = useState<ExpandState>({
@@ -418,11 +423,6 @@ export function ModelResultsTable() {
         return false;
       }
 
-      // Vision model filter - show models that are NOT text-only (have vision capabilities)
-      if (filters.showVisionModels && model.isTextOnlyModel === true) {
-        return false;
-      }
-
       // Text-only model filter - show models that ARE text-only
       if (filters.showTextModels && model.isTextOnlyModel !== true) {
         return false;
@@ -435,6 +435,17 @@ export function ModelResultsTable() {
 
       // Provider filter - if any providers are selected, only show models from those providers
       if (filters.selectedProviders.length > 0 && !filters.selectedProviders.includes(model.provider)) {
+        return false;
+      }
+
+      // Model size filter - show models based on selected sizes
+      const modelSize = model.model_size || 'standard'; // Default to standard if not specified
+      if (!filters.modelSizes[modelSize]) {
+        return false;
+      }
+
+      // Flagship filter - show only flagship models when checked
+      if (filters.showFlagship && model.flagship === false) {
         return false;
       }
 
@@ -535,18 +546,12 @@ export function ModelResultsTable() {
 
   return (
     <div className="w-full space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <FilterBar 
-            filters={filters} 
-            onFiltersChange={setFilters}
-          />
-        </div>
-        {isEditMode && (
+      {isEditMode && (
+        <div className="flex justify-end">
           <button
             onClick={saveModels}
             disabled={!hasUnsavedChanges}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium ml-4 ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium ${
               hasUnsavedChanges 
                 ? 'bg-blue-600 text-white hover:bg-blue-700' 
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -558,8 +563,13 @@ export function ModelResultsTable() {
               <span className="w-2 h-2 bg-red-500 rounded-full"></span>
             )}
           </button>
-        )}
-      </div>
+        </div>
+      )}
+      
+      <FilterBar 
+        filters={filters} 
+        onFiltersChange={setFilters}
+      />
       
       {/* Text-based Capabilities Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
@@ -580,7 +590,18 @@ export function ModelResultsTable() {
         {!expandState.textCapabilities && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setExpandState(prev => ({ ...prev, textCapabilities: true }))}
+              onClick={() => {
+                setExpandState(prev => ({ ...prev, textCapabilities: true }));
+                // When expanding, show all model sizes
+                setFilters(prev => ({
+                  ...prev,
+                  modelSizes: {
+                    standard: true,
+                    mini: true,
+                    nano: true
+                  }
+                }));
+              }}
               className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
             >
               <span className="text-sm font-medium">View All</span>
@@ -591,7 +612,18 @@ export function ModelResultsTable() {
         {expandState.textCapabilities && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setExpandState(prev => ({ ...prev, textCapabilities: false }))}
+              onClick={() => {
+                setExpandState(prev => ({ ...prev, textCapabilities: false }));
+                // When collapsing, show standard and mini models
+                setFilters(prev => ({
+                  ...prev,
+                  modelSizes: {
+                    standard: true,
+                    mini: true,
+                    nano: false
+                  }
+                }));
+              }}
               className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
             >
               <span className="text-sm font-medium">Collapse</span>
@@ -620,7 +652,18 @@ export function ModelResultsTable() {
         {!expandState.multimodal && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setExpandState(prev => ({ ...prev, multimodal: true }))}
+              onClick={() => {
+                setExpandState(prev => ({ ...prev, multimodal: true }));
+                // When expanding, show all model sizes
+                setFilters(prev => ({
+                  ...prev,
+                  modelSizes: {
+                    standard: true,
+                    mini: true,
+                    nano: true
+                  }
+                }));
+              }}
               className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
             >
               <span className="text-sm font-medium">View All</span>
@@ -631,7 +674,18 @@ export function ModelResultsTable() {
         {expandState.multimodal && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setExpandState(prev => ({ ...prev, multimodal: false }))}
+              onClick={() => {
+                setExpandState(prev => ({ ...prev, multimodal: false }));
+                // When collapsing, show standard and mini models
+                setFilters(prev => ({
+                  ...prev,
+                  modelSizes: {
+                    standard: true,
+                    mini: true,
+                    nano: false
+                  }
+                }));
+              }}
               className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
             >
               <span className="text-sm font-medium">Collapse</span>
@@ -640,7 +694,7 @@ export function ModelResultsTable() {
           </div>
         )}
       </div>
-
+ 
       {/* Safety Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
         <div className="bg-red-50 px-6 py-4 border-b border-gray-200">
@@ -660,7 +714,18 @@ export function ModelResultsTable() {
         {!expandState.safety && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setExpandState(prev => ({ ...prev, safety: true }))}
+              onClick={() => {
+                setExpandState(prev => ({ ...prev, safety: true }));
+                // When expanding, show all model sizes
+                setFilters(prev => ({
+                  ...prev,
+                  modelSizes: {
+                    standard: true,
+                    mini: true,
+                    nano: true
+                  }
+                }));
+              }}
               className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
             >
               <span className="text-sm font-medium">View All</span>
@@ -671,7 +736,18 @@ export function ModelResultsTable() {
         {expandState.safety && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setExpandState(prev => ({ ...prev, safety: false }))}
+              onClick={() => {
+                setExpandState(prev => ({ ...prev, safety: false }));
+                // When collapsing, show standard and mini models
+                setFilters(prev => ({
+                  ...prev,
+                  modelSizes: {
+                    standard: true,
+                    mini: true,
+                    nano: false
+                  }
+                }));
+              }}
               className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
             >
               <span className="text-sm font-medium">Collapse</span>

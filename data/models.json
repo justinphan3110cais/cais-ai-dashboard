@@ -9,29 +9,60 @@
       "swebench_verified": 67.2,
       "masks": 79.33,
       "textquests_harm": 17.2,
-      "vct_refusal": null,
+      "vct_refusal": 7.5,
       "enigmaeval": 10.47,
       "intphys2": 56.1,
       "erqa": 58.5,
       "mindcube": 59.7,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": 30.5,
+      "machiavelli": 69.8
     },
     "isTopModel": true,
     "modelGeneration": "green",
-    "modelCardUrl": "https://openai.com/index/introducing-gpt-5/"
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
+    "model_size": "standard",
+    "flagship": true
   },
   {
     "name": "Claude Opus 4.1",
     "provider": "anthropic",
     "scores": {
-      "hle": 7.92,
+      "hle": 11.5,
       "arc_agi_2": 8.6,
       "textquests": 33.9,
       "swebench_verified": null,
       "masks": 94.2,
       "textquests_harm": 19.1,
-      "vct_refusal": null,
+      "vct_refusal": 71.2,
       "enigmaeval": 7.18,
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null,
+      "terminal_bench": 32.1,
+      "machiavelli": null
+    },
+    "isTopModel": true,
+    "modelGeneration": "green",
+    "modelCardUrl": "https://www.anthropic.com/news/claude-opus-4-1",
+    "model_size": "standard",
+    "flagship": true
+  },
+  {
+    "name": "Claude Sonnet 4.5",
+    "provider": "anthropic",
+    "scores": {
+      "hle": 13.7,
+      "arc_agi_2": 6.9,
+      "textquests": null,
+      "swebench_verified": 70,
+      "terminal_bench": 33.3,
+      "masks": 96.13,
+      "vct_refusal": 68.5,
+      "machiavelli": 69.3,
+      "textquests_harm": null,
+      "enigmaeval": 6,
       "intphys2": null,
       "erqa": null,
       "mindcube": null,
@@ -39,27 +70,57 @@
     },
     "isTopModel": true,
     "modelGeneration": "green",
-    "modelCardUrl": "https://www.anthropic.com/news/claude-opus-4-1"
+    "modelCardUrl": "https://www.anthropic.com/news/claude-sonnet-4-5",
+    "model_size": "standard",
+    "flagship": true
   },
   {
     "name": "Grok 4",
     "provider": "xai",
     "scores": {
       "hle": 25.4,
-      "arc_agi_2": 16.0,
+      "arc_agi_2": 16,
       "textquests": 31.2,
       "swebench_verified": null,
       "masks": null,
       "textquests_harm": 30.4,
-      "vct_refusal": null,
+      "vct_refusal": 45,
       "enigmaeval": null,
       "intphys2": 54.9,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": 37.6,
+      "machiavelli": null
     },
     "isTopModel": true,
-    "modelCardUrl": "https://x.ai/news/grok-4"
+    "modelCardUrl": "https://x.ai/news/grok-4",
+    "model_size": "standard",
+    "flagship": true
+  },
+  {
+    "name": "Grok 4 Fast",
+    "provider": "xai",
+    "scores": {
+      "hle": 20,
+      "arc_agi_2": 1,
+      "textquests": null,
+      "swebench_verified": 36.7,
+      "terminal_bench": 17.7,
+      "masks": null,
+      "vct_refusal": 43.8,
+      "machiavelli": 74.1,
+      "textquests_harm": null,
+      "enigmaeval": null,
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null
+    },
+    "isTopModel": false,
+    "modelCardUrl": null,
+    "model_size": "mini",
+    "flagship": true
   },
   {
     "name": "o3",
@@ -76,10 +137,14 @@
       "intphys2": 54.7,
       "erqa": 57,
       "mindcube": 57.6,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": true,
-    "modelCardUrl": "https://openai.com/index/introducing-o3-and-o4-mini"
+    "modelCardUrl": "https://openai.com/index/introducing-o3-and-o4-mini",
+    "model_size": "standard",
+    "flagship": false
   },
   {
     "name": "Claude Opus 4",
@@ -96,17 +161,21 @@
       "intphys2": null,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": true,
-    "modelCardUrl": "https://www.anthropic.com/news/claude-4"
+    "modelCardUrl": "https://www.anthropic.com/news/claude-4",
+    "model_size": "standard",
+    "flagship": false
   },
   {
     "name": "Gemini 2.5 Pro",
     "provider": "google",
     "scores": {
       "hle": 21.64,
-      "arc_agi_2": 4.0,
+      "arc_agi_2": 4,
       "textquests": 23.2,
       "swebench_verified": 53.6,
       "masks": 55.67,
@@ -116,10 +185,14 @@
       "intphys2": 56,
       "erqa": 61.8,
       "mindcube": 59.6,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": 24.8,
+      "machiavelli": 77.6
     },
     "isTopModel": true,
-    "modelCardUrl": "https://arxiv.org/abs/2507.06261"
+    "modelCardUrl": "https://arxiv.org/abs/2507.06261",
+    "model_size": "standard",
+    "flagship": true
   },
   {
     "name": "Claude Sonnet 4",
@@ -136,10 +209,14 @@
       "intphys2": 50.5,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": false,
-    "modelCardUrl": "https://www.anthropic.com/news/claude-4"
+    "modelCardUrl": "https://www.anthropic.com/news/claude-4",
+    "model_size": "standard",
+    "flagship": false
   },
   {
     "name": "GPT-5-mini",
@@ -151,15 +228,19 @@
       "swebench_verified": 60.6,
       "masks": 82.6,
       "textquests_harm": 12,
-      "vct_refusal": null,
+      "vct_refusal": 0.5,
       "enigmaeval": 8.19,
       "intphys2": 59.2,
       "erqa": 56.3,
       "mindcube": 59.3,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": 68.5
     },
     "isTopModel": false,
-    "modelCardUrl": "https://openai.com/index/introducing-gpt-5/"
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
+    "model_size": "mini",
+    "flagship": true
   },
   {
     "name": "GPT-4.1",
@@ -176,10 +257,14 @@
       "intphys2": 55.7,
       "erqa": 47.6,
       "mindcube": 48.9,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": false,
-    "modelCardUrl": "https://openai.com/index/gpt-4-1"
+    "modelCardUrl": "https://openai.com/index/gpt-4-1",
+    "model_size": "standard",
+    "flagship": false
   },
   {
     "name": "Grok 3 mini",
@@ -196,52 +281,64 @@
       "intphys2": null,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": false,
     "modelCardUrl": "https://x.ai/news/grok-3",
-    "isTextOnlyModel": true
+    "isTextOnlyModel": true,
+    "model_size": "mini",
+    "flagship": false
   },
   {
     "name": "Qwen 3 Thinking",
     "provider": "qwen",
     "scores": {
       "hle": 15.4,
-      "arc_agi_2": null,
+      "arc_agi_2": 0,
       "textquests": 15.1,
       "swebench_verified": null,
-      "masks": null,
+      "masks": 56.4,
       "textquests_harm": 16.4,
-      "vct_refusal": null,
+      "vct_refusal": 0,
       "enigmaeval": null,
       "intphys2": null,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": false,
     "isTextOnlyModel": true,
-    "modelWeights": "Qwen/Qwen3-235B-A22B-Thinking-2507"
+    "modelWeights": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+    "model_size": "mini",
+    "flagship": true
   },
   {
     "name": "Gemini 2.5 Flash",
     "provider": "google",
     "scores": {
       "hle": 12.08,
-      "arc_agi_2": 2.1,
+      "arc_agi_2": 2.5,
       "textquests": 14.4,
-      "swebench_verified": null,
-      "masks": null,
+      "swebench_verified": 32,
+      "masks": 49.1,
       "textquests_harm": 11.7,
-      "vct_refusal": null,
-      "enigmaeval": null,
+      "vct_refusal": 0,
+      "enigmaeval": 2.7,
       "intphys2": 58,
       "erqa": 58.6,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": 15.6,
+      "machiavelli": 78.3
     },
     "isTopModel": false,
-    "modelCardUrl": "https://arxiv.org/abs/2507.06261"
+    "modelCardUrl": "https://arxiv.org/abs/2507.06261",
+    "model_size": "mini",
+    "flagship": true
   },
   {
     "name": "DeepSeek R1-0528",
@@ -251,19 +348,23 @@
       "arc_agi_2": 1.1,
       "textquests": 15.2,
       "swebench_verified": null,
-      "masks": null,
+      "masks": 53,
       "textquests_harm": 15.4,
-      "vct_refusal": null,
+      "vct_refusal": 0,
       "enigmaeval": null,
       "intphys2": null,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": false,
     "modelWeights": "deepseek-ai/DeepSeek-R1-0528",
     "modelCardUrl": "https://api-docs.deepseek.com/news/news250528",
-    "isTextOnlyModel": true
+    "isTextOnlyModel": true,
+    "model_size": "standard",
+    "flagship": true
   },
   {
     "name": "o4-mini",
@@ -280,54 +381,66 @@
       "intphys2": 53.6,
       "erqa": 47.5,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": false,
-    "isTextOnlyModel": false
+    "isTextOnlyModel": false,
+    "model_size": "mini",
+    "flagship": false
   },
   {
     "name": "Kimi K2",
     "provider": "moonshot",
     "scores": {
       "hle": 4.7,
-      "arc_agi_2": null,
+      "arc_agi_2": 0,
       "textquests": 10.5,
       "swebench_verified": 43.8,
       "masks": 46.7,
       "textquests_harm": 8.3,
-      "vct_refusal": null,
+      "vct_refusal": 0,
       "enigmaeval": null,
       "intphys2": null,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": false,
     "modelWeights": "moonshotai/Kimi-K2-Instruct",
     "modelCardUrl": "https://moonshotai.github.io/Kimi-K2/",
-    "isTextOnlyModel": true
+    "isTextOnlyModel": true,
+    "model_size": "standard",
+    "flagship": true
   },
   {
     "name": "GPT-OSS-120B",
     "provider": "openai",
     "scores": {
       "hle": 9.04,
-      "arc_agi_2": null,
+      "arc_agi_2": 0,
       "textquests": 12,
       "swebench_verified": 26,
       "masks": 92,
       "textquests_harm": 21.2,
-      "vct_refusal": null,
+      "vct_refusal": 0,
       "enigmaeval": null,
       "intphys2": null,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "isTopModel": false,
     "modelWeights": "openai/gpt-oss-120b",
     "modelCardUrl": "https://openai.com/index/introducing-gpt-oss/",
-    "isTextOnlyModel": true
+    "isTextOnlyModel": true,
+    "model_size": "mini",
+    "flagship": true
   },
   {
     "name": "Gemini 2.5 Flash-Lite",
@@ -339,22 +452,26 @@
       "swebench_verified": null,
       "masks": null,
       "textquests_harm": 22.8,
-      "vct_refusal": null,
+      "vct_refusal": 0,
       "enigmaeval": null,
       "intphys2": 54.1,
       "erqa": null,
       "mindcube": 49.2,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": 84.2
     },
     "isTopModel": false,
-    "modelCardUrl": "https://arxiv.org/abs/2507.06261"
+    "modelCardUrl": "https://arxiv.org/abs/2507.06261",
+    "model_size": "nano",
+    "flagship": true
   },
   {
     "name": "GPT-4.1-mini",
     "provider": "openai",
     "scores": {
       "hle": 2.7,
-      "arc_agi_2": 0.0,
+      "arc_agi_2": 0,
       "textquests": 10.6,
       "swebench_verified": null,
       "masks": null,
@@ -364,29 +481,37 @@
       "intphys2": 51.7,
       "erqa": 47.5,
       "mindcube": 50.9,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": null,
+      "machiavelli": null
     },
     "modelCardUrl": "https://openai.com/index/gpt-4-1",
-    "isTopModel": false
+    "isTopModel": false,
+    "model_size": "mini",
+    "flagship": false
   },
   {
     "name": "Llama 4 Maverick",
     "provider": "meta",
     "scores": {
       "hle": 5.68,
-      "arc_agi_2": 0.0,
+      "arc_agi_2": 0,
       "textquests": 9.2,
       "swebench_verified": null,
       "masks": 49.73,
       "textquests_harm": 13.1,
-      "vct_refusal": null,
+      "vct_refusal": 0,
       "enigmaeval": 0.58,
       "intphys2": null,
       "erqa": null,
       "mindcube": null,
-      "omnispatial": null
+      "omnispatial": null,
+      "terminal_bench": 6.4,
+      "machiavelli": null
     },
     "isTopModel": false,
-    "modelWeights": "meta-llama/Llama-4-Maverick-17B-128E-Instruct"
+    "modelWeights": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+    "model_size": "mini",
+    "flagship": true
   }
 ]

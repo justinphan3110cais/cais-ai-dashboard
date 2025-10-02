@@ -15,6 +15,7 @@ import arc_agi_logo from "@/assets/dataset-logos/arc_agi_logo.png";
 import vct_logo from "@/assets/dataset-logos/vct_logo.svg";
 import swebench_logo from "@/assets/dataset-logos/swebench_logo.png";
 import mindcube_logo from "@/assets/dataset-logos/mindcube_logo.png";
+import terminalbench_logo from "@/assets/dataset-logos/terminalbench_logo.png";
 import textquests_examples from "@/assets/dataset-examples/textquests_examples.png";
 import swebench_examples from "@/assets/dataset-examples/swebench_examples.png";
 import enigmaeval_examples from "@/assets/dataset-examples/enigmaeval_examples.png";
@@ -24,7 +25,7 @@ import erqa_examples from "@/assets/dataset-examples/erqa_examples.png";
 import mindcube_examples from "@/assets/dataset-examples/mindcube_examples.png";
 
 import { Dataset, Model } from "@/lib/types";
-import { Image as ImageIcon, SquareTerminal, GraduationCap, Bot, Earth, Puzzle, Gamepad, Map } from "lucide-react";
+import { Image as ImageIcon, SquareTerminal, GraduationCap, Bot, Earth, Puzzle, Gamepad, Map, Code } from "lucide-react";
 import React from "react";
 
 // Benchmark type definitions
@@ -41,6 +42,12 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     name: "Visual Reasoning",
     icon: ImageIcon,
     tooltipText: "Visual Reasoning Benchmark"
+  },
+  coding: {
+    id: "coding",
+    name: "Coding",
+    icon: Code,
+    tooltipText: "Coding Benchmark"
   },
   agent: {
     id: "agent",
@@ -180,7 +187,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     description: "<a href='https://www.swebench.com' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-Bench Verified</a> <i>(Bash Only)</i> tests LLMs ability to solve 500 real Python GitHub issues. <a href='https://www.swebench.com' target='_blank' style='text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-bench Bash Only</a> only use a minimal bash shell (no tools or special scaffold structure).<br><br>Scoring high would show a model can reliably understand and resolve real-world software engineering issues.",
     logo: swebench_logo.src,
     category: "text",
-    capabilities: ["agent"],
+    capabilities: ["coding"],
     paperLink: "https://arxiv.org/abs/2310.06770",
     githubLink: "https://github.com/SWE-agent/SWE-agent",
     huggingfaceLink: "https://huggingface.co/datasets/princeton-nlp/SWE-bench_Verified",
@@ -197,6 +204,15 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     year={2024},
     url={https://openreview.net/forum?id=VTF8yNQM66}
 }`
+  },
+  {
+    id: "terminal_bench",
+    name: "Terminal Bench",
+    link: "https://terminal-bench.stanford.edu/",
+    description: "<a href='https://terminal-bench.stanford.edu/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Terminal Bench</a> is a comprehensive benchmark from Stanford University and the Laude Institute for evaluating AI agents in realistic terminal environments. The \"hard\" subset contains 47 challenging tasks testing agents' abilities to compile code, train models, configure servers, play games, and debug systems in scenarios representing real-world problems and terminal use patterns.<br><br>Tasks cover engineering, game playing, and system administration that are unlikely to be pattern-matched from training data. Outcomes are evaluated programmatically with verification scripts in the agent's Docker environment.",
+    logo: terminalbench_logo.src,
+    category: "text",
+    capabilities: ["coding"]
   },
   {
     id: "textquests",
@@ -332,14 +348,6 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/2506.21458}, 
 }`
-  },
-  {
-    id: "omnispatial",
-    name: "OmniSpatial",
-    link: "https://qizekun.github.io/omnispatial/",
-    description: "<a href='https://qizekun.github.io/omnispatial/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>OmniSpatial</a> is a vision reasoning benchmark with 1.5K+ questions that provide representative examples across four main categories of spatial reasoning: Perspective Taking (understanding spatial relationships from egocentric, allocentric, or hypothetical viewpoints), Dynamic Reasoning (object manipulation, movement direction, and motion analysis), Spatial Interaction (traffic analysis, UI interaction, spatial localization, geospatial strategy), and Complex Logic (pattern recognition, polyhedron unfolding, mental rotation, and geometric reasoning).<br><br>Scoring high on OmniSpatial would indicate a model has a comprehensive ability to reason about visual and spatial dynamics.",
-    category: "vision",
-    capabilities: ["vision"]
   }
 ];
 
@@ -349,26 +357,33 @@ export const CAPABILITIES_DATASETS: Dataset[] = [...TEXT_CAPABILITIES_DATASETS, 
 export const SAFETY_DATASETS: Dataset[] = [
   {
     id: "masks",
-    name: "MASKS",
+    name: "MASK",
     link: "https://www.mask-benchmark.ai",
-    description: "As large language models (LLMs) become more capable and agentic, the requirement for trust in their outputs grows significantly, yet at the same time concerns have been mounting that models may learn to lie in pursuit of their goals. To address these concerns, a body of work has emerged around the notion of ``honesty'' in LLMs, along with interventions aimed at mitigating deceptive behaviors. However, evaluations of honesty are currently highly limited, with no benchmark combining large scale and applicability to all models. Moreover, many benchmarks claiming to measure honesty in fact simply measure accuracy—the correctness of a model's beliefs—in disguise. In this work, we introduce a large-scale human-collected dataset for measuring honesty directly, allowing us to disentangle accuracy from honesty for the first time. Across a diverse set of LLMs, we find that while larger models obtain higher accuracy on our benchmark, they do not become more honest. Surprisingly, while most frontier LLMs obtain high scores on truthfulness benchmarks, we find a substantial propensity in frontier LLMs to lie when pressured to do so, resulting in low honesty scores on our benchmark. We find that simple methods, such as representation engineering interventions, can improve honesty. These results underscore the growing need for robust evaluations and effective interventions to ensure LLMs remain trustworthy.",
-    category: "safety"
-  },
-  {
-    id: "textquests_harm",
-    name: "TextQuests Harm",
-    link: "https://textquests.ai/",
-    description: "How Good are LLMs at Text-Based Video Games? (Harm metric - lower is better)",
-    logo: textquests_logo,
+    description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a large-scale human-collected dataset for measuring honesty in LLMs directly, disentangling accuracy from honesty for the first time. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
     category: "safety"
   },
   {
     id: "vct_refusal",
     name: "VCT",
     link: "https://www.virologytest.ai",
-    description: "Virology Capabilities Test - Virology Capabilities Test (VCT), a large language model (LLM) benchmark that measures the capability to troubleshoot complex virology laboratory protocols. VCT is difficult: expert virologists with access to the internet score an average of 22.1% on questions specifically in their sub-areas of expertise.",
+    description: "Virology Capabilities Test (VCT) measures LLM capability to troubleshoot complex virology laboratory protocols. Expert virologists with internet access score an average of 22.1% on questions in their sub-areas of expertise.",
     category: "safety",
     logo: vct_logo,
+  },
+  {
+    id: "machiavelli",
+    name: "Machiavelli",
+    link: "https://aypan17.github.io/machiavelli/",
+    description: "<a href='https://aypan17.github.io/machiavelli/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Machiavelli</a> benchmark measures harmful behaviors in LLM agents across 134 text-based games, evaluating tendencies toward deception, manipulation, and unethical actions in goal-oriented scenarios.",
+    category: "safety"
+  },
+  {
+    id: "textquests_harm",
+    name: "TextQuests Harm",
+    link: "https://textquests.ai/",
+    description: "Harm metric from TextQuests measuring unethical behaviors in text-based adventure games (lower is better).",
+    logo: textquests_logo,
+    category: "safety"
   }
 ];
 
