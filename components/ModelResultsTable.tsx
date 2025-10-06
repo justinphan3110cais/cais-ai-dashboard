@@ -65,45 +65,41 @@ const DatasetHeader = ({
             onClick={() => onSort(dataset.id)}
             className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
           >
-            <div className="flex items-center justify-center gap-1">
-              {dataset.logo && (
-                    <Image
-                  src={dataset.logo}
-                  alt={`${dataset.name} logo`}
-                  width={16}
-                  height={16}
-                />
+            <div className="flex flex-col items-center justify-center gap-1">
+              {/* Capability Category (Secondary Text) */}
+              {dataset.capabilities && dataset.capabilities.length > 0 && (
+                <div className="flex items-center gap-1">
+                  {dataset.capabilities
+                    .map(capabilityId => BENCHMARK_TYPES[capabilityId])
+                    .filter(capability => capability !== undefined)
+                    .map((capability, idx) => (
+                      <span key={idx} className="text-[10px] text-muted-foreground uppercase tracking-wide leading-none">
+                        {capability.name}
+                      </span>
+                    ))
+                  }
+                </div>
               )}
-              <span className="text-xs font-medium">
-                {dataset.id === "textquests_harm" ? "TextQuests Harm" : 
-                 dataset.id === "vct_refusal" ? "VCT - Refusal" :
-                 dataset.id === "enigmaeval" ? "EnigmaEval" :
-                 dataset.id === "intphys2" ? "IntPhys2" :
-                 dataset.id === "textquests" ? "TextQuests" : 
-                 dataset.name}
-              </span>
-              {dataset.capabilities?.map((capabilityId) => {
-                const benchmarkType = BENCHMARK_TYPES[capabilityId];
-                if (!benchmarkType) return null;
-                
-                const IconComponent = benchmarkType.icon;
-                
-                return (
-                  <TooltipProvider key={capabilityId}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex-shrink-0">
-                          <IconComponent className="w-3 h-3 text-gray-500" />
-                        </div>
-              </TooltipTrigger>
-                      <TooltipContent className="bg-white text-black border border-gray-200 shadow-lg">
-                        <p>{benchmarkType.tooltipText}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        );
-      })}
-              <span className="text-xs ml-1">{getSortIcon()}</span>
+              {/* Dataset Name and Logo */}
+              <div className="flex items-center justify-center gap-1">
+                {dataset.logo && (
+                      <Image
+                    src={dataset.logo}
+                    alt={`${dataset.name} logo`}
+                    width={16}
+                    height={16}
+                  />
+                )}
+                <span className="text-xs font-medium">
+                  {dataset.id === "textquests_harm" ? "TextQuests Harm" : 
+                   dataset.id === "vct_refusal" ? "VCT - Refusal" :
+                   dataset.id === "enigmaeval" ? "EnigmaEval" :
+                   dataset.id === "intphys2" ? "IntPhys2" :
+                   dataset.id === "textquests" ? "TextQuests" : 
+                   dataset.name}
+                </span>
+                <span className="text-xs ml-1">{getSortIcon()}</span>
+              </div>
     </div>
           </button>
         </TooltipTrigger>
@@ -179,7 +175,7 @@ const LeaderboardTable = ({
           {datasets.map((dataset, index) => (
             <TableHead 
               key={dataset.name} 
-              className={`text-center ${bgColor} min-w-[80px] border-b-2 border-b-gray-300 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
+              className={`text-center ${bgColor} min-w-[80px] border-b-2 border-b-gray-300 ${index < datasets.length ? 'border-r border-gray-300' : ''} py-1`}
             >
               <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} />
             </TableHead>
@@ -582,31 +578,36 @@ export function ModelResultsTable() {
         </div>
       )}
       
-      <FilterBar 
-        filters={filters} 
-        onFiltersChange={setFilters}
-      />
-      
       {/* Text-based Capabilities Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-blue-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-xl font-semibold text-blue-700">Text</h3>
-          <button
-            onClick={() => toggleViewMode('textCapabilities')}
-            className="flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium"
-          >
-            {viewModes.textCapabilities === 'table' ? (
-              <>
-                <BarChart3 className="w-4 h-4" />
-                Bar Chart
-              </>
-            ) : (
-              <>
-                <TableIcon className="w-4 h-4" />
-                Table View
-              </>
+        <div className="bg-blue-50 px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
+            {viewModes.textCapabilities === 'table' && (
+              <div className="flex-1">
+                <FilterBar 
+                  filters={filters} 
+                  onFiltersChange={setFilters}
+                />
+              </div>
             )}
-          </button>
+            <button
+              onClick={() => toggleViewMode('textCapabilities')}
+              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0"
+            >
+              {viewModes.textCapabilities === 'table' ? (
+                <>
+                  <BarChart3 className="w-4 h-4" />
+                  Bar Chart
+                </>
+              ) : (
+                <>
+                  <TableIcon className="w-4 h-4" />
+                  Table View
+                </>
+              )}
+            </button>
+          </div>
         </div>
         {viewModes.textCapabilities === 'table' ? (
           <LeaderboardTable
@@ -624,76 +625,89 @@ export function ModelResultsTable() {
           <InlineBarChart
             datasets={TEXT_CAPABILITIES_DATASETS}
             models={textCapabilitiesSortedModels}
-            bgColor="bg-blue-50"
             onShowDetails={handleShowDetails}
           />
         )}
-        {!expandState.textCapabilities && (
-          <div className="border-t border-gray-200 bg-gray-50">
-            <button
-              onClick={() => {
-                setExpandState(prev => ({ ...prev, textCapabilities: true }));
-                // When expanding, show all model sizes
-                setFilters(prev => ({
-                  ...prev,
-                  modelSizes: {
-                    standard: true,
-                    mini: true,
-                    nano: true
-                  }
-                }));
-              }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
-            >
-              <span className="text-sm font-medium">View All</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-        {expandState.textCapabilities && (
-          <div className="border-t border-gray-200 bg-gray-50">
-            <button
-              onClick={() => {
-                setExpandState(prev => ({ ...prev, textCapabilities: false }));
-                // When collapsing, show standard and mini models
-                setFilters(prev => ({
-                  ...prev,
-                  modelSizes: {
-                    standard: true,
-                    mini: true,
-                    nano: false
-                  }
-                }));
-              }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
-            >
-              <span className="text-sm font-medium">Collapse</span>
-              <ChevronUp className="w-4 h-4" />
-            </button>
-          </div>
+        {viewModes.textCapabilities === 'table' && (
+          <>
+            {!expandState.textCapabilities && (
+              <div className="border-t border-gray-200 bg-gray-50">
+                <button
+                  onClick={() => {
+                    setExpandState(prev => ({ ...prev, textCapabilities: true }));
+                    // When expanding, show all model sizes
+                    setFilters(prev => ({
+                      ...prev,
+                      modelSizes: {
+                        standard: true,
+                        mini: true,
+                        nano: true
+                      }
+                    }));
+                  }}
+                  className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                >
+                  <span className="text-sm font-medium">View All</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            {expandState.textCapabilities && (
+              <div className="border-t border-gray-200 bg-gray-50">
+                <button
+                  onClick={() => {
+                    setExpandState(prev => ({ ...prev, textCapabilities: false }));
+                    // When collapsing, show standard and mini models
+                    setFilters(prev => ({
+                      ...prev,
+                      modelSizes: {
+                        standard: true,
+                        mini: true,
+                        nano: false
+                      }
+                    }));
+                  }}
+                  className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                >
+                  <span className="text-sm font-medium">Collapse</span>
+                  <ChevronUp className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
       {/* Multimodal Capabilities Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-green-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-xl font-semibold text-green-700">Vision</h3>
-          <button
-            onClick={() => toggleViewMode('multimodal')}
-            className="flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium"
-          >
-            {viewModes.multimodal === 'table' ? (
-              <>
-                <BarChart3 className="w-4 h-4" />
-                Bar Chart
-              </>
-            ) : (
-              <>
-                <TableIcon className="w-4 h-4" />
-                Table View
-              </>
+        <div className="bg-green-50 px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-green-700 flex-shrink-0">Vision</h3>
+            {viewModes.multimodal === 'table' && (
+              <div className="flex-1">
+                <FilterBar 
+                  filters={filters} 
+                  onFiltersChange={setFilters}
+                />
+              </div>
             )}
-          </button>
+            <button
+              onClick={() => toggleViewMode('multimodal')}
+              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium flex-shrink-0"
+            >
+              {viewModes.multimodal === 'table' ? (
+                <>
+                  <BarChart3 className="w-4 h-4" />
+                  Bar Chart
+                </>
+              ) : (
+                <>
+                  <TableIcon className="w-4 h-4" />
+                  Table View
+                </>
+              )}
+            </button>
+          </div>
         </div>
         {viewModes.multimodal === 'table' ? (
           <LeaderboardTable
@@ -711,11 +725,10 @@ export function ModelResultsTable() {
           <InlineBarChart
             datasets={MULTIMODAL_DATASETS}
             models={multimodalSortedModels}
-            bgColor="bg-green-50"
             onShowDetails={handleShowDetails}
           />
         )}
-        {!expandState.multimodal && (
+        {viewModes.multimodal === 'table' && !expandState.multimodal && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
               onClick={() => {
@@ -737,7 +750,7 @@ export function ModelResultsTable() {
             </button>
           </div>
         )}
-        {expandState.multimodal && (
+        {viewModes.multimodal === 'table' && expandState.multimodal && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
               onClick={() => {
@@ -763,24 +776,34 @@ export function ModelResultsTable() {
  
       {/* Safety Card */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-red-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-xl font-semibold text-red-700">Safety</h3>
-          <button
-            onClick={() => toggleViewMode('safety')}
-            className="flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium"
-          >
-            {viewModes.safety === 'table' ? (
-              <>
-                <BarChart3 className="w-4 h-4" />
-                Bar Chart
-              </>
-            ) : (
-              <>
-                <TableIcon className="w-4 h-4" />
-                Table View
-              </>
+        <div className="bg-red-50 px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-red-700 flex-shrink-0">Safety</h3>
+            {viewModes.safety === 'table' && (
+              <div className="flex-1">
+                <FilterBar 
+                  filters={filters} 
+                  onFiltersChange={setFilters}
+                />
+              </div>
             )}
-          </button>
+            <button
+              onClick={() => toggleViewMode('safety')}
+              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium flex-shrink-0"
+            >
+              {viewModes.safety === 'table' ? (
+                <>
+                  <BarChart3 className="w-4 h-4" />
+                  Bar Chart
+                </>
+              ) : (
+                <>
+                  <TableIcon className="w-4 h-4" />
+                  Table View
+                </>
+              )}
+            </button>
+          </div>
         </div>
         {viewModes.safety === 'table' ? (
           <LeaderboardTable
@@ -798,11 +821,10 @@ export function ModelResultsTable() {
           <InlineBarChart
             datasets={SAFETY_DATASETS}
             models={safetySortedModels}
-            bgColor="bg-red-50"
             onShowDetails={handleShowDetails}
           />
         )}
-        {!expandState.safety && (
+        {viewModes.safety === 'table' && !expandState.safety && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
               onClick={() => {
@@ -824,7 +846,7 @@ export function ModelResultsTable() {
             </button>
           </div>
         )}
-        {expandState.safety && (
+        {viewModes.safety === 'table' && expandState.safety && (
           <div className="border-t border-gray-200 bg-gray-50">
             <button
               onClick={() => {

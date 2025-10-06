@@ -63,9 +63,9 @@
       "machiavelli": 69.3,
       "textquests_harm": null,
       "enigmaeval": 6,
-      "intphys2": null,
+      "intphys2": 56.3,
       "erqa": 44.8,
-      "mindcube": null,
+      "mindcube": 56.4,
       "omnispatial": null
     },
     "isTopModel": true,
@@ -87,8 +87,8 @@
       "vct_refusal": 45,
       "enigmaeval": null,
       "intphys2": 54.9,
-      "erqa": null,
-      "mindcube": null,
+      "erqa": 50,
+      "mindcube": 64.7,
       "omnispatial": null,
       "terminal_bench": 37.6,
       "machiavelli": null
@@ -103,7 +103,7 @@
     "provider": "xai",
     "scores": {
       "hle": 20,
-      "arc_agi_2": 1,
+      "arc_agi_2": 3.3,
       "textquests": null,
       "swebench_verified": 36.7,
       "terminal_bench": 17.7,
@@ -112,9 +112,9 @@
       "machiavelli": 74.1,
       "textquests_harm": null,
       "enigmaeval": null,
-      "intphys2": null,
-      "erqa": null,
-      "mindcube": null,
+      "intphys2": 53.4,
+      "erqa": 41.8,
+      "mindcube": 49.24,
       "omnispatial": null
     },
     "isTopModel": false,
@@ -234,7 +234,7 @@
       "erqa": 56.3,
       "mindcube": 59.3,
       "omnispatial": null,
-      "terminal_bench": null,
+      "terminal_bench": 31.2,
       "machiavelli": 68.5
     },
     "isTopModel": false,
@@ -307,7 +307,7 @@
       "erqa": null,
       "mindcube": null,
       "omnispatial": null,
-      "terminal_bench": null,
+      "terminal_bench": 12.8,
       "machiavelli": null
     },
     "isTopModel": false,
@@ -330,7 +330,7 @@
       "enigmaeval": 2.7,
       "intphys2": 58,
       "erqa": 58.6,
-      "mindcube": null,
+      "mindcube": 53,
       "omnispatial": null,
       "terminal_bench": 15.6,
       "machiavelli": 78.3
@@ -356,7 +356,7 @@
       "erqa": null,
       "mindcube": null,
       "omnispatial": null,
-      "terminal_bench": null,
+      "terminal_bench": 14.5,
       "machiavelli": null
     },
     "isTopModel": false,
@@ -406,7 +406,7 @@
       "erqa": null,
       "mindcube": null,
       "omnispatial": null,
-      "terminal_bench": null,
+      "terminal_bench": 14.98,
       "machiavelli": null
     },
     "isTopModel": false,
@@ -432,7 +432,7 @@
       "erqa": null,
       "mindcube": null,
       "omnispatial": null,
-      "terminal_bench": null,
+      "terminal_bench": 22,
       "machiavelli": null
     },
     "isTopModel": false,
@@ -440,7 +440,7 @@
     "modelCardUrl": "https://openai.com/index/introducing-gpt-oss/",
     "isTextOnlyModel": true,
     "model_size": "mini",
-    "flagship": true
+    "flagship": false
   },
   {
     "name": "Gemini 2.5 Flash-Lite",

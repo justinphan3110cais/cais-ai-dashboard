@@ -69,9 +69,9 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
   },
   games: {
     id: "games",
-    name: "Games",
+    name: "Text-Based Video Games",
     icon: Gamepad,
-    tooltipText: "Video Games Benchmark"
+    tooltipText: "Text-Based Video Games Benchmark"
   },
   expert: {
     id: "expert",
@@ -108,6 +108,18 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     name: "Spatial Navigation",
     icon: Map,
     tooltipText: "Spatial Navigation Benchmark"
+  },
+  honesty: {
+    id: "honesty",
+    name: "Honesty",
+    icon: Bot,
+    tooltipText: "Honesty Benchmark"
+  },
+  bioweapons_refusal: {
+    id: "bioweapons_refusal",
+    name: "Bioweapons Refusal",
+    icon: Bot,
+    tooltipText: "Bioweapons Refusal Benchmark"
   }
 };
 
@@ -372,7 +384,8 @@ export const SAFETY_DATASETS: Dataset[] = [
     name: "MASK",
     link: "https://www.mask-benchmark.ai",
     description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a large-scale human-collected dataset for measuring honesty in LLMs directly, disentangling accuracy from honesty for the first time. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
-    category: "safety"
+    category: "safety",
+    capabilities: ["honesty"]
   },
   {
     id: "vct_refusal",
@@ -381,6 +394,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     description: "Virology Capabilities Test (VCT) measures LLM capability to troubleshoot complex virology laboratory protocols. Expert virologists with internet access score an average of 22.1% on questions in their sub-areas of expertise.",
     category: "safety",
     logo: vct_logo,
+    capabilities: ["bioweapons_refusal"]
   },
   {
     id: "machiavelli",
