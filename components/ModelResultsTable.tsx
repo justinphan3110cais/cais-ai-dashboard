@@ -308,7 +308,34 @@ const LeaderboardTable = ({
 };
 
 export function ModelResultsTable() {
-  const [filters, setFilters] = useState<FilterState>({
+  // Separate filter states for each table
+  const [textFilters, setTextFilters] = useState<FilterState>({
+    search: '',
+    showTextModels: false,
+    showOpenWeight: false,
+    showFlagship: true,
+    selectedProviders: [],
+    modelSizes: {
+      standard: true,
+      mini: true,
+      nano: false,
+    },
+  });
+
+  const [visionFilters, setVisionFilters] = useState<FilterState>({
+    search: '',
+    showTextModels: false,
+    showOpenWeight: false,
+    showFlagship: true,
+    selectedProviders: [],
+    modelSizes: {
+      standard: true,
+      mini: true,
+      nano: false,
+    },
+  });
+
+  const [safetyFilters, setSafetyFilters] = useState<FilterState>({
     search: '',
     showTextModels: false,
     showOpenWeight: false,
@@ -428,42 +455,46 @@ export function ModelResultsTable() {
     }));
   };
 
-  const filteredModels = useMemo(() => {
+  // Memoized filtered models for each table
+  const textFilteredModels = useMemo(() => {
     return models.filter(model => {
-      // Search filter
-      if (filters.search && !model.name.toLowerCase().includes(filters.search.toLowerCase())) {
-        return false;
-      }
-
-      // Text-only model filter - show models that ARE text-only
-      if (filters.showTextModels && model.isTextOnlyModel !== true) {
-        return false;
-      }
-
-      // Open weight filter - show models that have modelWeights (Hugging Face links)
-      if (filters.showOpenWeight && !model.modelWeights) {
-        return false;
-      }
-
-      // Provider filter - if any providers are selected, only show models from those providers
-      if (filters.selectedProviders.length > 0 && !filters.selectedProviders.includes(model.provider)) {
-        return false;
-      }
-
-      // Model size filter - show models based on selected sizes
-      const modelSize = model.model_size || 'standard'; // Default to standard if not specified
-      if (!filters.modelSizes[modelSize]) {
-        return false;
-      }
-
-      // Flagship filter - show only flagship models when checked
-      if (filters.showFlagship && model.flagship === false) {
-        return false;
-      }
-
+      if (textFilters.search && !model.name.toLowerCase().includes(textFilters.search.toLowerCase())) return false;
+      if (textFilters.showTextModels && model.isTextOnlyModel !== true) return false;
+      if (textFilters.showOpenWeight && !model.modelWeights) return false;
+      if (textFilters.selectedProviders.length > 0 && !textFilters.selectedProviders.includes(model.provider)) return false;
+      const modelSize = model.model_size || 'standard';
+      if (!textFilters.modelSizes[modelSize]) return false;
+      if (textFilters.showFlagship && model.flagship === false) return false;
       return true;
     });
-  }, [filters, models]);
+  }, [textFilters, models]);
+
+  const visionFilteredModels = useMemo(() => {
+    return models.filter(model => {
+      // Filter out text-only models from vision table
+      if (model.isTextOnlyModel === true) return false;
+      if (visionFilters.search && !model.name.toLowerCase().includes(visionFilters.search.toLowerCase())) return false;
+      if (visionFilters.showOpenWeight && !model.modelWeights) return false;
+      if (visionFilters.selectedProviders.length > 0 && !visionFilters.selectedProviders.includes(model.provider)) return false;
+      const modelSize = model.model_size || 'standard';
+      if (!visionFilters.modelSizes[modelSize]) return false;
+      if (visionFilters.showFlagship && model.flagship === false) return false;
+      return true;
+    });
+  }, [visionFilters, models]);
+
+  const safetyFilteredModels = useMemo(() => {
+    return models.filter(model => {
+      if (safetyFilters.search && !model.name.toLowerCase().includes(safetyFilters.search.toLowerCase())) return false;
+      if (safetyFilters.showTextModels && model.isTextOnlyModel !== true) return false;
+      if (safetyFilters.showOpenWeight && !model.modelWeights) return false;
+      if (safetyFilters.selectedProviders.length > 0 && !safetyFilters.selectedProviders.includes(model.provider)) return false;
+      const modelSize = model.model_size || 'standard';
+      if (!safetyFilters.modelSizes[modelSize]) return false;
+      if (safetyFilters.showFlagship && model.flagship === false) return false;
+      return true;
+    });
+  }, [safetyFilters, models]);
 
   const sortModels = (models: Model[], datasets: Dataset[], sortConfig: SortConfig) => {
     if (!sortConfig.key || !sortConfig.direction) return models;
@@ -549,12 +580,9 @@ export function ModelResultsTable() {
     });
   };
 
-  // Filter out text-only models from vision table
-  const visionCapableModels = filteredModels.filter(model => model.isTextOnlyModel !== true);
-  
-  const textCapabilitiesSortedModels = sortModels(filteredModels, TEXT_CAPABILITIES_DATASETS, textCapabilitiesSortConfig);
-  const multimodalSortedModels = sortModels(visionCapableModels, MULTIMODAL_DATASETS, multimodalSortConfig);
-  const safetySortedModels = sortModels(filteredModels, SAFETY_DATASETS, safetySortConfig);
+  const textCapabilitiesSortedModels = sortModels(textFilteredModels, TEXT_CAPABILITIES_DATASETS, textCapabilitiesSortConfig);
+  const multimodalSortedModels = sortModels(visionFilteredModels, MULTIMODAL_DATASETS, multimodalSortConfig);
+  const safetySortedModels = sortModels(safetyFilteredModels, SAFETY_DATASETS, safetySortConfig);
 
   return (
     <div className="w-full space-y-6">
@@ -586,8 +614,8 @@ export function ModelResultsTable() {
             {viewModes.textCapabilities === 'table' && (
               <div className="flex-1">
                 <FilterBar 
-                  filters={filters} 
-                  onFiltersChange={setFilters}
+                  filters={textFilters} 
+                  onFiltersChange={setTextFilters}
                 />
               </div>
             )}
@@ -636,7 +664,7 @@ export function ModelResultsTable() {
                   onClick={() => {
                     setExpandState(prev => ({ ...prev, textCapabilities: true }));
                     // When expanding, show all model sizes
-                    setFilters(prev => ({
+                    setTextFilters(prev => ({
                       ...prev,
                       modelSizes: {
                         standard: true,
@@ -658,7 +686,7 @@ export function ModelResultsTable() {
                   onClick={() => {
                     setExpandState(prev => ({ ...prev, textCapabilities: false }));
                     // When collapsing, show standard and mini models
-                    setFilters(prev => ({
+                    setTextFilters(prev => ({
                       ...prev,
                       modelSizes: {
                         standard: true,
@@ -686,8 +714,9 @@ export function ModelResultsTable() {
             {viewModes.multimodal === 'table' && (
               <div className="flex-1">
                 <FilterBar 
-                  filters={filters} 
-                  onFiltersChange={setFilters}
+                  filters={visionFilters} 
+                  onFiltersChange={setVisionFilters}
+                  hideTextOnly={true}
                 />
               </div>
             )}
@@ -734,7 +763,7 @@ export function ModelResultsTable() {
               onClick={() => {
                 setExpandState(prev => ({ ...prev, multimodal: true }));
                 // When expanding, show all model sizes
-                setFilters(prev => ({
+                setVisionFilters(prev => ({
                   ...prev,
                   modelSizes: {
                     standard: true,
@@ -756,7 +785,7 @@ export function ModelResultsTable() {
               onClick={() => {
                 setExpandState(prev => ({ ...prev, multimodal: false }));
                 // When collapsing, show standard and mini models
-                setFilters(prev => ({
+                setVisionFilters(prev => ({
                   ...prev,
                   modelSizes: {
                     standard: true,
@@ -782,8 +811,8 @@ export function ModelResultsTable() {
             {viewModes.safety === 'table' && (
               <div className="flex-1">
                 <FilterBar 
-                  filters={filters} 
-                  onFiltersChange={setFilters}
+                  filters={safetyFilters} 
+                  onFiltersChange={setSafetyFilters}
                 />
               </div>
             )}
@@ -830,7 +859,7 @@ export function ModelResultsTable() {
               onClick={() => {
                 setExpandState(prev => ({ ...prev, safety: true }));
                 // When expanding, show all model sizes
-                setFilters(prev => ({
+                setSafetyFilters(prev => ({
                   ...prev,
                   modelSizes: {
                     standard: true,
@@ -852,7 +881,7 @@ export function ModelResultsTable() {
               onClick={() => {
                 setExpandState(prev => ({ ...prev, safety: false }));
                 // When collapsing, show standard and mini models
-                setFilters(prev => ({
+                setSafetyFilters(prev => ({
                   ...prev,
                   modelSizes: {
                     standard: true,

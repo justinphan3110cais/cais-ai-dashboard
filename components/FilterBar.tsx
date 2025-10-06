@@ -22,9 +22,10 @@ interface FilterState {
 interface FilterBarProps {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
+  hideTextOnly?: boolean;
 }
 
-export const FilterBar = ({ filters, onFiltersChange }: FilterBarProps) => {
+export const FilterBar = ({ filters, onFiltersChange, hideTextOnly = false }: FilterBarProps) => {
   const [isProviderDropdownOpen, setIsProviderDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
@@ -54,17 +55,17 @@ export const FilterBar = ({ filters, onFiltersChange }: FilterBarProps) => {
   const allProvidersSelected = filters.selectedProviders.length === 0;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 sm:gap-3 p-2 bg-gray-50/30 rounded-lg border border-border">
+    <div className="flex flex-wrap items-center gap-2 sm:gap-3 p-2 bg-gray-50/30 rounded-lg border border-border opacity-60 hover:opacity-100 transition-opacity duration-200">
       {/* Provider Filter Dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsProviderDropdownOpen(!isProviderDropdownOpen)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 border border-gray-300 rounded-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex items-center gap-1.5 px-2 py-1 border border-gray-200 rounded-md bg-white/50 hover:bg-white hover:border-gray-300 focus:outline-none transition-colors"
         >
-          <span className="text-xs font-medium text-gray-900">
+          <span className="text-xs text-gray-600">
             Companies {!allProvidersSelected && `(${filters.selectedProviders.length})`}
           </span>
-          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isProviderDropdownOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform ${isProviderDropdownOpen ? 'rotate-180' : ''}`} />
         </button>
         
         {isProviderDropdownOpen && (
@@ -118,17 +119,17 @@ export const FilterBar = ({ filters, onFiltersChange }: FilterBarProps) => {
         placeholder="Search..."
         value={filters.search}
         onChange={(e) => onFiltersChange({ ...filters, search: e.target.value })}
-        className="w-32 sm:w-40 px-2.5 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs"
+        className="w-32 sm:w-40 px-2 py-1 border border-gray-200 rounded-md bg-white/50 hover:bg-white hover:border-gray-300 focus:outline-none focus:border-gray-400 transition-colors text-xs text-gray-600 placeholder:text-gray-400"
       />
       
       {/* Vertical Separator - Hidden on mobile */}
-      <div className="hidden lg:block h-8 w-px bg-gray-300"></div>
+      <div className="hidden lg:block h-6 w-px bg-gray-200"></div>
       
       {/* Model Size Filter Group */}
-      <div className="flex items-center gap-2 px-2 py-1.5 bg-white rounded-md border border-gray-200 shadow-sm">
-        <span className="text-xs font-semibold text-gray-600">Size:</span>
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-gray-500">Size:</span>
         <div className="flex gap-2">
-          <label className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors">
+          <label className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors">
             <input
               type="checkbox"
               checked={filters.modelSizes.standard}
@@ -136,12 +137,12 @@ export const FilterBar = ({ filters, onFiltersChange }: FilterBarProps) => {
                 ...filters, 
                 modelSizes: { ...filters.modelSizes, standard: e.target.checked }
               })}
-              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-0"
             />
-            <span className="text-xs">Standard</span>
+            <span className="text-xs text-gray-600">Standard</span>
           </label>
           
-          <label className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors">
+          <label className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors">
             <input
               type="checkbox"
               checked={filters.modelSizes.mini}
@@ -149,12 +150,12 @@ export const FilterBar = ({ filters, onFiltersChange }: FilterBarProps) => {
                 ...filters, 
                 modelSizes: { ...filters.modelSizes, mini: e.target.checked }
               })}
-              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-0"
             />
-            <span className="text-xs">Mini</span>
+            <span className="text-xs text-gray-600">Mini</span>
           </label>
           
-          <label className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors">
+          <label className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors">
             <input
               type="checkbox"
               checked={filters.modelSizes.nano}
@@ -162,21 +163,21 @@ export const FilterBar = ({ filters, onFiltersChange }: FilterBarProps) => {
                 ...filters, 
                 modelSizes: { ...filters.modelSizes, nano: e.target.checked }
               })}
-              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-0"
             />
-            <span className="text-xs">Nano</span>
+            <span className="text-xs text-gray-600">Nano</span>
           </label>
         </div>
       </div>
       
       {/* Vertical Separator - Hidden on mobile */}
-      <div className="hidden lg:block h-8 w-px bg-gray-300"></div>
+      <div className="hidden lg:block h-6 w-px bg-gray-200"></div>
       
       {/* Model Type Filter Group */}
-      <div className="flex items-center gap-2 px-2 py-1.5 bg-white rounded-md border border-gray-200 shadow-sm">
-        <span className="text-xs font-semibold text-gray-600">Type:</span>
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-gray-500">Type:</span>
         <div className="flex gap-2">
-          <label className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors">
+          <label className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors">
             <div onClick={(e) => {
               e.preventDefault();
               onFiltersChange({ ...filters, showFlagship: !filters.showFlagship });
@@ -184,31 +185,33 @@ export const FilterBar = ({ filters, onFiltersChange }: FilterBarProps) => {
               <Star 
                 className={`w-3.5 h-3.5 transition-colors ${
                   filters.showFlagship 
-                    ? 'text-yellow-500 fill-blue-500 stroke-yellow-500' 
-                    : 'text-yellow-500 fill-none stroke-yellow-500'
+                    ? 'text-yellow-400 fill-blue-500 stroke-yellow-400' 
+                    : 'text-gray-400 fill-none stroke-gray-400'
                 }`} 
               />
             </div>
-            <span className="text-xs">Flagship</span>
+            <span className="text-xs text-gray-600">Flagship</span>
           </label>
           
-          <label className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors">
-            <input
-              type="checkbox"
-              checked={filters.showTextModels}
-              onChange={(e) => onFiltersChange({ ...filters, showTextModels: e.target.checked })}
-              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <Type className="w-3 h-3 text-gray-600" />
-            <span className="text-xs">Text-Only</span>
-          </label>
+          {!hideTextOnly && (
+            <label className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors">
+              <input
+                type="checkbox"
+                checked={filters.showTextModels}
+                onChange={(e) => onFiltersChange({ ...filters, showTextModels: e.target.checked })}
+                className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-0"
+              />
+              <Type className="w-3 h-3 text-gray-500" />
+              <span className="text-xs text-gray-600">Text-Only</span>
+            </label>
+          )}
           
-          <label className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors">
+          <label className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors">
             <input
               type="checkbox"
               checked={filters.showOpenWeight}
               onChange={(e) => onFiltersChange({ ...filters, showOpenWeight: e.target.checked })}
-              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-0"
             />
             <Image
               src={hf_logo}
@@ -217,7 +220,7 @@ export const FilterBar = ({ filters, onFiltersChange }: FilterBarProps) => {
               height={12}
               className="flex-shrink-0"
             />
-            <span className="text-xs">Open-Weight</span>
+            <span className="text-xs text-gray-600">Open-Weight</span>
           </label>
         </div>
       </div>

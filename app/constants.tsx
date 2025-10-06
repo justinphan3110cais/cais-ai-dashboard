@@ -240,7 +240,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
   },
   {
     id: "textquests",
-    name: "TextQuests Progress",
+    name: "TextQuests",
     link: "https://textquests.ai/",
     paperLink: "https://arxiv.org/abs/2507.23701",
     githubLink: "https://github.com/centerforaisafety/textquests",
