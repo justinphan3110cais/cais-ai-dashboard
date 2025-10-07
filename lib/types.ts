@@ -1,6 +1,7 @@
 export interface Dataset {
   id: string; // Unique identifier for the dataset
   name: string;
+  displayName?: string; // Display name for table headers (defaults to name if not provided)
   title?: string; // Title for the dialog (defaults to name if not provided)
   link: string;
   description: string;
@@ -12,6 +13,7 @@ export interface Dataset {
   huggingfaceLink?: string; // Full URL to Hugging Face dataset
   citationUrl?: string; // URL to fetch citation from
   citation?: string; // Direct citation text
+  postprocessScore?: (score: number) => number; // Optional function to transform scores (e.g., 100 - score)
   examples?: {
     type: 'image' | 'video';
     src: string | import('next/image').StaticImageData; // Can be string (for videos) or StaticImageData (for images)

@@ -69,7 +69,11 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     return datasets
       .map(dataset => {
         const modelScores = filteredModels.map(model => {
-          const score = model.scores[dataset.id];
+          let score = model.scores[dataset.id];
+          // Apply postprocessScore if it exists
+          if (score !== null && score !== undefined && dataset.postprocessScore) {
+            score = dataset.postprocessScore(score);
+          }
           return {
             modelName: model.name,
             score: score !== null && score !== undefined 
@@ -96,7 +100,16 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     
     return filteredModels.map(model => {
       const scores = includedDatasetsIds
-        .map(datasetId => model.scores[datasetId])
+        .map(datasetId => {
+          let score = model.scores[datasetId];
+          if (score === null || score === undefined) return null;
+          // Apply postprocessScore if it exists for this dataset
+          const dataset = datasets.find(d => d.id === datasetId);
+          if (dataset && dataset.postprocessScore) {
+            score = dataset.postprocessScore(score);
+          }
+          return score;
+        })
         .filter(score => score !== null && score !== undefined) as number[];
       
       const avgScore = scores.length > 0 
@@ -111,7 +124,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     })
     .filter(item => item.score !== null)
     .sort((a, b) => (b.score || 0) - (a.score || 0)); // Sort by score descending
-  }, [filteredModels, includedDatasets]);
+  }, [filteredModels, includedDatasets, datasets]);
 
   // Create a custom label component factory for each chart
   const createCustomLabel = (chartData: Array<{ modelName: string; score: number | null; provider: string }>) => {

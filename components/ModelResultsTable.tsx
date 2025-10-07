@@ -91,12 +91,7 @@ const DatasetHeader = ({
                   />
                 )}
                 <span className="text-xs font-medium">
-                  {dataset.id === "textquests_harm" ? "TextQuests Harm" : 
-                   dataset.id === "vct_refusal" ? "VCT - Refusal" :
-                   dataset.id === "enigmaeval" ? "EnigmaEval" :
-                   dataset.id === "intphys2" ? "IntPhys2" :
-                   dataset.id === "textquests" ? "TextQuests" : 
-                   dataset.name}
+                  {dataset.displayName || dataset.name}
                 </span>
                 <span className="text-xs ml-1">{getSortIcon()}</span>
               </div>
@@ -131,7 +126,8 @@ const LeaderboardTable = ({
   expanded = false,
   isEditMode = false,
   onUpdateScore,
-  onShowDetails
+  onShowDetails,
+  isSafetyTable = false
 }: { 
   datasets: Dataset[];
   models: Model[];
@@ -142,7 +138,17 @@ const LeaderboardTable = ({
   isEditMode?: boolean;
   onUpdateScore?: (modelName: string, datasetId: string, newValue: number | null) => void;
   onShowDetails: (datasetId: string, datasetName: string) => void;
+  isSafetyTable?: boolean;
 }) => {
+  // Helper function to get processed score (applies postprocessScore if it exists)
+  const getProcessedScore = (dataset: Dataset, rawScore: number | null): number | null => {
+    if (rawScore === null) return null;
+    if (dataset.postprocessScore) {
+      return dataset.postprocessScore(rawScore);
+    }
+    return rawScore;
+  };
+
   const formatValue = (value: number | null) => {
     if (value === null) return "-";
     return value.toFixed(1);
@@ -150,7 +156,10 @@ const LeaderboardTable = ({
 
   const calculateAverage = (model: Model, datasets: Dataset[]) => {
     const scores = datasets
-      .map(dataset => model.scores[dataset.id])
+      .map(dataset => {
+        const rawScore = model.scores[dataset.id];
+        return getProcessedScore(dataset, rawScore);
+      })
       .filter((score): score is number => score !== null);
     
     if (scores.length === 0) return null;
@@ -170,7 +179,15 @@ const LeaderboardTable = ({
       <TableHeader className="sticky top-0 bg-background z-10">
             <TableRow>
           <TableHead className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 bg-gray-50 z-30`}>
-            Model
+            {isSafetyTable ? (
+              <div>
+                <span className="font-semibold">Model</span>
+                <span className="text-gray-400 mx-1">/</span>
+                <span className="text-[10px] text-gray-500 font-normal">Higher Score is Better</span>
+              </div>
+            ) : (
+              <div className="font-semibold">Model</div>
+            )}
           </TableHead>
           {datasets.map((dataset, index) => (
             <TableHead 
@@ -266,13 +283,15 @@ const LeaderboardTable = ({
                 </TableCell>
             
             {datasets.map((dataset, index) => {
+              const rawScore = model.scores[dataset.id];
+              const displayScore = getProcessedScore(dataset, rawScore);
               return (
                 <TableCell 
                   key={dataset.name} 
                   className={`text-center ${bgColor}/30 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
                 >
                   <EditableTableCell
-                    value={model.scores[dataset.id]}
+                    value={displayScore}
                     onSave={(newValue) => onUpdateScore?.(model.name, dataset.id, newValue)}
                     isEditable={isEditMode}
                     isGrayedOut={false}
@@ -499,23 +518,45 @@ export function ModelResultsTable() {
   const sortModels = (models: Model[], datasets: Dataset[], sortConfig: SortConfig) => {
     if (!sortConfig.key || !sortConfig.direction) return models;
 
+    // Helper to get processed score for sorting
+    const getScore = (model: Model, dataset: Dataset): number => {
+      const rawScore = model.scores[dataset.id];
+      if (rawScore === null) return -Infinity;
+      if (dataset.postprocessScore) {
+        return dataset.postprocessScore(rawScore);
+      }
+      return rawScore;
+    };
+
     return [...models].sort((a, b) => {
       if (sortConfig.key === 'average') {
-        // Calculate averages for sorting
+        // Calculate averages for sorting using processed scores
         const avgA = datasets
-          .map(d => a.scores[d.id])
+          .map(d => {
+            const rawScore = a.scores[d.id];
+            if (rawScore === null) return null;
+            return d.postprocessScore ? d.postprocessScore(rawScore) : rawScore;
+          })
           .filter((score): score is number => score !== null)
           .reduce((sum, score, _, arr) => sum + score / arr.length, 0) || 0;
         
         const avgB = datasets
-          .map(d => b.scores[d.id])
+          .map(d => {
+            const rawScore = b.scores[d.id];
+            if (rawScore === null) return null;
+            return d.postprocessScore ? d.postprocessScore(rawScore) : rawScore;
+          })
           .filter((score): score is number => score !== null)
           .reduce((sum, score, _, arr) => sum + score / arr.length, 0) || 0;
 
         return sortConfig.direction === 'asc' ? avgA - avgB : avgB - avgA;
       } else {
-        const scoreA = a.scores[sortConfig.key!] ?? -Infinity; // Treat null as lowest for sorting
-        const scoreB = b.scores[sortConfig.key!] ?? -Infinity;
+        // Find the dataset for this sort key
+        const dataset = datasets.find(d => d.id === sortConfig.key);
+        if (!dataset) return 0;
+
+        const scoreA = getScore(a, dataset);
+        const scoreB = getScore(b, dataset);
 
         if (scoreA === -Infinity && scoreB === -Infinity) return 0;
         if (scoreA === -Infinity) return sortConfig.direction === 'asc' ? -1 : 1;
@@ -626,7 +667,7 @@ export function ModelResultsTable() {
               {viewModes.textCapabilities === 'table' ? (
                 <>
                   <BarChart3 className="w-4 h-4" />
-                  Bar Chart
+                  Bar Charts
                 </>
               ) : (
                 <>
@@ -727,7 +768,7 @@ export function ModelResultsTable() {
               {viewModes.multimodal === 'table' ? (
                 <>
                   <BarChart3 className="w-4 h-4" />
-                  Bar Chart
+                  Bar Charts
                 </>
               ) : (
                 <>
@@ -823,7 +864,7 @@ export function ModelResultsTable() {
               {viewModes.safety === 'table' ? (
                 <>
                   <BarChart3 className="w-4 h-4" />
-                  Bar Chart
+                  Bar Charts
                 </>
               ) : (
                 <>
@@ -845,6 +886,7 @@ export function ModelResultsTable() {
             isEditMode={isEditMode}
             onUpdateScore={updateModelScore}
             onShowDetails={handleShowDetails}
+            isSafetyTable={true}
           />
         ) : (
           <InlineBarChart

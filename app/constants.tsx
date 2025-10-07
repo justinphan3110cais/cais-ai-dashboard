@@ -17,12 +17,15 @@ import swebench_logo from "@/assets/dataset-logos/swebench_logo.png";
 import mindcube_logo from "@/assets/dataset-logos/mindcube_logo.png";
 import terminalbench_logo from "@/assets/dataset-logos/terminalbench_logo.png";
 import textquests_examples from "@/assets/dataset-examples/textquests_examples.png";
+import terminalbench_examples from "@/assets/dataset-examples/terminalbench_examples.png";
 import swebench_examples from "@/assets/dataset-examples/swebench_examples.png";
 import enigmaeval_examples from "@/assets/dataset-examples/enigmaeval_examples.png";
 // Video files are served from public folder
 const intphys2_examples = "/dataset-examples/intphys2_examples.mp4";
 import erqa_examples from "@/assets/dataset-examples/erqa_examples.png";
 import mindcube_examples from "@/assets/dataset-examples/mindcube_examples.png";
+import arc_agi_2_examples from "@/assets/dataset-examples/arc_agi_2_examples.png";
+import vct_examples from "@/assets/dataset-examples/vct_examples.png";
 
 import { Dataset, Model } from "@/lib/types";
 import { Image as ImageIcon, SquareTerminal, GraduationCap, Bot, Earth, Puzzle, Gamepad, Map, Code } from "lucide-react";
@@ -81,21 +84,21 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
   },
   fluid_reasoning: {
     id: "fluid_reasoning",
-    name: "Fluid Reasoning",
+    name: "Abstract Reasoning",
     icon: Bot,
-    tooltipText: "Fluid Reasoning Benchmark"
+    tooltipText: "Abstract Reasoning Benchmark"
   },
   expert_puzzle: {
     id: "expert_puzzle",
-    name: "Expert Puzzle",
+    name: "Challenging Puzzles",
     icon: Puzzle,
-    tooltipText: "Expert Puzzle Benchmark"
+    tooltipText: "Challenging Puzzles Benchmark"
   },
   realworld_physics: {
     id: "realworld_physics", 
-    name: "Realworld Physics",
+    name: "Intuitive Physics",
     icon: Earth,
-    tooltipText: "Realworld Physics Benchmark"
+    tooltipText: "Intuitive Physics Benchmark"
   },
   embodied_reasoning: {
     id: "embodied_reasoning",
@@ -120,6 +123,12 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     name: "Bioweapons Refusal",
     icon: Bot,
     tooltipText: "Bioweapons Refusal Benchmark"
+  },
+  harmful_propensity: {
+    id: "harmful_propensity",
+    name: "Harmful Propensity",
+    icon: Bot,
+    tooltipText: "Harmful Propensity Benchmark"
   }
 };
 
@@ -167,7 +176,7 @@ export const getProviderLogo = (provider: string) => {
 export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
   {
     id: "hle",
-    name: "HLE",
+    name: "Humanity's Last Exam",
     title: "Humanity's Last Exam",
     link: "https://lastexam.ai",
     description: "<a href='https://lastexam.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Humanity's Last Exam (HLE)</a> <i>(No Tool)</i> tests LLMs on 2,500 expert-written academic questions spanning 100+ disciplines (math, humanities, natural sciences). Most questions are authored by researchers, professors, postdocs, and PhD students across 500+ research institutions and universities worldwide. HLE is designed to evaluate LLMs' knowledge and reasoning at the human frontier. <br><br><i><strong>No Tool</strong></i> evaluates LLMs without access to any external tools (web search, code etc.)",
@@ -188,7 +197,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     id: "arc_agi_2",
     name: "ARC-AGI-2",
     link: "https://arcprize.org/",
-    description: "<a href='https://arcprize.org/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ARC-AGI-2</a> measures fluid intelligence—the ability to reason, solve novel problems, and adapt to new situations—rather than crystallized intelligence that relies on accumulated knowledge. The benchmark uses abstract visual puzzles based on core knowledge priors (cognitive building blocks present at birth) to evaluate genuine skill-acquisition efficiency on tasks the AI has never encountered.<br><br>Scoring high on ARC-AGI-2 demonstrates that a system can efficiently acquire new skills outside its training data, marking true progress toward artificial general intelligence.",
+    description: "<a href='https://arcprize.org/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ARC-AGI-2</a> measures fluid intelligence—the ability to reason, solve novel problems, and adapt to new situations—rather than crystallized intelligence that relies on accumulated knowledge. The benchmark uses abstract visual puzzles based on core knowledge priors (cognitive building blocks present at birth) to evaluate genuine skill-acquisition efficiency on tasks the AI has never encountered.<br><br>Scoring high on ARC-AGI-2 demonstrates that a system can efficiently acquire new skills outside its training data.",
     logo: arc_agi_logo.src,
     category: "text",
     capabilities: ["fluid_reasoning"],
@@ -202,7 +211,12 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
       archivePrefix={arXiv},
       primaryClass={cs.AI},
       url={https://arxiv.org/abs/1911.01547}, 
-}`
+}`,
+    examples: [{
+      type: "image",
+      src: arc_agi_2_examples,
+      alt: "Examples of abstract visual reasoning puzzles from ARC-AGI-2."
+    }]
   },
   {
     id: "swebench_verified",
@@ -232,11 +246,21 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
   {
     id: "terminal_bench",
     name: "Terminal Bench",
-    link: "https://terminal-bench.stanford.edu/",
-    description: "<a href='https://terminal-bench.stanford.edu/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Terminal Bench</a> is a comprehensive benchmark from Stanford University and the Laude Institute for evaluating AI agents in realistic terminal environments. The \"hard\" subset contains 47 challenging tasks testing agents' abilities to compile code, train models, configure servers, play games, and debug systems in scenarios representing real-world problems and terminal use patterns.<br><br>Tasks cover engineering, game playing, and system administration that are unlikely to be pattern-matched from training data. Outcomes are evaluated programmatically with verification scripts in the agent's Docker environment.",
+    link: "https://www.tbench.ai",
+    githubLink: "https://github.com/laude-institute/terminal-bench",
+    description: "<a href='https://www.tbench.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>terminal-bench</a> is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery. Tasks cover a wide range of engineering, game playing, and system administration tasks that are unlikely to be pattern-matched on training data. Outcomes are evaluated programmattically with verification scripts executed in the agent's Docker environment, requiring agents to successfully meet a range of output conditions.",
     logo: terminalbench_logo.src,
     category: "text",
-    capabilities: ["coding"]
+    capabilities: ["coding"],
+    examples: [{
+      type: "image",
+      src: terminalbench_examples,
+      alt: "Examples of terminal-based coding and system administration tasks from Terminal Bench."
+    }],
+    citation: `@misc{tbench_2025,
+      title={Terminal-Bench: A Benchmark for AI Agents in Terminal Environments}, 
+      url={https://github.com/laude-institute/terminal-bench}, 
+      author={The Terminal-Bench Team}, year={2025}, month={Apr}}`
   },
   {
     id: "textquests",
@@ -301,7 +325,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
   },
   {
     id: "intphys2",
-    name: "IntPhysics2",
+    name: "IntPhys 2",
     link: "https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks",
     description: "<a href='https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>IntPhys 2</a> evaluates LLM-driven models' understanding of intuitive physics through video clips testing core principles like permanence, solidity, and spatio-temporal continuity. Models must identify physically plausible versus impossible physical-world scenes.<br><br> Scoring high on IntPhys 2 would demonstrate that a model has a sufficient grasp of basic physical-world dynamics.",
     category: "vision",
@@ -390,26 +414,47 @@ export const SAFETY_DATASETS: Dataset[] = [
   {
     id: "vct_refusal",
     name: "VCT",
+    displayName: "VCT - Refusal",
     link: "https://www.virologytest.ai",
-    description: "Virology Capabilities Test (VCT) measures LLM capability to troubleshoot complex virology laboratory protocols. Expert virologists with internet access score an average of 22.1% on questions in their sub-areas of expertise.",
+    paperLink: "https://arxiv.org/abs/2504.16137",
+    description: "<a href='https://www.virologytest.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Virology Capabilities Test (VCT)</a> Refusal measures the rate of LLM refuse complex virology laboratory protocols queries.<br><br>The ability to provide expert-level troubleshooting is inherently <b><i>dual-use</i></b>: it is useful for beneficial research, but it can also be misused in particularly harmful ways.",
     category: "safety",
     logo: vct_logo,
-    capabilities: ["bioweapons_refusal"]
+    capabilities: ["bioweapons_refusal"],
+    examples: [{
+      type: "image",
+      src: vct_examples,
+      alt: "Examples of complex virology protocol troubleshooting questions from VCT."
+    }],
+    citation: `@misc{götting2025virologycapabilitiestestvct,
+      title={Virology Capabilities Test (VCT): A Multimodal Virology Q&A Benchmark}, 
+      author={Jasper Götting and Pedro Medeiros and Jon G Sanders and Nathaniel Li and Long Phan and Karam Elabd and Lennart Justen and Dan Hendrycks and Seth Donoughe},
+      year={2025},
+      eprint={2504.16137},
+      archivePrefix={arXiv},
+      primaryClass={cs.CY},
+      url={https://arxiv.org/abs/2504.16137}, 
+}`
   },
   {
     id: "machiavelli",
     name: "Machiavelli",
     link: "https://aypan17.github.io/machiavelli/",
     description: "<a href='https://aypan17.github.io/machiavelli/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Machiavelli</a> benchmark measures harmful behaviors in LLM agents across 134 text-based games, evaluating tendencies toward deception, manipulation, and unethical actions in goal-oriented scenarios.",
-    category: "safety"
+    category: "safety",
+    capabilities: ["harmful_propensity"],
+    postprocessScore: (score: number) => 100 - score
   },
   {
     id: "textquests_harm",
     name: "TextQuests Harm",
+    displayName: "TextQuests Harm",
     link: "https://textquests.ai/",
     description: "Harm metric from TextQuests measuring unethical behaviors in text-based adventure games (lower is better).",
     logo: textquests_logo,
-    category: "safety"
+    category: "safety",
+    capabilities: ["harmful_propensity"],
+    postprocessScore: (score: number) => 100 - score
   }
 ];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Type, ChevronDown, Star } from "lucide-react";
+import { Type, ChevronDown, Square } from "lucide-react";
 import Image from "next/image";
 import hf_logo from "@/assets/hf-logo.png";
 import { MODELS, getProviderLogo } from "@/app/constants";
@@ -182,11 +182,11 @@ export const FilterBar = ({ filters, onFiltersChange, hideTextOnly = false }: Fi
               e.preventDefault();
               onFiltersChange({ ...filters, showFlagship: !filters.showFlagship });
             }}>
-              <Star 
+              <Square 
                 className={`w-3.5 h-3.5 transition-colors ${
                   filters.showFlagship 
-                    ? 'text-yellow-400 fill-blue-500 stroke-yellow-400' 
-                    : 'text-gray-400 fill-none stroke-gray-400'
+                    ? 'text-blue-500 fill-blue-500' 
+                    : 'text-gray-400 fill-none'
                 }`} 
               />
             </div>

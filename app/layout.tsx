@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SafetyxCapabilities Leaderboard",
-  description: "Evaluating frontier AI models on safety and capabilities benchmarks",
+  title: "AI Capabilities Overview",
+  description: "Evaluating frontier AI models on capabilities benchmarks",
 };
 
 export default function RootLayout({

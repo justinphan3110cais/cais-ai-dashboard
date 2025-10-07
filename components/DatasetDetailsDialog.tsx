@@ -72,21 +72,21 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="!w-[90vw] !max-w-[90vw] max-h-[90vh] overflow-y-auto sm:!max-w-[90vw]">
         <div className="pt-6 space-y-6">
-          {/* Header with title and links */}
-          <div>
-            <h2 className="text-2xl font-bold mb-6">
+          {/* Header with title and links inline */}
+          <div className="flex items-center gap-4 flex-wrap">
+            <h2 className="text-2xl font-bold">
               {dataset.title || dataset.name}
             </h2>
-            <div className="flex gap-4 mb-6">
+            <div className="flex gap-2">
               {dataset.paperLink && (
                 <a 
                   href={dataset.paperLink} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 bg-background text-foreground border border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
+                  className="flex items-center justify-center w-7 h-7 bg-background text-foreground border border-dashed border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
                   title="Paper"
                 >
-                  <FileText className="w-5 h-5" />
+                  <FileText className="w-3.5 h-3.5" />
                 </a>
               )}
               {dataset.link && (
@@ -94,10 +94,10 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
                   href={dataset.link} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 bg-background text-foreground border border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
+                  className="flex items-center justify-center w-7 h-7 bg-background text-foreground border border-dashed border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
                   title="Website"
                 >
-                  <Globe className="w-5 h-5" />
+                  <Globe className="w-3.5 h-3.5" />
                 </a>
               )}
               {dataset.githubLink && (
@@ -105,10 +105,10 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
                   href={dataset.githubLink} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 bg-background text-foreground border border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
+                  className="flex items-center justify-center w-7 h-7 bg-background text-foreground border border-dashed border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
                   title="GitHub"
                 >
-                  <Github className="w-5 h-5" />
+                  <Github className="w-3.5 h-3.5" />
                 </a>
               )}
               {dataset.huggingfaceLink && (
@@ -116,28 +116,18 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
                   href={dataset.huggingfaceLink} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 bg-background text-foreground border border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
+                  className="flex items-center justify-center w-7 h-7 bg-background text-foreground border border-dashed border-foreground rounded-md hover:bg-foreground hover:text-background transition-colors"
                   title="Dataset"
                 >
-                  <Image src={hf_logo} alt="Hugging Face Dataset" width={20} height={20} />
+                  <Image src={hf_logo} alt="Hugging Face Dataset" width={14} height={14} />
                 </a>
               )}
             </div>
           </div>
           
-          {/* Description and Examples - Responsive Layout */}
-          <div className={`grid grid-cols-1 gap-8 ${dataset.examples && dataset.examples.length > 0 ? 'lg:grid-cols-2' : ''}`}>
-            {/* Description */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Description</h3>
-              <div 
-                className="text-gray-700 mb-4" 
-                dangerouslySetInnerHTML={{ __html: dataset.description }}
-                style={{ lineHeight: '1.6' }}
-              />
-            </div>
-
-            {/* Examples */}
+          {/* Two-column layout: Examples on left, Description + Citation on right */}
+          <div className={`grid gap-8 ${dataset.examples && dataset.examples.length > 0 ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
+            {/* Left Column: Examples */}
             {dataset.examples && dataset.examples.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold mb-4">Examples</h3>
@@ -172,43 +162,56 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
                 </div>
               </div>
             )}
-          </div>
 
-          {/* Citation Section */}
-          {(dataset.citationUrl || dataset.citation) && (
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Citation</h3>
-              <div className="relative bg-gray-50 border border-gray-200 rounded-lg p-4">
-                {!loading && citation && (
-                  <button
-                    onClick={handleCopy}
-                    className="absolute top-3 right-3 p-2 hover:bg-gray-200 rounded-md transition-colors"
-                    title="Copy citation"
-                    disabled={loading}
-                  >
-                    {copied ? (
-                      <Check className="w-4 h-4 text-green-600" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-gray-600" />
-                    )}
-                  </button>
-                )}
-                
-                {loading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader className="w-6 h-6 text-gray-500 animate-spin" />
-                    <span className="ml-2 text-gray-500">Loading latest citation...</span>
-                  </div>
-                ) : null}
-                
-                {!loading && citation && (
-                  <pre className="text-xs text-gray-800 overflow-x-auto overflow-y-auto whitespace-pre-wrap pr-10 max-h-48">
-                    {citation}
-                  </pre>
-                )}
+            {/* Right Column: Description + Citation */}
+            <div className="space-y-6">
+              {/* Description */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Description</h3>
+                <div 
+                  className="text-gray-700" 
+                  dangerouslySetInnerHTML={{ __html: dataset.description }}
+                  style={{ lineHeight: '1.6' }}
+                />
               </div>
+
+              {/* Citation Section */}
+              {(dataset.citationUrl || dataset.citation) && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Citation</h3>
+                  <div className="relative bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    {!loading && citation && (
+                      <button
+                        onClick={handleCopy}
+                        className="absolute top-3 right-3 p-2 hover:bg-gray-200 rounded-md transition-colors"
+                        title="Copy citation"
+                        disabled={loading}
+                      >
+                        {copied ? (
+                          <Check className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-gray-600" />
+                        )}
+                      </button>
+                    )}
+                    
+                    {loading ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader className="w-6 h-6 text-gray-500 animate-spin" />
+                        <span className="ml-2 text-gray-500">Loading latest citation...</span>
+                      </div>
+                    ) : null}
+                    
+                    {!loading && citation && (
+                      <pre className="text-[10px] text-gray-800 overflow-x-auto overflow-y-auto whitespace-pre-wrap pr-10 max-h-48">
+                        {citation}
+                      </pre>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

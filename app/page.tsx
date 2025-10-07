@@ -7,7 +7,7 @@ export default function LandingPage() {
     <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center px-4 py-8">
       <div className="mb-10 mt-10 flex flex-col items-center gap-6 text-center w-full">
         <h1 className="text-3xl font-bold tracking-tight lg:text-5xl w-full text-gray-900">
-          AI Leaderboard
+          AI Capabilities Overview
         </h1>
         <p className="text-lg text-gray-600 max-w-4xl">
           Evaluating frontier AI models on safety and capabilities benchmarks
