@@ -25,31 +25,6 @@
     "flagship": true
   },
   {
-    "name": "Claude Opus 4.1",
-    "provider": "anthropic",
-    "scores": {
-      "hle": 11.5,
-      "arc_agi_2": 8.6,
-      "textquests": 33.9,
-      "swebench_verified": 68,
-      "masks": 94.2,
-      "textquests_harm": 19.1,
-      "vct_refusal": 71.2,
-      "enigmaeval": 7.18,
-      "intphys2": 51.09,
-      "erqa": 46.1,
-      "mindcube": null,
-      "omnispatial": null,
-      "terminal_bench": 32.1,
-      "machiavelli": null
-    },
-    "isTopModel": true,
-    "modelGeneration": "green",
-    "modelCardUrl": "https://www.anthropic.com/news/claude-opus-4-1",
-    "model_size": "standard",
-    "flagship": true
-  },
-  {
     "name": "Claude Sonnet 4.5",
     "provider": "anthropic",
     "scores": {
