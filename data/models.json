@@ -22,7 +22,8 @@
     "modelGeneration": "green",
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
     "model_size": "standard",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-08-07"
   },
   {
     "name": "Claude Sonnet 4.5",
@@ -47,7 +48,8 @@
     "modelGeneration": "green",
     "modelCardUrl": "https://www.anthropic.com/news/claude-sonnet-4-5",
     "model_size": "standard",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-09-29"
   },
   {
     "name": "Grok 4",
@@ -57,7 +59,7 @@
       "arc_agi_2": 16,
       "textquests": 31.2,
       "swebench_verified": 48.4,
-      "masks": null,
+      "masks": 58.3,
       "textquests_harm": 30.4,
       "vct_refusal": 45,
       "enigmaeval": null,
@@ -71,7 +73,8 @@
     "isTopModel": true,
     "modelCardUrl": "https://x.ai/news/grok-4",
     "model_size": "standard",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-07-09"
   },
   {
     "name": "Grok 4 Fast",
@@ -82,7 +85,7 @@
       "textquests": null,
       "swebench_verified": 36.7,
       "terminal_bench": 17.7,
-      "masks": null,
+      "masks": 30,
       "vct_refusal": 43.8,
       "machiavelli": 74.1,
       "textquests_harm": null,
@@ -95,7 +98,8 @@
     "isTopModel": false,
     "modelCardUrl": null,
     "model_size": "mini",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-09-19"
   },
   {
     "name": "o3",
@@ -119,31 +123,8 @@
     "isTopModel": true,
     "modelCardUrl": "https://openai.com/index/introducing-o3-and-o4-mini",
     "model_size": "standard",
-    "flagship": false
-  },
-  {
-    "name": "Claude Opus 4",
-    "provider": "anthropic",
-    "scores": {
-      "hle": 6.68,
-      "arc_agi_2": 4.5,
-      "textquests": 26.4,
-      "swebench_verified": 67.6,
-      "masks": 80.28,
-      "textquests_harm": 16.5,
-      "vct_refusal": null,
-      "enigmaeval": 3.21,
-      "intphys2": null,
-      "erqa": null,
-      "mindcube": null,
-      "omnispatial": null,
-      "terminal_bench": null,
-      "machiavelli": null
-    },
-    "isTopModel": true,
-    "modelCardUrl": "https://www.anthropic.com/news/claude-4",
-    "model_size": "standard",
-    "flagship": false
+    "flagship": false,
+    "releaseDate": "2025-04-16"
   },
   {
     "name": "Gemini 2.5 Pro",
@@ -167,7 +148,8 @@
     "isTopModel": true,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
     "model_size": "standard",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-03-25"
   },
   {
     "name": "Claude Sonnet 4",
@@ -191,7 +173,8 @@
     "isTopModel": false,
     "modelCardUrl": "https://www.anthropic.com/news/claude-4",
     "model_size": "standard",
-    "flagship": false
+    "flagship": false,
+    "releaseDate": "2025-05-22"
   },
   {
     "name": "GPT-5-mini",
@@ -215,7 +198,8 @@
     "isTopModel": false,
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
     "model_size": "mini",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-08-07"
   },
   {
     "name": "GPT-4.1",
@@ -239,7 +223,8 @@
     "isTopModel": false,
     "modelCardUrl": "https://openai.com/index/gpt-4-1",
     "model_size": "standard",
-    "flagship": false
+    "flagship": false,
+    "releaseDate": "2025-04-14"
   },
   {
     "name": "Grok 3 mini",
@@ -264,7 +249,8 @@
     "modelCardUrl": "https://x.ai/news/grok-3",
     "isTextOnlyModel": true,
     "model_size": "mini",
-    "flagship": false
+    "flagship": false,
+    "releaseDate": "2025-02-19"
   },
   {
     "name": "Qwen 3 Thinking",
@@ -289,7 +275,8 @@
     "isTextOnlyModel": true,
     "modelWeights": "Qwen/Qwen3-235B-A22B-Thinking-2507",
     "model_size": "mini",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-02-19"
   },
   {
     "name": "Gemini 2.5 Flash",
@@ -313,7 +300,8 @@
     "isTopModel": false,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
     "model_size": "mini",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-06-17"
   },
   {
     "name": "DeepSeek R1-0528",
@@ -339,7 +327,8 @@
     "modelCardUrl": "https://api-docs.deepseek.com/news/news250528",
     "isTextOnlyModel": true,
     "model_size": "standard",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-05-28"
   },
   {
     "name": "o4-mini",
@@ -363,7 +352,8 @@
     "isTopModel": false,
     "isTextOnlyModel": false,
     "model_size": "mini",
-    "flagship": false
+    "flagship": false,
+    "releaseDate": "2025-04-16"
   },
   {
     "name": "Kimi K2",
@@ -389,7 +379,8 @@
     "modelCardUrl": "https://moonshotai.github.io/Kimi-K2/",
     "isTextOnlyModel": true,
     "model_size": "standard",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-09-05"
   },
   {
     "name": "GPT-OSS-120B",
@@ -415,7 +406,8 @@
     "modelCardUrl": "https://openai.com/index/introducing-gpt-oss/",
     "isTextOnlyModel": true,
     "model_size": "mini",
-    "flagship": false
+    "flagship": false,
+    "releaseDate": "2025-08-05"
   },
   {
     "name": "Gemini 2.5 Flash-Lite",
@@ -439,7 +431,8 @@
     "isTopModel": false,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
     "model_size": "nano",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-06-17"
   },
   {
     "name": "GPT-4.1-mini",
@@ -463,7 +456,8 @@
     "modelCardUrl": "https://openai.com/index/gpt-4-1",
     "isTopModel": false,
     "model_size": "mini",
-    "flagship": false
+    "flagship": false,
+    "releaseDate": "2025-04-14"
   },
   {
     "name": "Llama 4 Maverick",
@@ -487,6 +481,7 @@
     "isTopModel": false,
     "modelWeights": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
     "model_size": "mini",
-    "flagship": true
+    "flagship": true,
+    "releaseDate": "2025-04-05"
   }
 ]

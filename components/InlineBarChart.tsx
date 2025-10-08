@@ -7,6 +7,8 @@ import { Dataset, Model } from "@/lib/types";
 import { getProviderLogo, PROVIDER_COLORS, BENCHMARK_TYPES } from "@/app/constants";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ChartFilterBar } from "@/components/ChartFilterBar";
+import TimeSeriesChart from "@/components/TimeSeriesChart";
+import { Calendar, BarChart3 } from "lucide-react";
 
 interface InlineBarChartProps {
   datasets: Dataset[];
@@ -22,6 +24,9 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   const [includedDatasets, setIncludedDatasets] = useState<Record<string, boolean>>(
     datasets.reduce((acc, dataset) => ({ ...acc, [dataset.id]: true }), {})
   );
+
+  // Track which charts are in time series view
+  const [timeSeriesView, setTimeSeriesView] = useState<Record<string, boolean>>({});
 
   // Get default selected models (flagship models with standard or mini size from default providers)
   const defaultSelectedModels = useMemo(() => {
@@ -187,61 +192,82 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
           {/* Individual Benchmark Charts */}
           {chartsData.map((chartInfo) => (
             <div key={chartInfo.datasetId} className="flex flex-col">
-              {/* Benchmark Title with Logo and Hover */}
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex flex-col items-center justify-center mb-3 cursor-pointer">
-                      {/* Capability Category (Secondary Text) */}
-                      {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
-                        <div className="flex items-center gap-1 mb-1">
-                          {chartInfo.dataset.capabilities
-                            .map(capabilityId => BENCHMARK_TYPES[capabilityId])
-                            .filter(capability => capability !== undefined)
-                            .map((capability, idx) => (
-                              <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide">
-                                {capability.name}
-                              </span>
-                            ))
-                          }
+              {/* Benchmark Title with Logo, Hover, and Toggle Button */}
+              <div className="flex items-center justify-center mb-3 gap-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex flex-col items-center justify-center cursor-pointer">
+                        {/* Capability Category (Secondary Text) */}
+                        {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
+                          <div className="flex items-center gap-1 mb-1">
+                            {chartInfo.dataset.capabilities
+                              .map(capabilityId => BENCHMARK_TYPES[capabilityId])
+                              .filter(capability => capability !== undefined)
+                              .map((capability, idx) => (
+                                <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide">
+                                  {capability.name}
+                                </span>
+                              ))
+                            }
+                          </div>
+                        ) : null}
+                        {/* Benchmark Name */}
+                        <div className="flex items-center gap-2">
+                          {chartInfo.dataset.logo && (
+                            <Image
+                              src={chartInfo.dataset.logo}
+                              alt={`${chartInfo.datasetName} logo`}
+                              width={20}
+                              height={20}
+                              className="flex-shrink-0"
+                            />
+                          )}
+                          <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
+                            {chartInfo.datasetName}
+                          </h3>
                         </div>
-                      ) : null}
-                      {/* Benchmark Name */}
-                      <div className="flex items-center gap-2">
-                        {chartInfo.dataset.logo && (
-                          <Image
-                            src={chartInfo.dataset.logo}
-                            alt={`${chartInfo.datasetName} logo`}
-                            width={20}
-                            height={20}
-                            className="flex-shrink-0"
-                          />
-                        )}
-                        <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
-                          {chartInfo.datasetName}
-                        </h3>
                       </div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg">
-                    <div dangerouslySetInnerHTML={{ __html: chartInfo.dataset.description }} style={{ lineHeight: '1.6' }} />
-                    {onShowDetails && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onShowDetails(chartInfo.datasetId);
-                        }}
-                        className="mt-3 px-3 py-1 bg-background text-foreground border border-foreground text-xs rounded hover:bg-foreground hover:text-background transition-colors"
-                      >
-                        Examples and Details
-                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg">
+                      <div dangerouslySetInnerHTML={{ __html: chartInfo.dataset.description }} style={{ lineHeight: '1.6' }} />
+                      {onShowDetails && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onShowDetails(chartInfo.datasetId);
+                          }}
+                          className="mt-3 px-3 py-1 bg-background text-foreground border border-foreground text-xs rounded hover:bg-foreground hover:text-background transition-colors"
+                        >
+                          Examples and Details
+                        </button>
+                      )}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                {/* Toggle Button for Time Series vs Bar Chart */}
+                {/* Temporarily disabled time series toggle */}
+                {false && (
+                  <button
+                    onClick={() => setTimeSeriesView(prev => ({ ...prev, [chartInfo.datasetId]: !prev[chartInfo.datasetId] }))}
+                    className="p-1 rounded hover:bg-gray-100 transition-colors"
+                    title={timeSeriesView[chartInfo.datasetId] ? "Show bar chart" : "Show time series"}
+                  >
+                    {timeSeriesView[chartInfo.datasetId] ? (
+                      <BarChart3 className="w-4 h-4 text-gray-600" />
+                    ) : (
+                      <Calendar className="w-4 h-4 text-gray-600" />
                     )}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                  </button>
+                )}
+              </div>
               
-              {/* Chart */}
-              <div className="h-80">
+              {/* Chart - either Bar Chart or Time Series */}
+              {timeSeriesView[chartInfo.datasetId] ? (
+                <TimeSeriesChart dataset={chartInfo.dataset} models={models} />
+              ) : (
+                <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={chartInfo.data}
@@ -281,6 +307,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                   </BarChart>
                 </ResponsiveContainer>
               </div>
+              )}
             </div>
           ))}
 

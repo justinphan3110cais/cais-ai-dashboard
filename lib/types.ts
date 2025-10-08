@@ -36,6 +36,7 @@ export interface Model {
   isTextOnlyModel?: boolean; // true for text-only models, false/null for vision-capable models
   model_size?: 'standard' | 'mini' | 'nano'; // Model size classification
   flagship?: boolean; // true for current flagship models, false for older versions
+  releaseDate?: string; // Release date in YYYY-MM-DD format
 }
 
 export interface LeaderboardData {
