@@ -16,6 +16,7 @@ import vct_logo from "@/assets/dataset-logos/vct_logo.svg";
 import swebench_logo from "@/assets/dataset-logos/swebench_logo.png";
 import mindcube_logo from "@/assets/dataset-logos/mindcube_logo.png";
 import terminalbench_logo from "@/assets/dataset-logos/terminalbench_logo.png";
+import erqa_logo from "@/assets/dataset-logos/erqa_logo.svg";
 import textquests_examples from "@/assets/dataset-examples/textquests_examples.png";
 import terminalbench_examples from "@/assets/dataset-examples/terminalbench_examples.png";
 import swebench_examples from "@/assets/dataset-examples/swebench_examples.png";
@@ -304,6 +305,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
     name: "ERQA",
     link: "https://github.com/embodiedreasoning/ERQA",
     description: "<a href='https://github.com/embodiedreasoning/ERQA' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ERQA</a> evaluates Vision-Language Models on 400 multiple-choice embodied reasoning questions designed around the capabilities needed by an embodied agent interacting with the physical world, particularly in robotics. The benchmark spans spatial reasoning, trajectory reasoning, action reasoning, state estimation, pointing, multi-view reasoning, and task reasoning.<br><br>Scoring high on ERQA would indicate a model has a broad capability to reason about the physical world in ways critical for embodied robotics.",
+    logo: erqa_logo.src,
     category: "vision",
     capabilities: ["embodied_reasoning"],
     paperLink: "https://arxiv.org/abs/2503.20020",

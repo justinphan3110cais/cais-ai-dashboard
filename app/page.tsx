@@ -1,14 +1,26 @@
 "use client";
 import { BIBTEX_CITATION } from "@/app/constants";
 import { ModelResultsTable } from "@/components/ModelResultsTable";
+import Image from "next/image";
+import logo from "@/assets/logo.svg";
 
 export default function LandingPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center px-4 py-8">
       <div className="mb-10 mt-10 flex flex-col items-center gap-6 text-center w-full">
-        <h1 className="text-3xl font-bold tracking-tight lg:text-5xl w-full text-gray-900">
-          AI Capabilities Overview
-        </h1>
+        {/* Logo and Title */}
+        <div className="flex items-center gap-4">
+          <Image
+            src={logo}
+            alt="AI Capabilities Overview Logo"
+            width={48}
+            height={48}
+            className="flex-shrink-0"
+          />
+          <h1 className="text-3xl font-bold tracking-tight lg:text-5xl text-gray-900">
+            AI Capabilities Overview
+          </h1>
+        </div>
         <p className="text-lg text-gray-600 max-w-4xl">
           Evaluating frontier AI models on safety and capabilities benchmarks
         </p>
