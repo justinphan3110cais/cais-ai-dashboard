@@ -68,7 +68,7 @@
       "mindcube": 64.7,
       "omnispatial": null,
       "terminal_bench": 37.6,
-      "machiavelli": null
+      "machiavelli": 76.9
     },
     "isTopModel": true,
     "modelCardUrl": "https://x.ai/news/grok-4",
@@ -82,13 +82,13 @@
     "scores": {
       "hle": 20,
       "arc_agi_2": 3.3,
-      "textquests": null,
+      "textquests": 18.6,
       "swebench_verified": 36.7,
       "terminal_bench": 17.7,
       "masks": 30,
       "vct_refusal": 43.8,
       "machiavelli": 74.1,
-      "textquests_harm": null,
+      "textquests_harm": 19.3,
       "enigmaeval": null,
       "intphys2": 53.4,
       "erqa": 41.8,

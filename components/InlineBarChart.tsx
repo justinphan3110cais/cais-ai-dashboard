@@ -7,8 +7,6 @@ import { Dataset, Model } from "@/lib/types";
 import { getProviderLogo, PROVIDER_COLORS, BENCHMARK_TYPES } from "@/app/constants";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ChartFilterBar } from "@/components/ChartFilterBar";
-import TimeSeriesChart from "@/components/TimeSeriesChart";
-import { Calendar, BarChart3 } from "lucide-react";
 
 interface InlineBarChartProps {
   datasets: Dataset[];
@@ -24,9 +22,6 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   const [includedDatasets, setIncludedDatasets] = useState<Record<string, boolean>>(
     datasets.reduce((acc, dataset) => ({ ...acc, [dataset.id]: true }), {})
   );
-
-  // Track which charts are in time series view
-  const [timeSeriesView, setTimeSeriesView] = useState<Record<string, boolean>>({});
 
   // Get default selected models (flagship models with standard or mini size from default providers)
   const defaultSelectedModels = useMemo(() => {
@@ -245,29 +240,10 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-
-                {/* Toggle Button for Time Series vs Bar Chart */}
-                {/* Temporarily disabled time series toggle */}
-                {false && (
-                  <button
-                    onClick={() => setTimeSeriesView(prev => ({ ...prev, [chartInfo.datasetId]: !prev[chartInfo.datasetId] }))}
-                    className="p-1 rounded hover:bg-gray-100 transition-colors"
-                    title={timeSeriesView[chartInfo.datasetId] ? "Show bar chart" : "Show time series"}
-                  >
-                    {timeSeriesView[chartInfo.datasetId] ? (
-                      <BarChart3 className="w-4 h-4 text-gray-600" />
-                    ) : (
-                      <Calendar className="w-4 h-4 text-gray-600" />
-                    )}
-                  </button>
-                )}
               </div>
               
-              {/* Chart - either Bar Chart or Time Series */}
-              {timeSeriesView[chartInfo.datasetId] ? (
-                <TimeSeriesChart dataset={chartInfo.dataset} models={models} />
-              ) : (
-                <div className="h-80">
+              {/* Bar Chart */}
+              <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={chartInfo.data}
@@ -307,7 +283,6 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              )}
             </div>
           ))}
 

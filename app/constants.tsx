@@ -179,7 +179,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     name: "Humanity's Last Exam",
     title: "Humanity's Last Exam",
     link: "https://lastexam.ai",
-    description: "<a href='https://lastexam.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Humanity's Last Exam (HLE)</a> <i>(No Tool)</i> tests LLMs on 2,500 expert-written academic questions spanning 100+ disciplines (math, humanities, natural sciences). Most questions are authored by researchers, professors, postdocs, and PhD students across 500+ research institutions and universities worldwide. HLE is designed to evaluate LLMs' knowledge and reasoning at the human frontier. <br><br><i><strong>No Tool</strong></i> evaluates LLMs without access to any external tools (web search, code etc.)",
+    description: "<a href='https://lastexam.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Humanity's Last Exam (HLE)</a> <i>(No Tools)</i> tests LLMs on 2,500 expert-written academic questions spanning 100+ disciplines (math, humanities, natural sciences). Most questions are authored by researchers, professors, postdocs, and PhD students across 500+ research institutions and universities worldwide. HLE is designed to evaluate LLMs' knowledge and reasoning at the human frontier. <br><br><i><strong>No Tools</strong></i> evaluates LLMs without access to any external tools (web search, code etc.)",
     logo: hle_logo,
     category: "text",
     capabilities: ["expert"],
