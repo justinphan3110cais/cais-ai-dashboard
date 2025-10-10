@@ -17,10 +17,13 @@ import swebench_logo from "@/assets/dataset-logos/swebench_logo.png";
 import mindcube_logo from "@/assets/dataset-logos/mindcube_logo.png";
 import terminalbench_logo from "@/assets/dataset-logos/terminalbench_logo.png";
 import erqa_logo from "@/assets/dataset-logos/erqa_logo.svg";
+import intphys2_logo from "@/assets/dataset-logos/intphys2_logo.svg";
+import enigmaeval_logo from "@/assets/dataset-logos/enigmaeval_logo.svg";
 import textquests_examples from "@/assets/dataset-examples/textquests_examples.png";
 import terminalbench_examples from "@/assets/dataset-examples/terminalbench_examples.png";
 import swebench_examples from "@/assets/dataset-examples/swebench_examples.png";
 import enigmaeval_examples from "@/assets/dataset-examples/enigmaeval_examples.png";
+import mask_examples from "@/assets/dataset-examples/mask_examples.png";
 // Video files are served from public folder
 const intphys2_examples = "/dataset-examples/intphys2_examples.mp4";
 import erqa_examples from "@/assets/dataset-examples/erqa_examples.png";
@@ -330,6 +333,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
     name: "IntPhys 2",
     link: "https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks",
     description: "<a href='https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>IntPhys 2</a> evaluates LLM-driven models' understanding of intuitive physics through video clips testing core principles like permanence, solidity, and spatio-temporal continuity. Models must identify physically plausible versus impossible physical-world scenes.<br><br> Scoring high on IntPhys 2 would demonstrate that a model has a sufficient grasp of basic physical-world dynamics.",
+    logo: intphys2_logo.src,
     category: "vision",
     capabilities: ["realworld_physics"],
     paperLink: "https://arxiv.org/abs/2506.09849",
@@ -355,6 +359,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
     name: "EnigmaEval",
     link: "https://scale.com/leaderboard/enigma_eval",
     description: "<a href='https://scale.com/leaderboard/enigma_eval' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>EnigmaEval</a> evaluates LLMs on 1,184 extremely hard multimodal puzzles from competitions like the MIT Mystery Hunt, one of the world's toughest puzzle competitions. These puzzles often take teams of expert humans several days to solve, requiring lateral, multi-step reasoning over images and text.<br><br>Scoring high on EnigmaEval would show that a LLM is sufficiently capable of solving extremely complex puzzles and problems that push the limits of reasoning ability.",
+    logo: enigmaeval_logo.src,
     category: "vision",
     capabilities: ["expert_puzzle"],
     paperLink: "https://arxiv.org/abs/2502.08859",
@@ -411,7 +416,12 @@ export const SAFETY_DATASETS: Dataset[] = [
     link: "https://www.mask-benchmark.ai",
     description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a large-scale human-collected dataset for measuring honesty in LLMs directly, disentangling accuracy from honesty for the first time. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
     category: "safety",
-    capabilities: ["honesty"]
+    capabilities: ["honesty"],
+    examples: [{
+      type: "image",
+      src: mask_examples,
+      alt: "Examples of MASK benchmark questions testing honesty in language models"
+    }]
   },
   {
     id: "vct_refusal",

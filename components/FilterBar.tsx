@@ -178,18 +178,12 @@ export const FilterBar = ({ filters, onFiltersChange, hideTextOnly = false }: Fi
         <span className="text-xs text-gray-500">Type:</span>
         <div className="flex gap-2">
           <label className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors">
-            <div onClick={(e) => {
-              e.preventDefault();
-              onFiltersChange({ ...filters, showFlagship: !filters.showFlagship });
-            }}>
-              <Square 
-                className={`w-3.5 h-3.5 transition-colors ${
-                  filters.showFlagship 
-                    ? 'text-blue-500 fill-blue-500' 
-                    : 'text-gray-400 fill-none'
-                }`} 
-              />
-            </div>
+            <input
+              type="checkbox"
+              checked={filters.showFlagship}
+              onChange={(e) => onFiltersChange({ ...filters, showFlagship: e.target.checked })}
+              className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-0"
+            />
             <span className="text-xs text-gray-600">Flagship</span>
           </label>
           
