@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import Image from "next/image";
 import { Dataset, Model } from "@/lib/types";
 import { getProviderLogo, PROVIDER_COLORS, BENCHMARK_TYPES } from "@/app/constants";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChartFilterBar } from "@/components/ChartFilterBar";
+import { ChartFilterBar } from "@/components/ui/ChartFilterBar";
 
 interface InlineBarChartProps {
   datasets: Dataset[];
@@ -130,7 +130,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   const createCustomLabel = (chartData: Array<{ modelName: string; score: number | null; provider: string }>) => {
     // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
     return (props: any) => {
-      const { x, y, width, value, index } = props;
+      const { x, y, width, height, value, index } = props;
       
       if (value === null || value === undefined) return null;
       if (!chartData[index]) return null;
@@ -140,10 +140,21 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
       
       return (
         <g>
-          {/* Provider logo */}
+          {/* Score text - centered on top of bar */}
+          <text 
+            x={Number(x) + Number(width) / 2} 
+            y={Number(y) - 8} 
+            fill="#374151" 
+            textAnchor="middle" 
+            fontSize="10"
+            fontWeight="500"
+          >
+            {typeof value === 'number' ? value.toFixed(1) : value}
+          </text>
+          {/* Provider logo - positioned between bar and model name */}
           <foreignObject 
-            x={Number(x) + Number(width) / 2 - 12} 
-            y={Number(y) - 18} 
+            x={Number(x) + Number(width) / 2 - 7} 
+            y={Number(y) + Number(height) + 8} 
             width={14} 
             height={14}
           >
@@ -157,17 +168,6 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               />
             </div>
           </foreignObject>
-          {/* Score text */}
-          <text 
-            x={Number(x) + Number(width) / 2 + 4} 
-            y={Number(y) - 8} 
-            fill="#374151" 
-            textAnchor="start" 
-            fontSize="10"
-            fontWeight="500"
-          >
-            {value}
-          </text>
         </g>
       );
     };
@@ -224,8 +224,21 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         </div>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg">
-                      <div dangerouslySetInnerHTML={{ __html: chartInfo.dataset.description }} style={{ lineHeight: '1.6' }} />
+                    <TooltipContent className="w-72 bg-white text-black border border-gray-200 shadow-lg p-3">
+                      {(() => {
+                        const sentences = chartInfo.dataset.description.split('. ');
+                        const firstSentence = sentences[0] + (sentences.length > 1 ? '.' : '');
+                        const restOfDescription = sentences.length > 1 ? sentences.slice(1).join('. ') : '';
+                        
+                        return (
+                          <>
+                            <div className="mb-3" dangerouslySetInnerHTML={{ __html: firstSentence }} />
+                            {restOfDescription && (
+                              <div className="text-gray-600 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: restOfDescription }} />
+                            )}
+                          </>
+                        );
+                      })()}
                       {onShowDetails && (
                         <button
                           onClick={(e) => {
@@ -259,15 +272,11 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       angle={-45}
                       textAnchor="end"
                       height={60}
-                      tick={{ fontSize: 10, fill: '#374151' }}
+                      tick={{ fontSize: 10, fill: '#374151', dy: 16 }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <YAxis hide />
-                    <RechartsTooltip 
-                      formatter={(value: number) => [`${value}%`, 'Score']}
-                      labelFormatter={(label: string) => `Model: ${label}`}
-                    />
                     <Bar 
                       dataKey="score"
                       radius={[4, 4, 0, 0]}
@@ -328,15 +337,11 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                     angle={-45}
                     textAnchor="end"
                     height={60}
-                    tick={{ fontSize: 10, fill: '#374151' }}
+                    tick={{ fontSize: 10, fill: '#374151', dy: 16 }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <YAxis hide />
-                  <RechartsTooltip 
-                    formatter={(value: number) => [`${value}%`, 'Average Score']}
-                    labelFormatter={(label: string) => `Model: ${label}`}
-                  />
                   <Bar 
                     dataKey="score"
                     radius={[4, 4, 0, 0]}

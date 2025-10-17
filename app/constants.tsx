@@ -19,11 +19,13 @@ import terminalbench_logo from "@/assets/dataset-logos/terminalbench_logo.png";
 import erqa_logo from "@/assets/dataset-logos/erqa_logo.svg";
 import intphys2_logo from "@/assets/dataset-logos/intphys2_logo.svg";
 import enigmaeval_logo from "@/assets/dataset-logos/enigmaeval_logo.svg";
+import art_logo from "@/assets/dataset-logos/art_logo.png";
 import textquests_examples from "@/assets/dataset-examples/textquests_examples.png";
 import terminalbench_examples from "@/assets/dataset-examples/terminalbench_examples.png";
 import swebench_examples from "@/assets/dataset-examples/swebench_examples.png";
 import enigmaeval_examples from "@/assets/dataset-examples/enigmaeval_examples.png";
 import mask_examples from "@/assets/dataset-examples/mask_examples.png";
+import art_examples from "@/assets/dataset-examples/art_examples.png";
 // Video files are served from public folder
 const intphys2_examples = "/dataset-examples/intphys2_examples.mp4";
 import erqa_examples from "@/assets/dataset-examples/erqa_examples.png";
@@ -133,17 +135,29 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     name: "Harmful Propensity",
     icon: Bot,
     tooltipText: "Harmful Propensity Benchmark"
+  },
+  deception_propensity: {
+    id: "deception_propensity",
+    name: "Deception Propensity",
+    icon: Bot,
+    tooltipText: "Deception Propensity Benchmark"
+  },
+  adversarial_robustness: {
+    id: "adversarial_robustness",
+    name: "Adversarial Robustness",
+    icon: Bot,
+    tooltipText: "Adversarial Robustness Benchmark"
   }
 };
 
 export const PAPER_URL = "https://arxiv.org/abs/2507.23701";
 export const GITHUB_URL = "https://github.com/centerforaisafety/safetyxcapabilities-leaderboard";
 
-export const BIBTEX_CITATION = `@misc{safetyxcapabilities2025leaderboard,
-      title={SafetyxCapabilities Leaderboard: Evaluating Frontier AI Models on Safety and Capabilities Benchmarks}, 
-      author={Center for AI Safety},
+export const BIBTEX_CITATION = `@misc{aicapabilitiesoverview,
+      title={AI Capabilities Overview Leaderboard}, 
+      author={Long Phan and Dan Hendrycks},
       year={2025},
-      url={https://github.com/centerforaisafety/safetyxcapabilities-leaderboard}, 
+      url={https://leaderboard.safe.ai}, 
 }`;
 
 export const LOGO_MAP = {
@@ -201,7 +215,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     id: "arc_agi_2",
     name: "ARC-AGI-2",
     link: "https://arcprize.org/",
-    description: "<a href='https://arcprize.org/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ARC-AGI-2</a> measures fluid intelligence—the ability to reason, solve novel problems, and adapt to new situations—rather than crystallized intelligence that relies on accumulated knowledge. The benchmark uses abstract visual puzzles based on core knowledge priors (cognitive building blocks present at birth) to evaluate genuine skill-acquisition efficiency on tasks the AI has never encountered.<br><br>Scoring high on ARC-AGI-2 demonstrates that a system can efficiently acquire new skills outside its training data.",
+    description: "<a href='https://arcprize.org/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ARC-AGI-2</a> uses abstract visual puzzles based on core knowledge priors (cognitive building blocks present at birth) to evaluate genuine skill-acquisition efficiency on tasks the AI has never encountered. The benchmark measures fluid intelligence—the ability to reason, solve novel problems, and adapt to new situations—rather than crystallized intelligence that relies on accumulated knowledge.<br><br>Scoring high on ARC-AGI-2 demonstrates that a system can efficiently acquire new skills outside its training data.",
     logo: arc_agi_logo.src,
     category: "text",
     capabilities: ["fluid_reasoning"],
@@ -252,7 +266,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     name: "Terminal Bench",
     link: "https://www.tbench.ai",
     githubLink: "https://github.com/laude-institute/terminal-bench",
-    description: "<a href='https://www.tbench.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>terminal-bench</a> is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery. Tasks cover a wide range of engineering, game playing, and system administration tasks that are unlikely to be pattern-matched on training data. Outcomes are evaluated programmattically with verification scripts executed in the agent's Docker environment, requiring agents to successfully meet a range of output conditions.",
+    description: "<a href='https://www.tbench.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Terminal-Bench</a> is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery. Tasks cover a wide range of engineering, game playing, and system administration tasks that are unlikely to be pattern-matched on training data. Outcomes are evaluated programmattically with verification scripts executed in the agent's Docker environment, requiring agents to successfully meet a range of output conditions.",
     logo: terminalbench_logo.src,
     category: "text",
     capabilities: ["coding"],
@@ -411,6 +425,20 @@ export const CAPABILITIES_DATASETS: Dataset[] = [...TEXT_CAPABILITIES_DATASETS, 
 
 export const SAFETY_DATASETS: Dataset[] = [
   {
+    id: "art",
+    name: "Agent Red Teaming",
+    link: "https://app.grayswan.ai/arena/challenge/agent-red-teaming/rules",
+    description: "<a href='https://app.grayswan.ai/arena/challenge/agent-red-teaming/rules' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ART</a> (Agent Red Teaming) measures robustness against malicious use and security against prompt injections. The benchmark evaluates AI agents across five core behavior categories: Confidentiality Breaches, Conflicting Objectives, Instruction Hierarchy Violations — Information, and Instruction Hierarchy Violations — Actions.",
+    logo: art_logo.src,
+    category: "safety",
+    capabilities: ["adversarial_robustness"],
+    examples: [{
+      type: "image",
+      src: art_examples,
+      alt: "Examples of ART benchmark testing adversarial robustness and prompt injection resistance"
+    }]
+  },
+  {
     id: "masks",
     name: "MASK",
     link: "https://www.mask-benchmark.ai",
@@ -454,7 +482,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     link: "https://aypan17.github.io/machiavelli/",
     description: "<a href='https://aypan17.github.io/machiavelli/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Machiavelli</a> benchmark measures harmful behaviors in LLM agents across 134 text-based games, evaluating tendencies toward deception, manipulation, and unethical actions in goal-oriented scenarios.",
     category: "safety",
-    capabilities: ["harmful_propensity"],
+    capabilities: ["deception_propensity"],
     postprocessScore: (score: number) => 100 - score
   },
   {
@@ -462,7 +490,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     name: "TextQuests Harm",
     displayName: "TextQuests Harm",
     link: "https://textquests.ai/",
-    description: "Harm metric from TextQuests measuring unethical behaviors in text-based adventure games (lower is better).",
+    description: "Harm metric from TextQuests measuring unethical behaviors in text-based adventure games.",
     logo: textquests_logo,
     category: "safety",
     capabilities: ["harmful_propensity"],

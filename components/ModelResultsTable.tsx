@@ -83,7 +83,7 @@ const DatasetHeader = ({
               {/* Dataset Name and Logo */}
               <div className="flex items-center justify-center gap-1">
                 {dataset.logo && (
-                      <Image
+                    <Image
                     src={dataset.logo}
                     alt={`${dataset.name} logo`}
                     width={16}
@@ -96,10 +96,23 @@ const DatasetHeader = ({
                 <span className="text-xs ml-1">{getSortIcon()}</span>
               </div>
     </div>
-          </button>
-        </TooltipTrigger>
-        <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg">
-          <div dangerouslySetInnerHTML={{ __html: dataset.description }} style={{ lineHeight: '1.6' }} />
+                </button>
+              </TooltipTrigger>
+        <TooltipContent className="w-72 bg-white text-black border border-gray-200 shadow-lg p-3">
+          {(() => {
+            const sentences = dataset.description.split('. ');
+            const firstSentence = sentences[0] + (sentences.length > 1 ? '.' : '');
+            const restOfDescription = sentences.length > 1 ? sentences.slice(1).join('. ') : '';
+            
+            return (
+              <>
+                <div className="mb-3" dangerouslySetInnerHTML={{ __html: firstSentence }} />
+                {restOfDescription && (
+                  <div className="text-gray-600 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: restOfDescription }} />
+                )}
+              </>
+            );
+          })()}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -109,9 +122,9 @@ const DatasetHeader = ({
           >
             Examples and Details
           </button>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
   );
 };
 
@@ -318,11 +331,11 @@ const LeaderboardTable = ({
           {tableContent}
         </div>
       ) : (
-        <ScrollArea className="h-96">
+        <ScrollArea className="h-80">
           {tableContent}
         </ScrollArea>
       )}
-    </div>
+      </div>
   );
 };
 
@@ -480,6 +493,7 @@ export function ModelResultsTable() {
       if (textFilters.search && !model.name.toLowerCase().includes(textFilters.search.toLowerCase())) return false;
       if (textFilters.showTextModels && model.isTextOnlyModel !== true) return false;
       if (textFilters.showOpenWeight && !model.modelWeights) return false;
+      if (!textFilters.showOpenWeight && model.modelWeights) return false; // Filter out open-weight models by default
       if (textFilters.selectedProviders.length > 0 && !textFilters.selectedProviders.includes(model.provider)) return false;
       const modelSize = model.model_size || 'standard';
       if (!textFilters.modelSizes[modelSize]) return false;
@@ -494,6 +508,7 @@ export function ModelResultsTable() {
       if (model.isTextOnlyModel === true) return false;
       if (visionFilters.search && !model.name.toLowerCase().includes(visionFilters.search.toLowerCase())) return false;
       if (visionFilters.showOpenWeight && !model.modelWeights) return false;
+      if (!visionFilters.showOpenWeight && model.modelWeights) return false; // Filter out open-weight models by default
       if (visionFilters.selectedProviders.length > 0 && !visionFilters.selectedProviders.includes(model.provider)) return false;
       const modelSize = model.model_size || 'standard';
       if (!visionFilters.modelSizes[modelSize]) return false;
@@ -507,6 +522,7 @@ export function ModelResultsTable() {
       if (safetyFilters.search && !model.name.toLowerCase().includes(safetyFilters.search.toLowerCase())) return false;
       if (safetyFilters.showTextModels && model.isTextOnlyModel !== true) return false;
       if (safetyFilters.showOpenWeight && !model.modelWeights) return false;
+      if (!safetyFilters.showOpenWeight && model.modelWeights) return false; // Filter out open-weight models by default
       if (safetyFilters.selectedProviders.length > 0 && !safetyFilters.selectedProviders.includes(model.provider)) return false;
       const modelSize = model.model_size || 'standard';
       if (!safetyFilters.modelSizes[modelSize]) return false;
@@ -757,7 +773,6 @@ export function ModelResultsTable() {
                 <FilterBar 
                   filters={visionFilters} 
                   onFiltersChange={setVisionFilters}
-                  hideTextOnly={true}
                 />
               </div>
             )}
@@ -941,17 +956,6 @@ export function ModelResultsTable() {
         )}
       </div>
 
-      <div className="space-y-4 text-center">
-        <p className="text-sm text-gray-600">
-          To add a model to the leaderboard or submit benchmark results, send us an email at{' '}
-          <a 
-            href="mailto:agibenchmark@safe.ai" 
-            className="text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            agibenchmark@safe.ai
-          </a>
-        </p>
-      </div>
 
       {/* Dataset Details Dialog */}
       <DatasetDetailsDialog

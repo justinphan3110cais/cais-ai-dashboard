@@ -16,7 +16,8 @@
       "mindcube": 59.7,
       "omnispatial": null,
       "terminal_bench": 30.5,
-      "machiavelli": 69.8
+      "machiavelli": 69.8,
+      "art": 54
     },
     "isTopModel": true,
     "modelGeneration": "green",
@@ -26,7 +27,7 @@
     "releaseDate": "2025-08-07"
   },
   {
-    "name": "Claude Sonnet 4.5",
+    "name": "Sonnet 4.5",
     "provider": "anthropic",
     "scores": {
       "hle": 13.7,
@@ -42,7 +43,8 @@
       "intphys2": 56.3,
       "erqa": 44.8,
       "mindcube": 56.4,
-      "omnispatial": null
+      "omnispatial": null,
+      "art": 40
     },
     "isTopModel": true,
     "modelGeneration": "green",
@@ -68,7 +70,8 @@
       "mindcube": 64.7,
       "omnispatial": null,
       "terminal_bench": 37.6,
-      "machiavelli": 76.9
+      "machiavelli": 76.9,
+      "art": 65
     },
     "isTopModel": true,
     "modelCardUrl": "https://x.ai/news/grok-4",
@@ -93,7 +96,8 @@
       "intphys2": 53.4,
       "erqa": 41.8,
       "mindcube": 49.24,
-      "omnispatial": null
+      "omnispatial": null,
+      "art": 80.3
     },
     "isTopModel": false,
     "modelCardUrl": null,
@@ -143,7 +147,8 @@
       "mindcube": 59.6,
       "omnispatial": null,
       "terminal_bench": 24.8,
-      "machiavelli": 77.6
+      "machiavelli": 77.6,
+      "art": 90.6
     },
     "isTopModel": true,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
@@ -152,7 +157,7 @@
     "releaseDate": "2025-03-25"
   },
   {
-    "name": "Claude Sonnet 4",
+    "name": "Sonnet 4",
     "provider": "anthropic",
     "scores": {
       "hle": 5.52,
@@ -193,7 +198,8 @@
       "mindcube": 59.3,
       "omnispatial": null,
       "terminal_bench": 31.2,
-      "machiavelli": 68.5
+      "machiavelli": 68.5,
+      "art": 14.4
     },
     "isTopModel": false,
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
@@ -259,7 +265,7 @@
       "hle": 15.4,
       "arc_agi_2": 0,
       "textquests": 15.1,
-      "swebench_verified": null,
+      "swebench_verified": 17.8,
       "masks": 56.4,
       "textquests_harm": 16.4,
       "vct_refusal": 0,
@@ -295,7 +301,8 @@
       "mindcube": 53,
       "omnispatial": null,
       "terminal_bench": 15.6,
-      "machiavelli": 78.3
+      "machiavelli": 78.3,
+      "art": 91.7
     },
     "isTopModel": false,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
@@ -426,7 +433,8 @@
       "mindcube": 49.2,
       "omnispatial": null,
       "terminal_bench": null,
-      "machiavelli": 84.2
+      "machiavelli": 84.2,
+      "art": 93.6
     },
     "isTopModel": false,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",

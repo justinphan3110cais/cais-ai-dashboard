@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Type, ChevronDown, Square } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+// TODO: Uncomment for later release - Type filter imports
+// import { Type, Square } from "lucide-react";
+// import hf_logo from "@/assets/hf-logo.png";
 import Image from "next/image";
-import hf_logo from "@/assets/hf-logo.png";
 import { MODELS, getProviderLogo } from "@/app/constants";
 
 interface FilterState {
@@ -22,10 +24,11 @@ interface FilterState {
 interface FilterBarProps {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
-  hideTextOnly?: boolean;
+  // TODO: Uncomment for later release
+  // hideTextOnly?: boolean;
 }
 
-export const FilterBar = ({ filters, onFiltersChange, hideTextOnly = false }: FilterBarProps) => {
+export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false */ }: FilterBarProps) => {
   const [isProviderDropdownOpen, setIsProviderDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
@@ -170,10 +173,9 @@ export const FilterBar = ({ filters, onFiltersChange, hideTextOnly = false }: Fi
         </div>
       </div>
       
-      {/* Vertical Separator - Hidden on mobile */}
-      <div className="hidden lg:block h-6 w-px bg-gray-200"></div>
+      {/* TODO: Uncomment for later release - Entire Type filter section */}
+      {/* <div className="hidden lg:block h-6 w-px bg-gray-200"></div>
       
-      {/* Model Type Filter Group */}
       <div className="flex items-center gap-2">
         <span className="text-xs text-gray-500">Type:</span>
         <div className="flex gap-2">
@@ -217,7 +219,7 @@ export const FilterBar = ({ filters, onFiltersChange, hideTextOnly = false }: Fi
             <span className="text-xs text-gray-600">Open-Weight</span>
           </label>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
