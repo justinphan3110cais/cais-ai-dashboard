@@ -3,6 +3,7 @@ import { BIBTEX_CITATION } from "@/app/constants";
 import { ModelResultsTable } from "@/components/ModelResultsTable";
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
+import caisLogo from "@/assets/cais_icon_black_text.svg";
 
 export default function LandingPage() {
   return (
@@ -40,6 +41,23 @@ export default function LandingPage() {
       {/* Citation Section */}
       <section className="mb-12 w-full">
         <div className="mx-auto max-w-4xl">
+          {/* CAIS Logo */}
+          <div className="flex justify-center mb-6">
+            <a 
+              href="https://safe.ai" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <Image
+                src={caisLogo}
+                alt="Center for AI Safety"
+                width={200}
+                height={60}
+                className="flex-shrink-0"
+              />
+            </a>
+          </div>
           <h2 className="mb-4 text-center text-2xl font-bold">Citation</h2>
           <div className="mx-auto mb-6 h-0.5 w-16 bg-gradient-to-r from-gray-300 to-gray-100"></div>
 
