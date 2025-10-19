@@ -65,15 +65,15 @@ const DatasetHeader = ({
             onClick={() => onSort(dataset.id)}
             className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
           >
-            <div className="flex flex-col items-center justify-center gap-1">
+            <div className="flex flex-col items-center justify-center gap-1 px-1">
               {/* Capability Category (Secondary Text) */}
               {dataset.capabilities && dataset.capabilities.length > 0 && (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 flex-wrap justify-center">
                   {dataset.capabilities
                     .map(capabilityId => BENCHMARK_TYPES[capabilityId])
                     .filter(capability => capability !== undefined)
                     .map((capability, idx) => (
-                      <span key={idx} className="text-[10px] text-muted-foreground uppercase tracking-wide leading-none">
+                      <span key={idx} className="text-[10px] text-muted-foreground uppercase tracking-wide leading-none text-center">
                         {capability.name}
                       </span>
                     ))
@@ -81,19 +81,24 @@ const DatasetHeader = ({
                 </div>
               )}
               {/* Dataset Name and Logo */}
-              <div className="flex items-center justify-center gap-1">
-                {dataset.logo && (
-                    <Image
-                    src={dataset.logo}
-                    alt={`${dataset.name} logo`}
-                    width={16}
-                    height={16}
-                  />
+              <div className="relative flex items-center justify-center w-full">
+                <div className="flex items-center gap-1 justify-center">
+                  {dataset.logo && (
+                      <Image
+                      src={dataset.logo}
+                      alt={`${dataset.name} logo`}
+                      width={16}
+                      height={16}
+                      className="flex-shrink-0"
+                    />
+                  )}
+                  <span className="text-xs font-medium text-center">
+                    {dataset.displayName || dataset.name}
+                  </span>
+                </div>
+                {getSortIcon() && (
+                  <span className="absolute right-0 text-xs">{getSortIcon()}</span>
                 )}
-                <span className="text-xs font-medium">
-                  {dataset.displayName || dataset.name}
-                </span>
-                <span className="text-xs ml-1">{getSortIcon()}</span>
               </div>
     </div>
                 </button>
@@ -180,37 +185,18 @@ const LeaderboardTable = ({
   };
 
   const getRowStyling = (model: Model) => {
-    if (model.modelGeneration === 'green') {
-      return 'bg-slate-50 hover:bg-slate-100';
-    } else {
-      return 'hover:bg-gray-50';
-    }
+    return 'hover:bg-gray-50';
   };
 
   const tableContent = (
-        <Table>
+        <Table className="min-w-[800px]">
       <TableHeader className="sticky top-0 bg-background z-10">
             <TableRow>
-          <TableHead className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 bg-gray-50 z-30`}>
-            {isSafetyTable ? (
-              <div>
-                <span className="font-semibold">Model</span>
-                <span className="text-gray-400 mx-1">/</span>
-                <span className="text-[10px] text-gray-500 font-normal">Higher Score is Better</span>
-              </div>
-            ) : (
-              <div className="font-semibold">Model</div>
-            )}
+          <TableHead className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor} z-30`}>
+            <div className="font-semibold">Model</div>
           </TableHead>
-          {datasets.map((dataset, index) => (
-            <TableHead 
-              key={dataset.name} 
-              className={`text-center ${bgColor} min-w-[80px] border-b-2 border-b-gray-300 ${index < datasets.length ? 'border-r border-gray-300' : ''} py-1`}
-            >
-              <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} />
-            </TableHead>
-          ))}
-          <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300`}>
+          {/* Average column - show second (after Model) */}
+          <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
                         <button
               onClick={() => onSort('average')}
               className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
@@ -224,6 +210,14 @@ const LeaderboardTable = ({
               </div>
                         </button>
               </TableHead>
+          {datasets.map((dataset, index) => (
+            <TableHead 
+              key={dataset.name} 
+              className={`text-center ${bgColor} min-w-[100px] w-auto border-b-2 border-b-gray-300 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''} py-1`}
+            >
+              <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} />
+            </TableHead>
+          ))}
             </TableRow>
       </TableHeader>
       <TableBody>
@@ -233,7 +227,7 @@ const LeaderboardTable = ({
             className={`border-b border-gray-200 ${getRowStyling(model)} ${model.modelCardUrl ? 'group' : ''}`}
           >
               <TableCell 
-                className={`text-center ${bgColor}/30 border-r border-gray-300`}
+                className={`text-center ${bgColor}/30 border-r border-gray-300 sticky left-0 z-20 bg-white`}
               >              <div className="flex items-center gap-2">
                 <Image
                   src={getProviderLogo(model.provider).src}
@@ -295,13 +289,20 @@ const LeaderboardTable = ({
                   </div>
                 </TableCell>
             
+            {/* Average column - show second (after Model) */}
+            <TableCell className={`text-center ${bgColor}/30 font-bold border-r border-gray-300`}>
+              <span className="font-mono text-sm">
+                {formatValue(calculateAverage(model, datasets))}
+              </span>
+            </TableCell>
+            
             {datasets.map((dataset, index) => {
               const rawScore = model.scores[dataset.id];
               const displayScore = getProcessedScore(dataset, rawScore);
               return (
                 <TableCell 
                   key={dataset.name} 
-                  className={`text-center ${bgColor}/30 ${index < datasets.length ? 'border-r border-gray-300' : ''}`}
+                  className={`text-center ${bgColor}/30 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''}`}
                 >
                   <EditableTableCell
                     value={displayScore}
@@ -312,12 +313,6 @@ const LeaderboardTable = ({
                 </TableCell>
             );
             })}
-            
-            <TableCell className={`text-center ${bgColor}/30 font-bold`}>
-              <span className="font-mono text-sm">
-                {formatValue(calculateAverage(model, datasets))}
-              </span>
-            </TableCell>
           </TableRow>
         ))}
           </TableBody>
@@ -331,9 +326,9 @@ const LeaderboardTable = ({
           {tableContent}
         </div>
       ) : (
-        <ScrollArea className="h-80">
+        <div className="h-80 overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           {tableContent}
-        </ScrollArea>
+        </div>
       )}
       </div>
   );
@@ -387,18 +382,18 @@ export function ModelResultsTable() {
   });
 
   const [textCapabilitiesSortConfig, setTextCapabilitiesSortConfig] = useState<SortConfig>({
-    key: null,
-    direction: null,
+    key: 'average',
+    direction: 'desc',
   });
 
   const [multimodalSortConfig, setMultimodalSortConfig] = useState<SortConfig>({
-    key: null,
-    direction: null,
+    key: 'average',
+    direction: 'desc',
   });
 
   const [safetySortConfig, setSafetySortConfig] = useState<SortConfig>({
-    key: null,
-    direction: null,
+    key: 'average',
+    direction: 'asc',
   });
 
   // Edit mode state
@@ -664,7 +659,7 @@ export function ModelResultsTable() {
       )}
       
       {/* Text-based Capabilities Card */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
+      <div id="text-section" className="border border-gray-200 rounded-lg overflow-hidden">
         <div className="bg-blue-50 px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between gap-4">
             <h3 className="text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
@@ -764,7 +759,7 @@ export function ModelResultsTable() {
       </div>
 
       {/* Multimodal Capabilities Card */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
+      <div id="vision-section" className="border border-gray-200 rounded-lg overflow-hidden">
         <div className="bg-green-50 px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between gap-4">
             <h3 className="text-xl font-semibold text-green-700 flex-shrink-0">Vision</h3>
@@ -860,10 +855,13 @@ export function ModelResultsTable() {
       </div>
  
       {/* Safety Card */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
+      <div id="safety-section" className="border border-gray-200 rounded-lg overflow-hidden">
         <div className="bg-red-50 px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between gap-4">
-            <h3 className="text-xl font-semibold text-red-700 flex-shrink-0">Safety</h3>
+            <div className="flex-shrink-0">
+              <h3 className="text-xl font-semibold text-red-700">Safety</h3>
+              <p className="text-sm text-foreground mt-1">Lower Score is Better</p>
+            </div>
             {viewModes.safety === 'table' && (
               <div className="flex-1">
                 <FilterBar 

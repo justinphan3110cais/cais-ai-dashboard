@@ -1,31 +1,67 @@
 "use client";
 import { BIBTEX_CITATION } from "@/app/constants";
 import { ModelResultsTable } from "@/components/ModelResultsTable";
+import { Navigation } from "@/components/ui/navigation";
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
-import caisLogo from "@/assets/cais_icon_black_text.svg";
+import heroBackground from "@/assets/hero-background.webp";
 
 export default function LandingPage() {
+  const handleNavigate = (section: string) => {
+    const element = document.getElementById(`${section}-section`);
+    if (element) {
+      const navHeight = 64; // Height of the navigation bar (h-16 = 64px)
+      const elementPosition = element.offsetTop - navHeight - 16; // Extra 16px padding
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center px-4 py-8">
-      <div className="mb-10 mt-10 flex flex-col items-center gap-6 text-center w-full">
-        {/* Logo and Title */}
-        <div className="flex items-center gap-4">
-          <Image
-            src={logo}
-            alt="AI Capabilities Overview Logo"
-            width={48}
-            height={48}
-            className="flex-shrink-0"
+    <div className="min-h-screen">
+      {/* Navigation Bar */}
+      <Navigation onNavigate={handleNavigate} />
+      
+      {/* Hero Section with Background - Full Width */}
+      <div className="relative w-full mb-8">
+        <div className="relative h-64 flex items-center justify-center">
+          {/* Background with gradient overlay */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              zIndex: -1,
+              backgroundColor: 'var(--gray-100)',
+              backgroundImage: `linear-gradient(111deg, #ffffff40 24%, #0000 54%), url(${heroBackground.src})`,
+              backgroundPosition: '0 0, 50% 100%',
+              backgroundSize: 'auto, cover'
+            }}
           />
-          <h1 className="text-3xl font-bold tracking-tight lg:text-5xl text-gray-900">
-            AI Capabilities Overview
-          </h1>
+          
+          {/* Content */}
+          <div className="relative z-10 flex flex-col items-center gap-6 text-center w-full px-4">
+            {/* Logo and Title */}
+            <div className="flex items-center gap-4">
+              <Image
+                src={logo.src}
+                alt="AI Capabilities Overview Logo"
+                width={120}
+                height={120}
+                className="flex-shrink-0"
+              />
+              <h1 className="text-3xl font-bold tracking-tight lg:text-5xl text-gray-900">
+                CAIS AI Leaderboard
+              </h1>
+            </div>
+            <p className="text-lg text-gray-700 max-w-4xl">
+              Evaluating frontier AI models on capabilities and safety benchmarks
+            </p>
+          </div>
         </div>
-        <p className="text-lg text-gray-600 max-w-4xl">
-          Evaluating frontier AI models on safety and capabilities benchmarks
-        </p>
       </div>
+
+      <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center px-4">
 
       {/* Leaderboard Section */}
       <section className="mb-12 w-full">
@@ -41,23 +77,6 @@ export default function LandingPage() {
       {/* Citation Section */}
       <section className="mb-12 w-full">
         <div className="mx-auto max-w-4xl">
-          {/* CAIS Logo */}
-          <div className="flex justify-center mb-6">
-            <a 
-              href="https://safe.ai" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:opacity-80 transition-opacity"
-            >
-              <Image
-                src={caisLogo}
-                alt="Center for AI Safety"
-                width={200}
-                height={60}
-                className="flex-shrink-0"
-              />
-            </a>
-          </div>
           <h2 className="mb-4 text-center text-2xl font-bold">Citation</h2>
           <div className="mx-auto mb-6 h-0.5 w-16 bg-gradient-to-r from-gray-300 to-gray-100"></div>
 
@@ -92,6 +111,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </div>
   );
 }

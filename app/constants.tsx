@@ -118,17 +118,17 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     icon: Map,
     tooltipText: "Spatial Navigation Benchmark"
   },
-  honesty: {
-    id: "honesty",
-    name: "Honesty",
+  dishonesty: {
+    id: "dishonesty",
+    name: "Dishonesty",
     icon: Bot,
-    tooltipText: "Honesty Benchmark"
+    tooltipText: "Dishonesty Benchmark"
   },
-  bioweapons_refusal: {
-    id: "bioweapons_refusal",
-    name: "Bioweapons Refusal",
+  bioweapons_compliance: {
+    id: "bioweapons_compliance",
+    name: "Bioweapons Compliance",
     icon: Bot,
-    tooltipText: "Bioweapons Refusal Benchmark"
+    tooltipText: "Bioweapons Compliance Benchmark"
   },
   harmful_propensity: {
     id: "harmful_propensity",
@@ -142,11 +142,11 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     icon: Bot,
     tooltipText: "Deception Propensity Benchmark"
   },
-  adversarial_robustness: {
-    id: "adversarial_robustness",
-    name: "Adversarial Robustness",
+  adversarial_vulnerability: {
+    id: "adversarial_vulnerability",
+    name: "Adversarial Vulnerability",
     icon: Bot,
-    tooltipText: "Adversarial Robustness Benchmark"
+    tooltipText: "Adversarial Vulnerability Benchmark"
   }
 };
 
@@ -431,24 +431,11 @@ export const SAFETY_DATASETS: Dataset[] = [
     description: "<a href='https://app.grayswan.ai/arena/challenge/agent-red-teaming/rules' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ART</a> (Agent Red Teaming) measures robustness against malicious use and security against prompt injections. The benchmark evaluates AI agents across five core behavior categories: Confidentiality Breaches, Conflicting Objectives, Instruction Hierarchy Violations — Information, and Instruction Hierarchy Violations — Actions.",
     logo: art_logo.src,
     category: "safety",
-    capabilities: ["adversarial_robustness"],
+    capabilities: ["adversarial_vulnerability"],
     examples: [{
       type: "image",
       src: art_examples,
       alt: "Examples of ART benchmark testing adversarial robustness and prompt injection resistance"
-    }]
-  },
-  {
-    id: "masks",
-    name: "MASK",
-    link: "https://www.mask-benchmark.ai",
-    description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a large-scale human-collected dataset for measuring honesty in LLMs directly, disentangling accuracy from honesty for the first time. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
-    category: "safety",
-    capabilities: ["honesty"],
-    examples: [{
-      type: "image",
-      src: mask_examples,
-      alt: "Examples of MASK benchmark questions testing honesty in language models"
     }]
   },
   {
@@ -460,7 +447,8 @@ export const SAFETY_DATASETS: Dataset[] = [
     description: "<a href='https://www.virologytest.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Virology Capabilities Test (VCT)</a> Refusal measures the rate of LLM refuse complex virology laboratory protocols queries.<br><br>The ability to provide expert-level troubleshooting is inherently <b><i>dual-use</i></b>: it is useful for beneficial research, but it can also be misused in particularly harmful ways.",
     category: "safety",
     logo: vct_logo,
-    capabilities: ["bioweapons_refusal"],
+    capabilities: ["bioweapons_compliance"],
+    postprocessScore: (score: number) => 100 - score,
     examples: [{
       type: "image",
       src: vct_examples,
@@ -477,13 +465,26 @@ export const SAFETY_DATASETS: Dataset[] = [
 }`
   },
   {
+    id: "masks",
+    name: "MASK",
+    link: "https://www.mask-benchmark.ai",
+    description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a large-scale human-collected dataset for measuring honesty in LLMs directly, disentangling accuracy from honesty for the first time. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
+    category: "safety",
+    capabilities: ["dishonesty"],
+    postprocessScore: (score: number) => 100 - score,
+    examples: [{
+      type: "image",
+      src: mask_examples,
+      alt: "Examples of MASK benchmark questions testing honesty in language models"
+    }]
+  },
+  {
     id: "machiavelli",
     name: "Machiavelli",
     link: "https://aypan17.github.io/machiavelli/",
     description: "<a href='https://aypan17.github.io/machiavelli/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Machiavelli</a> benchmark measures harmful behaviors in LLM agents across 134 text-based games, evaluating tendencies toward deception, manipulation, and unethical actions in goal-oriented scenarios.",
     category: "safety",
-    capabilities: ["deception_propensity"],
-    postprocessScore: (score: number) => 100 - score
+    capabilities: ["deception_propensity"]
   },
   {
     id: "textquests_harm",
@@ -493,8 +494,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     description: "Harm metric from TextQuests measuring unethical behaviors in text-based adventure games.",
     logo: textquests_logo,
     category: "safety",
-    capabilities: ["harmful_propensity"],
-    postprocessScore: (score: number) => 100 - score
+    capabilities: ["harmful_propensity"]
   }
 ];
 
