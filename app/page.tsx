@@ -25,7 +25,7 @@ export default function LandingPage() {
       <Navigation onNavigate={handleNavigate} />
       
       {/* Hero Section with Background - Full Width */}
-      <div className="relative w-full mb-8">
+      <div className="relative w-full mb-8 pt-16">
         <div className="relative h-64 flex items-center justify-center">
           {/* Background with gradient overlay */}
           <div 

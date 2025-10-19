@@ -189,7 +189,10 @@ const LeaderboardTable = ({
   };
 
   const tableContent = (
-        <Table className="min-w-[800px]">
+        <Table 
+          className="min-w-[800px]" 
+          style={{ touchAction: 'pan-x pan-y' }}
+        >
       <TableHeader className="sticky top-0 bg-background z-50">
             <TableRow>
           <TableHead 
@@ -326,14 +329,14 @@ const LeaderboardTable = ({
   return (
     <div className="border border-gray-300 rounded-md">
       {expanded ? (
-        <div className="overflow-auto">
+        <div className="overflow-auto" style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
           {tableContent}
         </div>
-      ) : (
-        <div className="h-80 overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          {tableContent}
-        </div>
-      )}
+        ) : (
+          <div className="h-72 overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
+            {tableContent}
+          </div>
+        )}
       </div>
   );
 };
@@ -664,11 +667,29 @@ export function ModelResultsTable() {
       
       {/* Text-based Capabilities Card */}
       <div id="text-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-blue-50 px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center justify-between gap-4">
-            <h3 className="text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
+        <div className="bg-blue-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center justify-between w-full sm:w-auto">
+              <h3 className="text-lg sm:text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
+              <button
+                onClick={() => toggleViewMode('textCapabilities')}
+                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
+              >
+                {viewModes.textCapabilities === 'table' ? (
+                  <>
+                    <BarChart3 className="w-4 h-4" />
+                    Bar Charts
+                  </>
+                ) : (
+                  <>
+                    <TableIcon className="w-4 h-4" />
+                    Table View
+                  </>
+                )}
+              </button>
+            </div>
             {viewModes.textCapabilities === 'table' && (
-              <div className="flex-1">
+              <div className="w-full sm:flex-1">
                 <FilterBar 
                   filters={textFilters} 
                   onFiltersChange={setTextFilters}
@@ -677,7 +698,7 @@ export function ModelResultsTable() {
             )}
             <button
               onClick={() => toggleViewMode('textCapabilities')}
-              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0"
             >
               {viewModes.textCapabilities === 'table' ? (
                 <>
@@ -764,11 +785,29 @@ export function ModelResultsTable() {
 
       {/* Multimodal Capabilities Card */}
       <div id="vision-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-green-50 px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center justify-between gap-4">
-            <h3 className="text-xl font-semibold text-green-700 flex-shrink-0">Vision</h3>
+        <div className="bg-green-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center justify-between w-full sm:w-auto">
+              <h3 className="text-lg sm:text-xl font-semibold text-green-700 flex-shrink-0">Vision</h3>
+              <button
+                onClick={() => toggleViewMode('multimodal')}
+                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
+              >
+                {viewModes.multimodal === 'table' ? (
+                  <>
+                    <BarChart3 className="w-4 h-4" />
+                    Bar Charts
+                  </>
+                ) : (
+                  <>
+                    <TableIcon className="w-4 h-4" />
+                    Table View
+                  </>
+                )}
+              </button>
+            </div>
             {viewModes.multimodal === 'table' && (
-              <div className="flex-1">
+              <div className="w-full sm:flex-1">
                 <FilterBar 
                   filters={visionFilters} 
                   onFiltersChange={setVisionFilters}
@@ -777,7 +816,7 @@ export function ModelResultsTable() {
             )}
             <button
               onClick={() => toggleViewMode('multimodal')}
-              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium flex-shrink-0"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium flex-shrink-0"
             >
               {viewModes.multimodal === 'table' ? (
                 <>
@@ -860,14 +899,32 @@ export function ModelResultsTable() {
  
       {/* Safety Card */}
       <div id="safety-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-red-50 px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex-shrink-0">
-              <h3 className="text-xl font-semibold text-red-700">Safety</h3>
-              <p className="text-sm text-foreground mt-1">Lower Score is Better</p>
+        <div className="bg-red-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center justify-between w-full sm:w-auto">
+              <div className="flex-shrink-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-red-700">Safety</h3>
+                <p className="text-sm text-foreground mt-1">Lower Score is Better</p>
+              </div>
+              <button
+                onClick={() => toggleViewMode('safety')}
+                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
+              >
+                {viewModes.safety === 'table' ? (
+                  <>
+                    <BarChart3 className="w-4 h-4" />
+                    Bar Charts
+                  </>
+                ) : (
+                  <>
+                    <TableIcon className="w-4 h-4" />
+                    Table View
+                  </>
+                )}
+              </button>
             </div>
             {viewModes.safety === 'table' && (
-              <div className="flex-1">
+              <div className="w-full sm:flex-1">
                 <FilterBar 
                   filters={safetyFilters} 
                   onFiltersChange={setSafetyFilters}
@@ -876,7 +933,7 @@ export function ModelResultsTable() {
             )}
             <button
               onClick={() => toggleViewMode('safety')}
-              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium flex-shrink-0"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium flex-shrink-0"
             >
               {viewModes.safety === 'table' ? (
                 <>

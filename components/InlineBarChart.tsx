@@ -183,7 +183,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
 
       {/* Chart Content - One chart per benchmark with model names on X-axis */}
       {chartsData.length > 0 && filteredModels.length > 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
           {/* Individual Benchmark Charts */}
           {chartsData.map((chartInfo) => (
             <div key={chartInfo.datasetId} className="flex flex-col">
@@ -256,15 +256,15 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               </div>
               
               {/* Bar Chart */}
-              <div className="h-80">
+              <div className="h-80 overflow-visible">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={chartInfo.data}
                     margin={{
                       top: 30,
                       right: 10,
-                      left: 10,
-                      bottom: 60,
+                      left: 30,
+                      bottom: 80,
                     }}
                   >
                     <XAxis 
@@ -321,15 +321,15 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
             </div>
             
             {/* Average Chart */}
-            <div className="h-80">
+            <div className="h-80 overflow-visible">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={averageData}
                   margin={{
                     top: 30,
                     right: 10,
-                    left: 10,
-                    bottom: 60,
+                    left: 30,
+                    bottom: 80,
                   }}
                 >
                   <XAxis 
