@@ -84,7 +84,7 @@ const DatasetHeader = ({
               <div className="relative flex items-center justify-center w-full">
                 <div className="flex items-center gap-1 justify-center">
                   {dataset.logo && (
-                      <Image
+                    <Image
                       src={dataset.logo}
                       alt={`${dataset.name} logo`}
                       width={16}
@@ -190,9 +190,12 @@ const LeaderboardTable = ({
 
   const tableContent = (
         <Table className="min-w-[800px]">
-      <TableHeader className="sticky top-0 bg-background z-10">
+      <TableHeader className="sticky top-0 bg-background z-50">
             <TableRow>
-          <TableHead className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor} z-30`}>
+          <TableHead 
+            className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
+            style={{ position: 'sticky', left: 0, top: 0, zIndex: 50 }}
+          >
             <div className="font-semibold">Model</div>
           </TableHead>
           {/* Average column - show second (after Model) */}
@@ -227,7 +230,8 @@ const LeaderboardTable = ({
             className={`border-b border-gray-200 ${getRowStyling(model)} ${model.modelCardUrl ? 'group' : ''}`}
           >
               <TableCell 
-                className={`text-center ${bgColor}/30 border-r border-gray-300 sticky left-0 z-20 bg-white`}
+                className={`text-center border-r border-gray-300 sticky left-0 bg-white`}
+                style={{ position: 'sticky', left: 0, zIndex: 10, backgroundColor: 'white' }}
               >              <div className="flex items-center gap-2">
                 <Image
                   src={getProviderLogo(model.provider).src}
@@ -294,7 +298,7 @@ const LeaderboardTable = ({
               <span className="font-mono text-sm">
                 {formatValue(calculateAverage(model, datasets))}
               </span>
-            </TableCell>
+                </TableCell>
             
             {datasets.map((dataset, index) => {
               const rawScore = model.scores[dataset.id];
