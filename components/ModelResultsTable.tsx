@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { EyeOff, ChevronDown, ChevronUp, Save, BarChart3, Table as TableIcon } from "lucide-react";
+import { EyeOff, ChevronDown, ChevronUp, Save, BarChart3, Table as TableIcon, HelpCircle, ExternalLink } from "lucide-react";
 import hf_logo from "@/assets/hf-logo.png";
 import { MODELS, TEXT_CAPABILITIES_DATASETS, MULTIMODAL_DATASETS, SAFETY_DATASETS, getProviderLogo, BENCHMARK_TYPES } from "@/app/constants";
 import { Dataset, Model } from "@/lib/types";
@@ -102,19 +102,20 @@ const DatasetHeader = ({
     </div>
                 </button>
               </TooltipTrigger>
-        <TooltipContent className="w-72 bg-white text-black border border-gray-200 shadow-lg p-3">
+        <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
           {(() => {
-            const sentences = dataset.description.split('. ');
-            const firstSentence = sentences[0] + (sentences.length > 1 ? '.' : '');
-            const restOfDescription = sentences.length > 1 ? sentences.slice(1).join('. ') : '';
+            // Split by periods first, then by HTML line breaks
+            let firstPart = dataset.description.split('. ')[0];
+            firstPart = firstPart.split('<br>')[0];
+            firstPart = firstPart.split('<br/>')[0];
+            firstPart = firstPart.split('<BR>')[0];
+            
+            // Add period if it doesn't end with one and the original had more content
+            const hasMoreContent = dataset.description.length > firstPart.length;
+            const firstSentence = firstPart + (hasMoreContent && !firstPart.endsWith('.') ? '.' : '');
             
             return (
-              <>
-                <div className="mb-3" dangerouslySetInnerHTML={{ __html: firstSentence }} />
-                {restOfDescription && (
-                  <div className="text-gray-600 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: restOfDescription }} />
-                )}
-              </>
+              <div className="text-sm leading-relaxed text-wrap" dangerouslySetInnerHTML={{ __html: firstSentence }} />
             );
           })()}
           <button
@@ -190,11 +191,11 @@ const LeaderboardTable = ({
           className="min-w-[800px]" 
           style={{ touchAction: 'pan-x pan-y' }}
         >
-      <TableHeader className="sticky top-0 bg-background z-50">
+      <TableHeader className="sticky top-0 bg-background z-40">
             <TableRow>
           <TableHead 
             className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
-            style={{ position: 'sticky', left: 0, top: 0, zIndex: 50 }}
+            style={{ position: 'sticky', left: 0, top: 0, zIndex: 40 }}
           >
             <div className="font-semibold">Model</div>
           </TableHead>
@@ -222,7 +223,7 @@ const LeaderboardTable = ({
           >
               <TableCell 
                 className={`text-center border-r border-gray-300 sticky left-0 bg-white`}
-                style={{ position: 'sticky', left: 0, zIndex: 10, backgroundColor: 'white' }}
+                style={{ position: 'sticky', left: 0, zIndex: 30, backgroundColor: 'white' }}
               >              <div className="flex items-center gap-2">
                 <Image
                   src={getProviderLogo(model.provider).src}
@@ -317,11 +318,11 @@ const LeaderboardTable = ({
   return (
     <div className="border border-gray-300 rounded-md">
       {expanded ? (
-        <div className="overflow-auto" style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
+        <div className="overflow-auto scrollbar-hidden" style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
           {tableContent}
         </div>
         ) : (
-          <div className="h-72 overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
+          <div className="h-72 overflow-auto scrollbar-hidden" style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
             {tableContent}
           </div>
         )}
@@ -900,7 +901,34 @@ export function ModelResultsTable() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex-shrink-0">
-                <h3 className="text-lg sm:text-xl font-semibold text-red-700">Safety</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-red-700">Safety</h3>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="w-4 h-4 text-red-600 cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-4">
+                        <div className="text-sm leading-relaxed space-y-2">
+                          <div>
+                            <a 
+                              href="https://arxiv.org/abs/2407.21792" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold inline-flex items-center gap-1"
+                            >
+                              How does safety differ from capabilities?
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                          <div className="text-wrap">
+                            Safety benchmarks are benchmarks that are uncorrelated with general capabilities or training compute.
+                          </div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
                 <p className="text-sm text-foreground mt-1">Lower Score is Better</p>
               </div>
               <button

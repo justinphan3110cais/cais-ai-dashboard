@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import caisLogo from '@/assets/cais_icon_black_text.svg';
+import caisLogoShort from '@/assets/cais_logo.svg';
 import githubLogo from '@/assets/external/github-mark.svg';
 import { GITHUB_URL } from '@/app/constants';
 
@@ -27,17 +28,26 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
             rel="noopener noreferrer"
             className="hover:opacity-80 transition-opacity"
           >
+            {/* Desktop logo with text */}
             <Image
               src={caisLogo}
               alt="Center for AI Safety"
               width={100}
               height={20}
-              className="flex-shrink-0"
+              className="hidden sm:block flex-shrink-0"
+            />
+            {/* Mobile logo - shorter version */}
+            <Image
+              src={caisLogoShort}
+              alt="Center for AI Safety"
+              width={32}
+              height={32}
+              className="block sm:hidden flex-shrink-0"
             />
           </a>
           
           {/* Navigation Links */}
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-8">
             {navigationItems.map((item) => (
               <Button
                 key={item.id}

@@ -72,7 +72,7 @@ export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false *
         </button>
         
         {isProviderDropdownOpen && (
-          <div className="absolute top-full left-0 mt-1 w-64 sm:w-80 bg-white border border-gray-300 rounded-md shadow-lg z-[100]">
+          <div className="absolute top-full left-0 mt-1 w-64 sm:w-80 bg-white border border-gray-300 rounded-md shadow-lg z-[9999]">
             <div className="p-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
                 {uniqueProviders.map((provider) => {

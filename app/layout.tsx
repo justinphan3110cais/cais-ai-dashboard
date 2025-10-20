@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Capabilities Overview",
-  description: "Evaluating frontier AI models on capabilities benchmarks",
+  title: "CAIS AI Leaderboard",
+  description: "Evaluating frontier AI models on capabilities and safety benchmarks",
 };
 
 export default function RootLayout({

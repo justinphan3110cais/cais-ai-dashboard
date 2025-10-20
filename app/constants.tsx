@@ -42,7 +42,7 @@ export const PROVIDER_COLORS: Record<string, string> = {
   openai: '#22c55e', // Green
   anthropic: '#f97316', // Orange
   xai: '#374151', // Gray/Black
-  google: '#1e40af', // Dark blue
+  google: '#3b82f6', // Lighter blue
   deepseek: '#06b6d4', // Cyan/Light blue
   meta: '#38bdf8', // Sky blue
   qwen: '#a855f7', // Purple
@@ -132,9 +132,9 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
   },
   harmful_propensity: {
     id: "harmful_propensity",
-    name: "Harmful Propensity",
+    name: "Harmful Propensities",
     icon: Bot,
-    tooltipText: "Harmful Propensity Benchmark"
+    tooltipText: "Harmful Propensities Benchmark"
   },
   deception_propensity: {
     id: "deception_propensity",
@@ -142,19 +142,19 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     icon: Bot,
     tooltipText: "Deception Benchmark"
   },
-  adversarial_vulnerability: {
-    id: "adversarial_vulnerability",
-    name: "Adversarial Vulnerability",
+  adversarial_robustness: {
+    id: "adversarial_robustness",
+    name: "Attack Success Rate",
     icon: Bot,
-    tooltipText: "Adversarial Vulnerability Benchmark"
+    tooltipText: "Attack Success Rate Benchmark"
   }
 };
 
 export const PAPER_URL = "https://arxiv.org/abs/2507.23701";
 export const GITHUB_URL = "https://github.com/centerforaisafety/safetyxcapabilities-leaderboard";
 
-export const BIBTEX_CITATION = `@misc{aicapabilitiesoverview,
-      title={AI Capabilities Overview Leaderboard}, 
+export const BIBTEX_CITATION = `@misc{caisaileaderboard,
+      title={CAIS AI Leaderboard}, 
       author={Long Phan and Dan Hendrycks},
       year={2025},
       url={https://leaderboard.safe.ai}, 
@@ -215,7 +215,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     id: "arc_agi_2",
     name: "ARC-AGI-2",
     link: "https://arcprize.org/",
-    description: "<a href='https://arcprize.org/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ARC-AGI-2</a> uses abstract visual puzzles based on core knowledge priors (cognitive building blocks present at birth) to evaluate genuine skill-acquisition efficiency on tasks the AI has never encountered. The benchmark measures fluid intelligence—the ability to reason, solve novel problems, and adapt to new situations—rather than crystallized intelligence that relies on accumulated knowledge.<br><br>Scoring high on ARC-AGI-2 demonstrates that a system can efficiently acquire new skills outside its training data.",
+    description: "<a href='https://arcprize.org/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ARC-AGI-2</a> uses abstract visual puzzles to evaluate reasoning skills. The benchmark measures fluid intelligence—the ability to reason, solve novel problems, and adapt to new situations—rather than crystallized intelligence that relies on accumulated knowledge.<br><br>Scoring high on ARC-AGI-2 demonstrates that a system can efficiently acquire new skills outside its training data.",
     logo: arc_agi_logo.src,
     category: "text",
     capabilities: ["fluid_reasoning"],
@@ -266,7 +266,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     name: "Terminal Bench",
     link: "https://www.tbench.ai",
     githubLink: "https://github.com/laude-institute/terminal-bench",
-    description: "<a href='https://www.tbench.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Terminal-Bench</a> is a collection of tasks and an evaluation harness to help agent makers quantify their agents' terminal mastery. Tasks cover a wide range of engineering, game playing, and system administration tasks that are unlikely to be pattern-matched on training data. Outcomes are evaluated programmattically with verification scripts executed in the agent's Docker environment, requiring agents to successfully meet a range of output conditions.",
+    description: "<a href='https://www.tbench.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Terminal-Bench</a> evaluates agents' terminal mastery. Tasks cover a wide range of engineering, game playing, and system administration tasks that are unlikely to be pattern-matched on training data. Outcomes are evaluated programmattically with verification scripts executed in the agent's Docker environment, requiring agents to successfully meet a range of output conditions.",
     logo: terminalbench_logo.src,
     category: "text",
     capabilities: ["coding"],
@@ -303,7 +303,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
       primaryClass={cs.AI},
       url={https://arxiv.org/abs/2507.23701}, 
 }`,
-    description: "<a href='https://textquests.ai/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>TextQuests</a> tests LLM agents on 25 classic Infocom text-based adventure games, which can take humans hundreds of precise actions and over 30 hours of gameplay to solve. Most questions revolve around exploratory, long-horizon problem solving, requiring trial-and-error reasoning and multi-step planning.<br><br>Scoring high would show an agent can sustain long-horizon reasoning and planning in exploratory environments.",
+    description: "<a href='https://textquests.ai/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>TextQuests</a> tests LLM agents on 25 classic exploratory text-based adventure games, which can take humans hundreds of precise actions and over 30 hours of gameplay to solve. Most questions revolve around exploratory, long-horizon problem solving, requiring trial-and-error reasoning and multi-step planning.<br><br>Scoring high would show an agent can sustain long-horizon reasoning and planning in exploratory environments.",
     logo: textquests_logo,
     category: "text",
     capabilities: ["games"],
@@ -321,7 +321,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
     id: "erqa",
     name: "ERQA",
     link: "https://github.com/embodiedreasoning/ERQA",
-    description: "<a href='https://github.com/embodiedreasoning/ERQA' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ERQA</a> evaluates Vision-Language Models on 400 multiple-choice embodied reasoning questions designed around the capabilities needed by an embodied agent interacting with the physical world, particularly in robotics. The benchmark spans spatial reasoning, trajectory reasoning, action reasoning, state estimation, pointing, multi-view reasoning, and task reasoning.<br><br>Scoring high on ERQA would indicate a model has a broad capability to reason about the physical world in ways critical for embodied robotics.",
+    description: "<a href='https://github.com/embodiedreasoning/ERQA' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ERQA</a> evaluates Vision-Language Models on embodied reasoning questions designed around the capabilities needed by an embodied agent interacting with the physical world, particularly in robotics. The benchmark spans spatial reasoning, trajectory reasoning, action reasoning, state estimation, pointing, multi-view reasoning, and task reasoning.<br><br>Scoring high on ERQA would indicate a model has a broad capability to reason about the physical world in ways critical for embodied robotics.",
     logo: erqa_logo.src,
     category: "vision",
     capabilities: ["embodied_reasoning"],
@@ -346,7 +346,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
     id: "intphys2",
     name: "IntPhys 2",
     link: "https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks",
-    description: "<a href='https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>IntPhys 2</a> evaluates LLM-driven models' understanding of intuitive physics through video clips testing core principles like permanence, solidity, and spatio-temporal continuity. Models must identify physically plausible versus impossible physical-world scenes.<br><br> Scoring high on IntPhys 2 would demonstrate that a model has a sufficient grasp of basic physical-world dynamics.",
+    description: "<a href='https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>IntPhys 2</a> evaluates LLMs understanding of intuitive physics through video clips testing core principles like permanence, solidity, and spatio-temporal continuity. Models must identify physically plausible versus impossible physical-world scenes.<br><br> Scoring high on IntPhys 2 would demonstrate that a model has a sufficient grasp of basic physical-world dynamics.",
     logo: intphys2_logo.src,
     category: "vision",
     capabilities: ["realworld_physics"],
@@ -372,7 +372,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
     id: "enigmaeval",
     name: "EnigmaEval",
     link: "https://scale.com/leaderboard/enigma_eval",
-    description: "<a href='https://scale.com/leaderboard/enigma_eval' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>EnigmaEval</a> evaluates LLMs on 1,184 extremely hard multimodal puzzles from competitions like the MIT Mystery Hunt, one of the world's toughest puzzle competitions. These puzzles often take teams of expert humans several days to solve, requiring lateral, multi-step reasoning over images and text.<br><br>Scoring high on EnigmaEval would show that a LLM is sufficiently capable of solving extremely complex puzzles and problems that push the limits of reasoning ability.",
+    description: "<a href='https://scale.com/leaderboard/enigma_eval' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>EnigmaEval</a> evaluates LLMs on extremely hard multimodal puzzles from competitions like the MIT Mystery Hunt, one of the world's toughest puzzle competitions. These puzzles often take teams of expert humans several days to solve, requiring lateral, multi-step reasoning over images and text.<br><br>Scoring high on EnigmaEval would show that a LLM is sufficiently capable of solving extremely complex puzzles and problems that push the limits of reasoning ability.",
     logo: enigmaeval_logo.src,
     category: "vision",
     capabilities: ["expert_puzzle"],
@@ -431,12 +431,21 @@ export const SAFETY_DATASETS: Dataset[] = [
     description: "<a href='https://app.grayswan.ai/arena/challenge/agent-red-teaming/rules' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ART</a> (Agent Red Teaming) measures robustness against malicious use and security against prompt injections. The benchmark evaluates AI agents across five core behavior categories: Confidentiality Breaches, Conflicting Objectives, Instruction Hierarchy Violations — Information, and Instruction Hierarchy Violations — Actions.",
     logo: art_logo.src,
     category: "safety",
-    capabilities: ["adversarial_vulnerability"],
+    capabilities: ["adversarial_robustness"],
     examples: [{
       type: "image",
       src: art_examples,
       alt: "Examples of ART benchmark testing adversarial robustness and prompt injection resistance"
-    }]
+    }],
+    citation: `@misc{zou2025securitychallengesaiagent,
+      title={Security Challenges in AI Agent Deployment: Insights from a Large Scale Public Competition}, 
+      author={Andy Zou and Maxwell Lin and Eliot Jones and Micha Nowak and Mateusz Dziemian and Nick Winter and Alexander Grattan and Valent Nathanael and Ayla Croft and Xander Davies and Jai Patel and Robert Kirk and Nate Burnikell and Yarin Gal and Dan Hendrycks and J. Zico Kolter and Matt Fredrikson},
+      year={2025},
+      eprint={2507.20526},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2507.20526}, 
+}`
   },
   {
     id: "vct_refusal",
@@ -444,7 +453,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     displayName: "VCT - Refusal",
     link: "https://www.virologytest.ai",
     paperLink: "https://arxiv.org/abs/2504.16137",
-    description: "<a href='https://www.virologytest.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Virology Capabilities Test (VCT)</a> Refusal measures the rate of LLM refuse complex virology laboratory protocols queries.<br><br>The ability to provide expert-level troubleshooting is inherently <b><i>dual-use</i></b>: it is useful for beneficial research, but it can also be misused in particularly harmful ways.",
+    description: "<a href='https://www.virologytest.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Virology Capabilities Test (VCT)</a> Refusal measures the rate of LLM refuse complex virology laboratory protocols queries. VCT-Refusal is a subset of VCT that is manually labeled by experts for queries that should be refused because of potential <b><i>dual-use</i></b>. <br>The ability to provide expert-level troubleshooting is inherently <b><i>dual-use</i></b>: it is useful for beneficial research, but it can also be misused in particularly harmful ways.",
     category: "safety",
     logo: vct_logo,
     capabilities: ["bioweapons_compliance"],
@@ -455,7 +464,7 @@ export const SAFETY_DATASETS: Dataset[] = [
       alt: "Examples of complex virology protocol troubleshooting questions from VCT."
     }],
     citation: `@misc{götting2025virologycapabilitiestestvct,
-      title={Virology Capabilities Test (VCT): A Multimodal Virology Q&A Benchmark}, 
+      title={Virology Capabilities Test (VCT): A Multimodal Virology Q\\&A Benchmark}, 
       author={Jasper Götting and Pedro Medeiros and Jon G Sanders and Nathaniel Li and Long Phan and Karam Elabd and Lennart Justen and Dan Hendrycks and Seth Donoughe},
       year={2025},
       eprint={2504.16137},
@@ -468,7 +477,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     id: "masks",
     name: "MASK",
     link: "https://www.mask-benchmark.ai",
-    description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a large-scale human-collected dataset for measuring honesty in LLMs directly, disentangling accuracy from honesty for the first time. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
+    description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a human-collected dataset for measuring honesty in LLMs directly. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
     category: "safety",
     capabilities: ["dishonesty"],
     postprocessScore: (score: number) => 100 - score,
@@ -476,7 +485,16 @@ export const SAFETY_DATASETS: Dataset[] = [
       type: "image",
       src: mask_examples,
       alt: "Examples of MASK benchmark questions testing honesty in language models"
-    }]
+    }],
+    citation: `@misc{ren2025maskbenchmarkdisentanglinghonesty,
+      title={The MASK Benchmark: Disentangling Honesty From Accuracy in AI Systems}, 
+      author={Richard Ren and Arunim Agarwal and Mantas Mazeika and Cristina Menghini and Robert Vacareanu and Brad Kenstler and Mick Yang and Isabelle Barrass and Alice Gatti and Xuwang Yin and Eduardo Trevino and Matias Geralnik and Adam Khoja and Dean Lee and Summer Yue and Dan Hendrycks},
+      year={2025},
+      eprint={2503.03750},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2503.03750}, 
+}`
   },
   {
     id: "machiavelli",
@@ -484,7 +502,16 @@ export const SAFETY_DATASETS: Dataset[] = [
     link: "https://aypan17.github.io/machiavelli/",
     description: "<a href='https://aypan17.github.io/machiavelli/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Machiavelli</a> benchmark measures harmful behaviors in LLM agents across 134 text-based games, evaluating tendencies toward deception, manipulation, and unethical actions in goal-oriented scenarios.",
     category: "safety",
-    capabilities: ["deception_propensity"]
+    capabilities: ["deception_propensity"],
+    citation: `@misc{pan2023rewardsjustifymeansmeasuring,
+      title={Do the Rewards Justify the Means? Measuring Trade-Offs Between Rewards and Ethical Behavior in the MACHIAVELLI Benchmark}, 
+      author={Alexander Pan and Jun Shern Chan and Andy Zou and Nathaniel Li and Steven Basart and Thomas Woodside and Jonathan Ng and Hanlin Zhang and Scott Emmons and Dan Hendrycks},
+      year={2023},
+      eprint={2304.03279},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2304.03279}, 
+}`
   },
   {
     id: "textquests_harm",

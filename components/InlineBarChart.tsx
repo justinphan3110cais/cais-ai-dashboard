@@ -23,13 +23,13 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     datasets.reduce((acc, dataset) => ({ ...acc, [dataset.id]: true }), {})
   );
 
-  // Get default selected models (flagship models with standard or mini size from default providers)
+  // Get default selected models (flagship models with standard size only from default providers)
   const defaultSelectedModels = useMemo(() => {
     const defaultProviders = ["openai", "anthropic", "xai", "google"];
     return models
       .filter(model => 
         model.flagship === true && 
-        (model.model_size === 'standard' || model.model_size === 'mini') &&
+        model.model_size === 'standard' &&
         defaultProviders.includes(model.provider.toLowerCase())
       )
       .map(model => model.name);
@@ -83,7 +83,15 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
           };
         })
         .filter(item => item.score !== null)
-        .sort((a, b) => (b.score || 0) - (a.score || 0)); // Sort by score descending
+        .sort((a, b) => {
+          // For safety datasets, sort ascending (lower is better)
+          // For other datasets, sort descending (higher is better)
+          if (dataset.category === 'safety') {
+            return (a.score || 0) - (b.score || 0); // Ascending
+          } else {
+            return (b.score || 0) - (a.score || 0); // Descending
+          }
+        });
         
         return {
           datasetName: dataset.name,
@@ -123,7 +131,15 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
       };
     })
     .filter(item => item.score !== null)
-    .sort((a, b) => (b.score || 0) - (a.score || 0)); // Sort by score descending
+    .sort((a, b) => {
+      // Check if we're dealing with safety datasets
+      const isSafetyDatasets = datasets.some(d => d.category === 'safety');
+      if (isSafetyDatasets) {
+        return (a.score || 0) - (b.score || 0); // Ascending for safety
+      } else {
+        return (b.score || 0) - (a.score || 0); // Descending for capabilities
+      }
+    });
   }, [filteredModels, includedDatasets, datasets]);
 
   // Create a custom label component factory for each chart
@@ -147,23 +163,23 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
             fill="#374151" 
             textAnchor="middle" 
             fontSize="10"
-            fontWeight="500"
+            fontWeight="600"
           >
             {typeof value === 'number' ? value.toFixed(1) : value}
           </text>
           {/* Provider logo - positioned between bar and model name */}
           <foreignObject 
-            x={Number(x) + Number(width) / 2 - 7} 
+            x={Number(x) + Number(width) / 2 - 9} 
             y={Number(y) + Number(height) + 8} 
-            width={14} 
-            height={14}
+            width={18} 
+            height={18}
           >
             <div className="flex justify-center items-center">
               <Image
                 src={providerLogo.src || ''}
                 alt={`${entry.provider} logo`}
-                width={12}
-                height={12}
+                width={16}
+                height={16}
                 className="rounded"
               />
             </div>
@@ -188,14 +204,14 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
           {chartsData.map((chartInfo) => (
             <div key={chartInfo.datasetId} className="flex flex-col">
               {/* Benchmark Title with Logo, Hover, and Toggle Button */}
-              <div className="flex items-center justify-center mb-3 gap-2">
+              <div className="flex items-center justify-center mb-3 w-full">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex flex-col items-center justify-center cursor-pointer">
+                      <div className="flex flex-col cursor-pointer">
                         {/* Capability Category (Secondary Text) */}
                         {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
-                          <div className="flex items-center gap-1 mb-1">
+                          <div className="flex items-center justify-center gap-1 mb-1">
                             {chartInfo.dataset.capabilities
                               .map(capabilityId => BENCHMARK_TYPES[capabilityId])
                               .filter(capability => capability !== undefined)
@@ -208,7 +224,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                           </div>
                         ) : null}
                         {/* Benchmark Name */}
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-center gap-2">
                           {chartInfo.dataset.logo && (
                             <Image
                               src={chartInfo.dataset.logo}
@@ -272,7 +288,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       angle={-45}
                       textAnchor="end"
                       height={60}
-                      tick={{ fontSize: 10, fill: '#374151', dy: 16 }}
+                      tick={{ fontSize: 10, fill: '#374151', dy: 19, fontWeight: 600 }}
                       axisLine={false}
                       tickLine={false}
                     />
@@ -314,7 +330,11 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       style={{ accentColor: includedDatasets[dataset.id] ? '#2563eb' : '#9ca3af' }}
                     />
-                    <span className="text-xs text-gray-700">{dataset.name}</span>
+                    <span className="text-xs text-gray-700">
+                      {dataset.name === "Agent Red Teaming" ? "Red Teaming" : 
+                       dataset.name === "VCT" ? "VCT-Refusal" : 
+                       dataset.name}
+                    </span>
                   </label>
                 ))}
               </div>
@@ -337,7 +357,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                     angle={-45}
                     textAnchor="end"
                     height={60}
-                    tick={{ fontSize: 10, fill: '#374151', dy: 16 }}
+                    tick={{ fontSize: 10, fill: '#374151', dy: 20, fontWeight: 600 }}
                     axisLine={false}
                     tickLine={false}
                   />

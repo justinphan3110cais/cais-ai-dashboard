@@ -2,6 +2,7 @@
 import { BIBTEX_CITATION } from "@/app/constants";
 import { ModelResultsTable } from "@/components/ModelResultsTable";
 import { Navigation } from "@/components/ui/navigation";
+import { Footer } from "@/components/Footer";
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
 import heroBackground from "@/assets/hero-background.webp";
@@ -112,6 +113,9 @@ export default function LandingPage() {
         </div>
       </section>
       </main>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

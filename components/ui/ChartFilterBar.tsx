@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { MODELS, getProviderLogo } from "@/app/constants";
 
@@ -119,11 +119,6 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
     return filters.selectedProviders.some(p => p.toLowerCase() === provider.toLowerCase());
   };
 
-  // Check if all providers selected or if explicitly showing defaults
-  const allProvidersSelected = filters.selectedProviders.length === 0 || 
-    (filters.selectedProviders.length === 4 && 
-     filters.selectedProviders.every(p => defaultProviders.includes(p.toLowerCase())));
-
   return (
     <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 p-3 sm:p-4 bg-gray-50/30 rounded-lg border border-border">
       {/* Provider Filter Dropdown */}
@@ -146,7 +141,6 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
                   const isExplicitlySelected = filters.selectedProviders.some(
                     p => p.toLowerCase() === provider.toLowerCase()
                   );
-                  const isDefaultProvider = defaultProviders.includes(provider.toLowerCase());
                   const showAsSelected = isProviderSelected(provider);
                   
                   return (
