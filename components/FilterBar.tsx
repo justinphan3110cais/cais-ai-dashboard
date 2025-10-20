@@ -142,7 +142,7 @@ export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false *
               })}
               className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-0"
             />
-            <span className="text-xs text-gray-600">Std</span>
+            <span className="text-xs text-gray-600">Standard</span>
           </label>
           
           <label className="flex items-center gap-0.5 sm:gap-1 cursor-pointer hover:text-gray-700 transition-colors">

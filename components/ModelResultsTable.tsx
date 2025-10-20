@@ -14,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
@@ -144,8 +143,7 @@ const LeaderboardTable = ({
   expanded = false,
   isEditMode = false,
   onUpdateScore,
-  onShowDetails,
-  isSafetyTable = false
+  onShowDetails
 }: { 
   datasets: Dataset[];
   models: Model[];
@@ -156,7 +154,6 @@ const LeaderboardTable = ({
   isEditMode?: boolean;
   onUpdateScore?: (modelName: string, datasetId: string, newValue: number | null) => void;
   onShowDetails: (datasetId: string, datasetName: string) => void;
-  isSafetyTable?: boolean;
 }) => {
   // Helper function to get processed score (applies postprocessScore if it exists)
   const getProcessedScore = (dataset: Dataset, rawScore: number | null): number | null => {
@@ -184,7 +181,7 @@ const LeaderboardTable = ({
     return scores.reduce((sum, score) => sum + score, 0) / scores.length;
   };
 
-  const getRowStyling = (model: Model) => {
+  const getRowStyling = () => {
     return 'hover:bg-gray-50';
   };
 
@@ -203,19 +200,10 @@ const LeaderboardTable = ({
           </TableHead>
           {/* Average column - show second (after Model) */}
           <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
-                        <button
-              onClick={() => onSort('average')}
-              className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
-            >
-              <div className="flex items-center justify-center gap-1">
-                <span className="text-xs font-medium">Average</span>
-                <span className="text-xs ml-1">
-                  {sortConfig.key === 'average' && sortConfig.direction === 'asc' && '↑'}
-                  {sortConfig.key === 'average' && sortConfig.direction === 'desc' && '↓'}
-                </span>
-              </div>
-                        </button>
-              </TableHead>
+            <div className="flex items-center justify-center gap-1">
+              <span className="text-xs font-bold">Average</span>
+            </div>
+          </TableHead>
           {datasets.map((dataset, index) => (
             <TableHead 
               key={dataset.name} 
@@ -230,7 +218,7 @@ const LeaderboardTable = ({
         {models.map((model) => (
           <TableRow 
             key={model.name} 
-            className={`border-b border-gray-200 ${getRowStyling(model)} ${model.modelCardUrl ? 'group' : ''}`}
+            className={`border-b border-gray-200 ${getRowStyling()} ${model.modelCardUrl ? 'group' : ''}`}
           >
               <TableCell 
                 className={`text-center border-r border-gray-300 sticky left-0 bg-white`}
@@ -586,6 +574,9 @@ export function ModelResultsTable() {
   };
 
   const handleTextCapabilitiesSort = (datasetId: string) => {
+    // Ignore sorting for average column
+    if (datasetId === 'average') return;
+    
     setTextCapabilitiesSortConfig(prev => {
       if (prev.key !== datasetId) {
         // First click on new column: desc
@@ -604,6 +595,9 @@ export function ModelResultsTable() {
   };
 
   const handleMultimodalSort = (datasetId: string) => {
+    // Ignore sorting for average column
+    if (datasetId === 'average') return;
+    
     setMultimodalSortConfig(prev => {
       if (prev.key !== datasetId) {
         // First click on new column: desc
@@ -622,6 +616,9 @@ export function ModelResultsTable() {
   };
 
   const handleSafetySort = (datasetId: string) => {
+    // Ignore sorting for average column
+    if (datasetId === 'average') return;
+    
     setSafetySortConfig(prev => {
       if (prev.key !== datasetId) {
         // First click on new column: desc
@@ -960,7 +957,6 @@ export function ModelResultsTable() {
             isEditMode={isEditMode}
             onUpdateScore={updateModelScore}
             onShowDetails={handleShowDetails}
-            isSafetyTable={true}
           />
         ) : (
           <InlineBarChart
