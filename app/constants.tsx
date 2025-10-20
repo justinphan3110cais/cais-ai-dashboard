@@ -120,15 +120,15 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
   },
   dishonesty: {
     id: "dishonesty",
-    name: "Dishonesty",
+    name: "Deception",
     icon: Bot,
-    tooltipText: "Dishonesty Benchmark"
+    tooltipText: "Deception Benchmark"
   },
   bioweapons_compliance: {
     id: "bioweapons_compliance",
-    name: "Bioweapons Compliance",
+    name: "Bioweapons Assistance",
     icon: Bot,
-    tooltipText: "Bioweapons Compliance Benchmark"
+    tooltipText: "Bioweapons Assistance Benchmark"
   },
   harmful_propensity: {
     id: "harmful_propensity",
@@ -138,9 +138,9 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
   },
   deception_propensity: {
     id: "deception_propensity",
-    name: "Deception Propensity",
+    name: "Deception",
     icon: Bot,
-    tooltipText: "Deception Propensity Benchmark"
+    tooltipText: "Deception Benchmark"
   },
   adversarial_vulnerability: {
     id: "adversarial_vulnerability",
