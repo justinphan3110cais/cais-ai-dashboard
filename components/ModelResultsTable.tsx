@@ -413,7 +413,7 @@ export function ModelResultsTable() {
   // Check if edit mode is enabled from environment variable
   useEffect(() => {
     // In Next.js client components, we need to access env vars this way
-    const editModeEnabled = (globalThis as any).process?.env?.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
+    const editModeEnabled = process.env.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
     setIsEditMode(editModeEnabled);
   }, []);
 
