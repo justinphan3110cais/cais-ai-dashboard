@@ -315,17 +315,18 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                     </TooltipTrigger>
                     <TooltipContent className="w-72 bg-white text-black border border-gray-200 shadow-lg p-3">
                       {(() => {
-                        const sentences = chartInfo.dataset.description.split('. ');
-                        const firstSentence = sentences[0] + (sentences.length > 1 ? '.' : '');
-                        const restOfDescription = sentences.length > 1 ? sentences.slice(1).join('. ') : '';
+                        // Split by periods first, then by HTML line breaks (same logic as table tooltips)
+                        let firstPart = chartInfo.dataset.description.split('. ')[0];
+                        firstPart = firstPart.split('<br>')[0];
+                        firstPart = firstPart.split('<br/>')[0];
+                        firstPart = firstPart.split('<BR>')[0];
+                        
+                        // Add period if it doesn't end with one and the original had more content
+                        const hasMoreContent = chartInfo.dataset.description.length > firstPart.length;
+                        const firstSentence = firstPart + (hasMoreContent && !firstPart.endsWith('.') ? '.' : '');
                         
                         return (
-                          <>
-                            <div className="mb-3" dangerouslySetInnerHTML={{ __html: firstSentence }} />
-                            {restOfDescription && (
-                              <div className="text-gray-600 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: restOfDescription }} />
-                            )}
-                          </>
+                          <div className="text-sm leading-relaxed text-wrap" dangerouslySetInnerHTML={{ __html: firstSentence }} />
                         );
                       })()}
                       {onShowDetails && (

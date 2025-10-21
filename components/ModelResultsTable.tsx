@@ -671,12 +671,21 @@ export function ModelResultsTable() {
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex items-center gap-2">
                 <h3 className="text-lg sm:text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
-                <TooltipProvider>
+                <TooltipProvider delayDuration={0}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="w-4 h-4 text-blue-600 cursor-help" />
+                      <button 
+                        className="flex items-center justify-center p-1 bg-transparent border-none cursor-help touch-manipulation"
+                        onTouchStart={(e) => e.preventDefault()}
+                      >
+                        <HelpCircle className="w-4 h-4 text-blue-600" />
+                      </button>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
+                    <TooltipContent 
+                      className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3 z-50"
+                      side="bottom"
+                      align="center"
+                    >
                       <div className="text-sm leading-relaxed text-wrap">
                         The benchmarks here do not fully indicate how far we are from to AGI. For direct AGI measurements, please see{' '}
                         <a 
@@ -926,12 +935,21 @@ export function ModelResultsTable() {
               <div className="flex-shrink-0">
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg sm:text-xl font-semibold text-red-700">Safety</h3>
-                  <TooltipProvider>
+                  <TooltipProvider delayDuration={0}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <HelpCircle className="w-4 h-4 text-red-600 cursor-help" />
+                        <button 
+                          className="flex items-center justify-center p-1 bg-transparent border-none cursor-help touch-manipulation"
+                          onTouchStart={(e) => e.preventDefault()}
+                        >
+                          <HelpCircle className="w-4 h-4 text-red-600" />
+                        </button>
                       </TooltipTrigger>
-                      <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
+                      <TooltipContent 
+                        className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3 z-50"
+                        side="bottom"
+                        align="center"
+                      >
                         <div className="text-sm leading-relaxed text-wrap space-y-2">
                           <div>
                             <a 

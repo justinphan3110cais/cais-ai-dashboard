@@ -421,7 +421,7 @@
     "provider": "google",
     "scores": {
       "hle": 6.9,
-      "arc_agi_2": null,
+      "arc_agi_2": 0,
       "textquests": 11.7,
       "swebench_verified": null,
       "masks": null,
@@ -432,7 +432,7 @@
       "erqa": null,
       "mindcube": 49.2,
       "omnispatial": null,
-      "terminal_bench": null,
+      "terminal_bench": 4.3,
       "machiavelli": 84.2,
       "art": 93.6
     },
@@ -496,10 +496,10 @@
     "name": "GPT-5-Nano",
     "provider": "openai",
     "scores": {
-      "hle": null,
-      "arc_agi_2": null,
+      "hle": 8.2,
+      "arc_agi_2": 2.6,
       "textquests": null,
-      "swebench_verified": null,
+      "swebench_verified": 25.5,
       "masks": null,
       "textquests_harm": null,
       "vct_refusal": null,
@@ -508,9 +508,9 @@
       "erqa": null,
       "mindcube": null,
       "omnispatial": null,
-      "terminal_bench": null,
+      "terminal_bench": 11.3,
       "machiavelli": null,
-      "art": null
+      "art": 76.1
     },
     "isTopModel": false,
     "model_size": "nano",
@@ -521,9 +521,9 @@
     "name": "Haiku 4.5",
     "provider": "anthropic",
     "scores": {
-      "hle": null,
-      "arc_agi_2": null,
-      "textquests": null,
+      "hle": 9.7,
+      "arc_agi_2": 2.8,
+      "textquests": 15.08,
       "swebench_verified": null,
       "masks": null,
       "textquests_harm": null,
@@ -533,7 +533,7 @@
       "erqa": null,
       "mindcube": null,
       "omnispatial": null,
-      "terminal_bench": null,
+      "terminal_bench": 25.5,
       "machiavelli": null,
       "art": null
     },
