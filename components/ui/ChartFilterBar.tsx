@@ -120,21 +120,21 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 p-3 sm:p-4 bg-gray-50/30 rounded-lg border border-border">
+    <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 p-3 sm:p-4 bg-muted/30 rounded-lg border border-border">
       {/* Provider Filter Dropdown */}
       <div className="relative" ref={providerDropdownRef}>
         <button
           onClick={() => setIsProviderDropdownOpen(!isProviderDropdownOpen)}
-          className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex items-center gap-2 px-3 py-2 border border-border rounded-md bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
         >
-          <span className="text-sm font-medium text-gray-900">
+          <span className="text-sm font-medium text-foreground">
             Companies ({filters.selectedProviders.length > 0 ? filters.selectedProviders.length : defaultProviders.length})
           </span>
           <ChevronDown className={`w-4 h-4 transition-transform ${isProviderDropdownOpen ? 'rotate-180' : ''}`} />
         </button>
         
         {isProviderDropdownOpen && (
-          <div className="absolute top-full left-0 mt-1 w-80 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+          <div className="absolute top-full left-0 mt-1 w-80 bg-popover border border-border rounded-md shadow-lg z-50">
             <div className="p-2">
               <div className="grid grid-cols-2 gap-1">
                 {uniqueProviders.map((provider) => {
@@ -146,16 +146,16 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
                   return (
                     <label 
                       key={provider} 
-                      className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer rounded"
+                      className="flex items-center gap-2 p-2 hover:bg-accent cursor-pointer rounded"
                     >
                       <input
                         type="checkbox"
                         checked={showAsSelected}
                         onChange={() => handleProviderToggle(provider)}
                         style={{
-                          accentColor: isExplicitlySelected ? '#2563eb' : '#9ca3af'
+                          accentColor: isExplicitlySelected ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))'
                         }}
-                        className="rounded border-gray-300"
+                        className="rounded border-border"
                       />
                       <Image
                         src={getProviderLogo(provider).src}
@@ -181,28 +181,28 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
 
       {/* Model Multi-Select Search with Label */}
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-700">Models:</span>
+        <span className="text-sm font-medium text-foreground">Models:</span>
         <div className="relative" ref={modelDropdownRef}>
           <button
             onClick={() => setModelSearchOpen(!modelSearchOpen)}
-            className="flex items-center justify-between gap-2 px-3 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-64 sm:w-80"
+            className="flex items-center justify-between gap-2 px-3 py-2 border border-border rounded-md bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring text-left w-64 sm:w-80"
           >
-            <span className="text-sm text-gray-900">
+            <span className="text-sm text-foreground">
               {filters.selectedModels.length} model{filters.selectedModels.length !== 1 ? 's' : ''} selected
             </span>
             <ChevronDown className={`w-4 h-4 transition-transform flex-shrink-0 ${modelSearchOpen ? 'rotate-180' : ''}`} />
           </button>
           
           {modelSearchOpen && (
-            <div className="absolute top-full left-0 mt-1 w-[600px] bg-white border border-gray-300 rounded-md shadow-lg z-50 max-h-80 overflow-hidden flex flex-col">
+            <div className="absolute top-full left-0 mt-1 w-[600px] bg-popover border border-border rounded-md shadow-lg z-50 max-h-80 overflow-hidden flex flex-col">
             {/* Search Input */}
-            <div className="p-2 border-b border-gray-200">
+            <div className="p-2 border-b border-border">
               <input
                 type="text"
                 placeholder="Search models..."
                 value={modelSearchTerm}
                 onChange={(e) => setModelSearchTerm(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground placeholder:text-muted-foreground"
                 autoFocus
               />
             </div>
@@ -217,14 +217,14 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
                       return (
                         <label 
                           key={model.name} 
-                          className="flex items-center gap-2 p-2 cursor-pointer rounded hover:bg-gray-100"
+                          className="flex items-center gap-2 p-2 cursor-pointer rounded hover:bg-accent"
                         >
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => handleModelToggle(model.name)}
-                            className="w-4 h-4 rounded border-gray-300 flex-shrink-0"
-                            style={{ accentColor: '#2563eb' }}
+                            className="w-4 h-4 rounded border-border flex-shrink-0"
+                            style={{ accentColor: 'hsl(var(--primary))' }}
                           />
                           <Image
                             src={getProviderLogo(model.provider).src}
@@ -233,14 +233,14 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
                             height={14}
                             className="flex-shrink-0"
                           />
-                          <span className="text-sm">{model.name}</span>
+                          <span className="text-sm text-foreground">{model.name}</span>
                         </label>
                       );
                     })}
                   </div>
                 </div>
               ) : (
-                <div className="p-4 text-center text-sm text-gray-500">
+                <div className="p-4 text-center text-sm text-muted-foreground">
                   No models found
                 </div>
               )}

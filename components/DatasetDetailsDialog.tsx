@@ -135,7 +135,7 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
                   {dataset.examples.map((example, index) => (
                     <div key={index} className="flex flex-col items-center">
                       {example.alt && (
-                        <p className="text-sm text-gray-600 mb-2 font-medium text-center italic">
+                        <p className="text-sm text-muted-foreground mb-2 font-medium text-center italic">
                           {example.alt}
                         </p>
                       )}
@@ -169,7 +169,7 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
               <div>
                 <h3 className="text-lg font-semibold mb-4">Description</h3>
                 <div 
-                  className="text-gray-700" 
+                  className="text-foreground" 
                   dangerouslySetInnerHTML={{ __html: dataset.description }}
                   style={{ lineHeight: '1.6' }}
                 />
@@ -179,31 +179,31 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
               {(dataset.citationUrl || dataset.citation) && (
                 <div>
                   <h3 className="text-lg font-semibold mb-4">Citation</h3>
-                  <div className="relative bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <div className="relative bg-muted border border-border rounded-lg p-4">
                     {!loading && citation && (
                       <button
                         onClick={handleCopy}
-                        className="absolute top-3 right-3 p-2 hover:bg-gray-200 rounded-md transition-colors"
+                        className="absolute top-3 right-3 p-2 hover:bg-accent rounded-md transition-colors"
                         title="Copy citation"
                         disabled={loading}
                       >
                         {copied ? (
                           <Check className="w-4 h-4 text-green-600" />
                         ) : (
-                          <Copy className="w-4 h-4 text-gray-600" />
+                          <Copy className="w-4 h-4 text-muted-foreground" />
                         )}
                       </button>
                     )}
                     
                     {loading ? (
                       <div className="flex items-center justify-center py-8">
-                        <Loader className="w-6 h-6 text-gray-500 animate-spin" />
-                        <span className="ml-2 text-gray-500">Loading latest citation...</span>
+                        <Loader className="w-6 h-6 text-muted-foreground animate-spin" />
+                        <span className="ml-2 text-muted-foreground">Loading latest citation...</span>
                       </div>
                     ) : null}
                     
                     {!loading && citation && (
-                      <pre className="text-[10px] text-gray-800 overflow-x-auto overflow-y-auto whitespace-pre-wrap pr-10 max-h-48">
+                      <pre className="text-[10px] text-foreground overflow-x-auto overflow-y-auto whitespace-pre-wrap pr-10 max-h-48">
                         {citation}
                       </pre>
                     )}

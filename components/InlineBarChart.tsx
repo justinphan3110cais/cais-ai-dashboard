@@ -361,7 +361,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       angle={-45}
                       textAnchor="end"
                       height={60}
-                      tick={{ fontSize: 10, fill: '#374151', dy: 19, fontWeight: 600 }}
+                      tick={{ fontSize: 10, fill: 'hsl(var(--foreground))', dy: 19, fontWeight: 600 }}
                       axisLine={false}
                       tickLine={false}
                     />
@@ -385,7 +385,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
           ))}
         </div>
       ) : (
-        <div className="flex items-center justify-center h-96 text-gray-500">
+        <div className="flex items-center justify-center h-96 text-muted-foreground">
           <div className="text-center">
             <p className="text-lg">No data available</p>
             <p className="text-sm">No flagship models or datasets selected</p>

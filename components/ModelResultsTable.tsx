@@ -102,7 +102,7 @@ const DatasetHeader = ({
     </div>
                 </button>
               </TooltipTrigger>
-        <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
+        <TooltipContent className="max-w-xs bg-popover text-popover-foreground border border-border shadow-lg p-3">
           {(() => {
             // Split by periods first, then by HTML line breaks
             let firstPart = dataset.description.split('. ')[0];
@@ -138,7 +138,7 @@ const DatasetHeader = ({
 const LeaderboardTable = ({ 
   datasets, 
   models, 
-  bgColor, 
+  tableType, 
   sortConfig, 
   onSort,
   expanded = false,
@@ -148,7 +148,7 @@ const LeaderboardTable = ({
 }: { 
   datasets: Dataset[];
   models: Model[];
-  bgColor: string;
+  tableType: 'text' | 'vision' | 'safety';
   sortConfig: SortConfig;
   onSort: (datasetId: string) => void;
   expanded?: boolean;
@@ -156,6 +156,42 @@ const LeaderboardTable = ({
   onUpdateScore?: (modelName: string, datasetId: string, newValue: number | null) => void;
   onShowDetails: (datasetId: string, datasetName: string) => void;
 }) => {
+  // Helper function to get theme classes based on table type
+  const getThemeClasses = () => {
+    switch (tableType) {
+      case 'text':
+        return {
+          bg: 'table-text-bg',
+          bg30: 'table-text-bg-30',
+          header: 'table-text-header',
+          border: 'table-text-border'
+        };
+      case 'vision':
+        return {
+          bg: 'table-vision-bg',
+          bg30: 'table-vision-bg-30',
+          header: 'table-vision-header',
+          border: 'table-vision-border'
+        };
+      case 'safety':
+        return {
+          bg: 'table-safety-bg',
+          bg30: 'table-safety-bg-30',
+          header: 'table-safety-header',
+          border: 'table-safety-border'
+        };
+      default:
+        return {
+          bg: 'bg-gray-50',
+          bg30: 'bg-gray-50/30',
+          header: 'text-gray-700',
+          border: 'border-gray-300'
+        };
+    }
+  };
+
+  const themeClasses = getThemeClasses();
+
   // Helper function to get processed score (applies postprocessScore if it exists)
   const getProcessedScore = (dataset: Dataset, rawScore: number | null): number | null => {
     if (rawScore === null) return null;
@@ -183,7 +219,7 @@ const LeaderboardTable = ({
   };
 
   const getRowStyling = () => {
-    return 'hover:bg-gray-50';
+    return 'hover:bg-muted/50';
   };
 
   const tableContent = (
@@ -194,13 +230,13 @@ const LeaderboardTable = ({
       <TableHeader className="sticky top-0 bg-background z-40">
             <TableRow>
           <TableHead 
-            className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
+            className={`w-[200px] border-r ${themeClasses.border} border-b-2 ${themeClasses.border} sticky left-0 ${themeClasses.bg}`}
             style={{ position: 'sticky', left: 0, top: 0, zIndex: 40 }}
           >
             <div className="font-semibold">Model</div>
           </TableHead>
           {/* Average column - show second (after Model) */}
-          <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
+          <TableHead className={`text-center ${themeClasses.bg} min-w-[80px] font-bold border-b-2 ${themeClasses.border} border-r ${themeClasses.border}`}>
             <div className="flex items-center justify-center gap-1">
               <span className="text-xs font-bold">Average</span>
             </div>
@@ -208,7 +244,7 @@ const LeaderboardTable = ({
           {datasets.map((dataset, index) => (
             <TableHead 
               key={dataset.name} 
-              className={`text-center ${bgColor} min-w-[100px] w-auto border-b-2 border-b-gray-300 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''} py-1`}
+              className={`text-center ${themeClasses.bg} min-w-[100px] w-auto border-b-2 ${themeClasses.border} ${index < datasets.length - 1 ? `border-r ${themeClasses.border}` : ''} py-1`}
             >
               <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} />
             </TableHead>
@@ -219,11 +255,11 @@ const LeaderboardTable = ({
         {models.map((model) => (
           <TableRow 
             key={model.name} 
-            className={`border-b border-gray-200 ${getRowStyling()} ${model.modelCardUrl ? 'group' : ''}`}
+            className={`border-b border-border ${getRowStyling()} ${model.modelCardUrl ? 'group' : ''}`}
           >
               <TableCell 
-                className={`text-center border-r border-gray-300 sticky left-0 bg-white`}
-                style={{ position: 'sticky', left: 0, zIndex: 30, backgroundColor: 'white' }}
+                className={`text-center border-r ${themeClasses.border} sticky left-0 bg-background`}
+                style={{ position: 'sticky', left: 0, zIndex: 30 }}
               >              <div className="flex items-center gap-2">
                 <Image
                   src={getProviderLogo(model.provider).src}
@@ -243,10 +279,10 @@ const LeaderboardTable = ({
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div className="flex-shrink-0">
-                          <EyeOff className="w-4 h-4 text-gray-500" />
+                          <EyeOff className="w-4 h-4 text-muted-foreground" />
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent className="bg-gray-800 text-white">
+                      <TooltipContent className="bg-popover text-popover-foreground border border-border">
                         <p>Text-only model</p>
                       </TooltipContent>
                     </Tooltip>
@@ -268,7 +304,7 @@ const LeaderboardTable = ({
                               />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent className="bg-gray-100 text-foreground border border-gray-300">
+                          <TooltipContent className="bg-popover text-popover-foreground border border-border">
                             <div className="flex items-center gap-2">
                               <Image
                             src={getProviderLogo(model.provider).src}
@@ -286,7 +322,7 @@ const LeaderboardTable = ({
                 </TableCell>
             
             {/* Average column - show second (after Model) */}
-            <TableCell className={`text-center ${bgColor}/30 font-bold border-r border-gray-300`}>
+            <TableCell className={`text-center ${themeClasses.bg30} font-bold border-r ${themeClasses.border}`}>
               <span className="font-mono text-sm">
                 {formatValue(calculateAverage(model, datasets))}
               </span>
@@ -298,7 +334,7 @@ const LeaderboardTable = ({
               return (
                 <TableCell 
                   key={dataset.name} 
-                  className={`text-center ${bgColor}/30 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''}`}
+                  className={`text-center ${themeClasses.bg30} ${index < datasets.length - 1 ? `border-r ${themeClasses.border}` : ''}`}
                 >
                   <EditableTableCell
                     value={displayScore}
@@ -316,7 +352,7 @@ const LeaderboardTable = ({
   );
 
   return (
-    <div className="border border-gray-300 rounded-md">
+    <div className="rounded-md">
       {expanded ? (
         <div className="overflow-auto scrollbar-hidden" style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
           {tableContent}
@@ -413,7 +449,7 @@ export function ModelResultsTable() {
   // Check if edit mode is enabled from environment variable
   useEffect(() => {
     // In Next.js client components, we need to access env vars this way
-    const editModeEnabled = (globalThis as any).process?.env?.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
+    const editModeEnabled = process.env.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
     setIsEditMode(editModeEnabled);
   }, []);
 
@@ -651,8 +687,8 @@ export function ModelResultsTable() {
             disabled={!hasUnsavedChanges}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium ${
               hasUnsavedChanges 
-                ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                : 'bg-muted text-muted-foreground cursor-not-allowed'
             }`}
           >
             <Save className="w-4 h-4" />
@@ -665,25 +701,25 @@ export function ModelResultsTable() {
       )}
       
       {/* Text-based Capabilities Card */}
-      <div id="text-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-blue-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+      <div id="text-section" className="border-2 table-text-border rounded-lg overflow-hidden">
+        <div className="table-text-bg px-3 sm:px-6 py-3 sm:py-4 border-b border-border">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg sm:text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
+                <h3 className="text-lg sm:text-xl font-semibold table-text-header flex-shrink-0">Text</h3>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="w-4 h-4 text-blue-600 cursor-help" />
+                      <HelpCircle className="w-4 h-4 table-text-header cursor-help" />
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
+                    <TooltipContent className="max-w-xs bg-popover text-popover-foreground border border-border shadow-lg p-3">
                       <div className="text-sm leading-relaxed text-wrap">
                         The benchmarks here do not fully indicate how far we are from to AGI. For direct AGI measurements, please see{' '}
                         <a 
                           href="https://agidefinition.ai" 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="text-foreground hover:text-foreground border-b border-dashed border-black font-medium"
+                          className="text-popover-foreground hover:text-popover-foreground border-b border-dashed border-border font-medium"
                         >
                           here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
                         </a>
@@ -694,7 +730,7 @@ export function ModelResultsTable() {
               </div>
               <button
                 onClick={() => toggleViewMode('textCapabilities')}
-                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
+                className="flex items-center gap-2 px-3 py-1.5 bg-background border table-text-border table-text-header rounded-md hover:table-text-bg-30 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
               >
                 {viewModes.textCapabilities === 'table' ? (
                   <>
@@ -719,7 +755,7 @@ export function ModelResultsTable() {
             )}
             <button
               onClick={() => toggleViewMode('textCapabilities')}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-background border table-text-border table-text-header rounded-md hover:table-text-bg-30 transition-colors text-sm font-medium flex-shrink-0"
             >
               {viewModes.textCapabilities === 'table' ? (
                 <>
@@ -739,7 +775,7 @@ export function ModelResultsTable() {
           <LeaderboardTable
             datasets={TEXT_CAPABILITIES_DATASETS}
             models={textCapabilitiesSortedModels}
-            bgColor="bg-blue-50"
+            tableType="text"
             sortConfig={textCapabilitiesSortConfig}
             onSort={handleTextCapabilitiesSort}
             expanded={expandState.textCapabilities}
@@ -757,7 +793,7 @@ export function ModelResultsTable() {
         {viewModes.textCapabilities === 'table' && (
           <>
             {!expandState.textCapabilities && (
-              <div className="border-t border-gray-200 bg-gray-50">
+              <div className="border-t border-border bg-muted">
                 <button
                   onClick={() => {
                     setExpandState(prev => ({ ...prev, textCapabilities: true }));
@@ -771,7 +807,7 @@ export function ModelResultsTable() {
                       }
                     }));
                   }}
-                  className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                  className="w-full py-3 flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                 >
                   <span className="text-sm font-medium">View All</span>
                   <ChevronDown className="w-4 h-4" />
@@ -779,7 +815,7 @@ export function ModelResultsTable() {
               </div>
             )}
             {expandState.textCapabilities && (
-              <div className="border-t border-gray-200 bg-gray-50">
+              <div className="border-t border-border bg-muted">
                 <button
                   onClick={() => {
                     setExpandState(prev => ({ ...prev, textCapabilities: false }));
@@ -793,7 +829,7 @@ export function ModelResultsTable() {
                       }
                     }));
                   }}
-                  className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                  className="w-full py-3 flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                 >
                   <span className="text-sm font-medium">Collapse</span>
                   <ChevronUp className="w-4 h-4" />
@@ -805,14 +841,14 @@ export function ModelResultsTable() {
       </div>
 
       {/* Multimodal Capabilities Card */}
-      <div id="vision-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-green-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+      <div id="vision-section" className="border-2 table-vision-border rounded-lg overflow-hidden">
+        <div className="table-vision-bg px-3 sm:px-6 py-3 sm:py-4 border-b border-border">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
-              <h3 className="text-lg sm:text-xl font-semibold text-green-700 flex-shrink-0">Vision</h3>
+              <h3 className="text-lg sm:text-xl font-semibold table-vision-header flex-shrink-0">Vision</h3>
               <button
                 onClick={() => toggleViewMode('multimodal')}
-                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
+                className="flex items-center gap-2 px-3 py-1.5 bg-background border table-vision-border table-vision-header rounded-md hover:table-vision-bg-30 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
               >
                 {viewModes.multimodal === 'table' ? (
                   <>
@@ -837,7 +873,7 @@ export function ModelResultsTable() {
             )}
             <button
               onClick={() => toggleViewMode('multimodal')}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium flex-shrink-0"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-background border table-vision-border table-vision-header rounded-md hover:table-vision-bg-30 transition-colors text-sm font-medium flex-shrink-0"
             >
               {viewModes.multimodal === 'table' ? (
                 <>
@@ -857,7 +893,7 @@ export function ModelResultsTable() {
           <LeaderboardTable
             datasets={MULTIMODAL_DATASETS}
             models={multimodalSortedModels}
-            bgColor="bg-green-50"
+            tableType="vision"
             sortConfig={multimodalSortConfig}
             onSort={handleMultimodalSort}
             expanded={expandState.multimodal}
@@ -873,7 +909,7 @@ export function ModelResultsTable() {
           />
         )}
         {viewModes.multimodal === 'table' && !expandState.multimodal && (
-          <div className="border-t border-gray-200 bg-gray-50">
+          <div className="border-t border-border bg-muted">
             <button
               onClick={() => {
                 setExpandState(prev => ({ ...prev, multimodal: true }));
@@ -887,7 +923,7 @@ export function ModelResultsTable() {
                   }
                 }));
               }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
             >
               <span className="text-sm font-medium">View All</span>
               <ChevronDown className="w-4 h-4" />
@@ -895,7 +931,7 @@ export function ModelResultsTable() {
           </div>
         )}
         {viewModes.multimodal === 'table' && expandState.multimodal && (
-          <div className="border-t border-gray-200 bg-gray-50">
+          <div className="border-t border-border bg-muted">
             <button
               onClick={() => {
                 setExpandState(prev => ({ ...prev, multimodal: false }));
@@ -909,7 +945,7 @@ export function ModelResultsTable() {
                   }
                 }));
               }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
             >
               <span className="text-sm font-medium">Collapse</span>
               <ChevronUp className="w-4 h-4" />
@@ -919,26 +955,26 @@ export function ModelResultsTable() {
       </div>
  
       {/* Safety Card */}
-      <div id="safety-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-red-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+      <div id="safety-section" className="border-2 table-safety-border rounded-lg overflow-hidden">
+        <div className="table-safety-bg px-3 sm:px-6 py-3 sm:py-4 border-b border-border">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex-shrink-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-lg sm:text-xl font-semibold text-red-700">Safety</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold table-safety-header">Safety</h3>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <HelpCircle className="w-4 h-4 text-red-600 cursor-help" />
+                        <HelpCircle className="w-4 h-4 table-safety-header cursor-help" />
                       </TooltipTrigger>
-                      <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
+                      <TooltipContent className="max-w-xs bg-popover text-popover-foreground border border-border shadow-lg p-3">
                         <div className="text-sm leading-relaxed text-wrap space-y-2">
                           <div>
                             <a 
                               href="https://arxiv.org/abs/2407.21792" 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
+                              className="text-popover-foreground hover:text-popover-foreground underline decoration-dashed underline-offset-4 font-semibold"
                             >
                               How does safety differ from capabilities? <ExternalLink className="w-3 h-3 inline-block align-text-top" />
                             </a>
@@ -955,7 +991,7 @@ export function ModelResultsTable() {
               </div>
               <button
                 onClick={() => toggleViewMode('safety')}
-                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
+                className="flex items-center gap-2 px-3 py-1.5 bg-background border table-safety-border table-safety-header rounded-md hover:table-safety-bg-30 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
               >
                 {viewModes.safety === 'table' ? (
                   <>
@@ -980,7 +1016,7 @@ export function ModelResultsTable() {
             )}
             <button
               onClick={() => toggleViewMode('safety')}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium flex-shrink-0"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-background border table-safety-border table-safety-header rounded-md hover:table-safety-bg-30 transition-colors text-sm font-medium flex-shrink-0"
             >
               {viewModes.safety === 'table' ? (
                 <>
@@ -1000,7 +1036,7 @@ export function ModelResultsTable() {
           <LeaderboardTable
             datasets={SAFETY_DATASETS}
             models={safetySortedModels}
-            bgColor="bg-red-50"
+            tableType="safety"
             sortConfig={safetySortConfig}
             onSort={handleSafetySort}
             expanded={expandState.safety}
@@ -1016,7 +1052,7 @@ export function ModelResultsTable() {
           />
         )}
         {viewModes.safety === 'table' && !expandState.safety && (
-          <div className="border-t border-gray-200 bg-gray-50">
+          <div className="border-t border-border bg-muted">
             <button
               onClick={() => {
                 setExpandState(prev => ({ ...prev, safety: true }));
@@ -1030,7 +1066,7 @@ export function ModelResultsTable() {
                   }
                 }));
               }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
             >
               <span className="text-sm font-medium">View All</span>
               <ChevronDown className="w-4 h-4" />
@@ -1038,7 +1074,7 @@ export function ModelResultsTable() {
           </div>
         )}
         {viewModes.safety === 'table' && expandState.safety && (
-          <div className="border-t border-gray-200 bg-gray-50">
+          <div className="border-t border-border bg-muted">
             <button
               onClick={() => {
                 setExpandState(prev => ({ ...prev, safety: false }));
@@ -1052,7 +1088,7 @@ export function ModelResultsTable() {
                   }
                 }));
               }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
             >
               <span className="text-sm font-medium">Collapse</span>
               <ChevronUp className="w-4 h-4" />
