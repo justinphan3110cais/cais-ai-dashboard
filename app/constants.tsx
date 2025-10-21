@@ -20,6 +20,7 @@ import erqa_logo from "@/assets/dataset-logos/erqa_logo.svg";
 import intphys2_logo from "@/assets/dataset-logos/intphys2_logo.svg";
 import enigmaeval_logo from "@/assets/dataset-logos/enigmaeval_logo.svg";
 import art_logo from "@/assets/dataset-logos/art_logo.png";
+import mask_logo from "@/assets/dataset-logos/mask_logo.svg";
 import textquests_examples from "@/assets/dataset-examples/textquests_examples.png";
 import terminalbench_examples from "@/assets/dataset-examples/terminalbench_examples.png";
 import swebench_examples from "@/assets/dataset-examples/swebench_examples.png";
@@ -151,7 +152,7 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
 };
 
 export const PAPER_URL = "https://arxiv.org/abs/2507.23701";
-export const GITHUB_URL = "https://github.com/centerforaisafety/safetyxcapabilities-leaderboard";
+export const GITHUB_URL = "https://github.com/centerforaisafety/cais_simple_eval";
 
 export const BIBTEX_CITATION = `@misc{caisaileaderboard,
       title={CAIS AI Leaderboard}, 
@@ -480,6 +481,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     link: "https://www.mask-benchmark.ai",
     description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a human-collected dataset for measuring honesty in LLMs directly. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
     category: "safety",
+    logo: mask_logo.src,
     capabilities: ["dishonesty"],
     postprocessScore: (score: number) => 100 - score,
     examples: [{
