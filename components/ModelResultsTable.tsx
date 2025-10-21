@@ -412,7 +412,8 @@ export function ModelResultsTable() {
 
   // Check if edit mode is enabled from environment variable
   useEffect(() => {
-    const editModeEnabled = process.env.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
+    // In Next.js client components, we need to access env vars this way
+    const editModeEnabled = (globalThis as any).process?.env?.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
     setIsEditMode(editModeEnabled);
   }, []);
 
@@ -668,7 +669,29 @@ export function ModelResultsTable() {
         <div className="bg-blue-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
-              <h3 className="text-lg sm:text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <HelpCircle className="w-4 h-4 text-blue-600 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
+                      <div className="text-sm leading-relaxed text-wrap">
+                        The benchmarks here do not fully indicate how far we are from to AGI. For direct AGI measurements, please see{' '}
+                        <a 
+                          href="https://agidefinition.ai" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-foreground hover:text-foreground border-b border-dashed border-black font-medium"
+                        >
+                          here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                        </a>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <button
                 onClick={() => toggleViewMode('textCapabilities')}
                 className="flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
@@ -908,20 +931,19 @@ export function ModelResultsTable() {
                       <TooltipTrigger asChild>
                         <HelpCircle className="w-4 h-4 text-red-600 cursor-help" />
                       </TooltipTrigger>
-                      <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-4">
-                        <div className="text-sm leading-relaxed space-y-2">
+                      <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
+                        <div className="text-sm leading-relaxed text-wrap space-y-2">
                           <div>
                             <a 
                               href="https://arxiv.org/abs/2407.21792" 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold inline-flex items-center gap-1"
+                              className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
                             >
-                              How does safety differ from capabilities?
-                              <ExternalLink className="w-3 h-3" />
+                              How does safety differ from capabilities? <ExternalLink className="w-3 h-3 inline-block align-text-top" />
                             </a>
                           </div>
-                          <div className="text-wrap">
+                          <div>
                             Safety benchmarks are benchmarks that are uncorrelated with general capabilities or training compute.
                           </div>
                         </div>
@@ -929,7 +951,7 @@ export function ModelResultsTable() {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <p className="text-sm text-foreground mt-1">Lower Score is Better</p>
+                <p className="text-sm text-foreground mt-1">Lower is Better</p>
               </div>
               <button
                 onClick={() => toggleViewMode('safety')}

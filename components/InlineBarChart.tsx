@@ -200,6 +200,74 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
       {/* Chart Content - One chart per benchmark with model names on X-axis */}
       {chartsData.length > 0 && filteredModels.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
+          {/* Average Chart - First Position */}
+          <div className="flex flex-col">
+            {/* Average Title */}
+            <h3 className="text-center font-semibold text-gray-900 mb-2">
+              Average
+            </h3>
+            
+            {/* Checkboxes below Average title */}
+            <div className="mb-3">
+              <div className="flex flex-wrap gap-2 justify-center items-center">
+                {datasets.map(dataset => (
+                  <label key={dataset.id} className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={includedDatasets[dataset.id] || false}
+                      onChange={() => toggleDatasetInclusion(dataset.id)}
+                      className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      style={{ accentColor: includedDatasets[dataset.id] ? '#2563eb' : '#9ca3af' }}
+                    />
+                    <span className="text-xs text-gray-700">
+                      {dataset.name === "Agent Red Teaming" ? "Red Teaming" : 
+                       dataset.name === "VCT" ? "VCT-Refusal" : 
+                       dataset.name}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            {/* Average Chart */}
+            <div className="h-80 overflow-visible">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={averageData}
+                  margin={{
+                    top: 30,
+                    right: 10,
+                    left: 30,
+                    bottom: 80,
+                  }}
+                >
+                  <XAxis 
+                    dataKey="modelName" 
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
+                    tick={{ fontSize: 10, fill: '#374151', dy: 20, fontWeight: 600 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis hide />
+                  <Bar 
+                    dataKey="score"
+                    radius={[4, 4, 0, 0]}
+                  >
+                    <LabelList content={createCustomLabel(averageData)} />
+                    {averageData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={PROVIDER_COLORS[entry.provider] || PROVIDER_COLORS['moonshot']} 
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
           {/* Individual Benchmark Charts */}
           {chartsData.map((chartInfo) => (
             <div key={chartInfo.datasetId} className="flex flex-col">
@@ -224,19 +292,24 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                           </div>
                         ) : null}
                         {/* Benchmark Name */}
-                        <div className="flex items-center justify-center gap-2">
-                          {chartInfo.dataset.logo && (
-                            <Image
-                              src={chartInfo.dataset.logo}
-                              alt={`${chartInfo.datasetName} logo`}
-                              width={20}
-                              height={20}
-                              className="flex-shrink-0"
-                            />
-                          )}
-                          <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
-                            {chartInfo.datasetName}
-                          </h3>
+                        <div className="grid grid-cols-3 items-center w-full">
+                          <div className="flex justify-end">
+                            {chartInfo.dataset.logo && (
+                              <Image
+                                src={chartInfo.dataset.logo}
+                                alt={`${chartInfo.datasetName} logo`}
+                                width={20}
+                                height={20}
+                                className="mr-2"
+                              />
+                            )}
+                          </div>
+                          <div className="flex justify-center">
+                            <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
+                              {chartInfo.datasetName}
+                            </h3>
+                          </div>
+                          <div></div>
                         </div>
                       </div>
                     </TooltipTrigger>
@@ -310,74 +383,6 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               </div>
             </div>
           ))}
-
-          {/* Average Chart - Last Position */}
-          <div className="flex flex-col">
-            {/* Average Title */}
-            <h3 className="text-center font-semibold text-gray-900 mb-2">
-              Average
-            </h3>
-            
-            {/* Checkboxes below Average title */}
-            <div className="mb-3">
-              <div className="flex flex-wrap gap-2 justify-center items-center">
-                {datasets.map(dataset => (
-                  <label key={dataset.id} className="flex items-center gap-1.5 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={includedDatasets[dataset.id] || false}
-                      onChange={() => toggleDatasetInclusion(dataset.id)}
-                      className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      style={{ accentColor: includedDatasets[dataset.id] ? '#2563eb' : '#9ca3af' }}
-                    />
-                    <span className="text-xs text-gray-700">
-                      {dataset.name === "Agent Red Teaming" ? "Red Teaming" : 
-                       dataset.name === "VCT" ? "VCT-Refusal" : 
-                       dataset.name}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            
-            {/* Average Chart */}
-            <div className="h-80 overflow-visible">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={averageData}
-                  margin={{
-                    top: 30,
-                    right: 10,
-                    left: 30,
-                    bottom: 80,
-                  }}
-                >
-                  <XAxis 
-                    dataKey="modelName" 
-                    angle={-45}
-                    textAnchor="end"
-                    height={60}
-                    tick={{ fontSize: 10, fill: '#374151', dy: 20, fontWeight: 600 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis hide />
-                  <Bar 
-                    dataKey="score"
-                    radius={[4, 4, 0, 0]}
-                  >
-                    <LabelList content={createCustomLabel(averageData)} />
-                    {averageData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={PROVIDER_COLORS[entry.provider] || PROVIDER_COLORS['moonshot']} 
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
         </div>
       ) : (
         <div className="flex items-center justify-center h-96 text-gray-500">

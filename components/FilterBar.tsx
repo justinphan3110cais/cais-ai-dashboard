@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
 // TODO: Uncomment for later release - Type filter imports
 // import { Type, Square } from "lucide-react";
@@ -30,7 +31,10 @@ interface FilterBarProps {
 
 export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false */ }: FilterBarProps) => {
   const [isProviderDropdownOpen, setIsProviderDropdownOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const portalDropdownRef = useRef<HTMLDivElement>(null);
   
   // Get unique providers from models
   const uniqueProviders = Array.from(new Set(MODELS.map(model => model.provider))).sort();
@@ -38,14 +42,42 @@ export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false *
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const isClickOnButton = buttonRef.current && buttonRef.current.contains(target);
+      const isClickOnDropdown = portalDropdownRef.current && portalDropdownRef.current.contains(target);
+      
+      if (!isClickOnButton && !isClickOnDropdown) {
         setIsProviderDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    if (isProviderDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isProviderDropdownOpen]);
+
+  // Recalculate position on scroll/resize
+  useEffect(() => {
+    const updatePosition = () => {
+      if (isProviderDropdownOpen && buttonRef.current) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        setDropdownPosition({
+          top: rect.bottom + 4,
+          left: rect.left
+        });
+      }
+    };
+
+    if (isProviderDropdownOpen) {
+      window.addEventListener('scroll', updatePosition);
+      window.addEventListener('resize', updatePosition);
+      return () => {
+        window.removeEventListener('scroll', updatePosition);
+        window.removeEventListener('resize', updatePosition);
+      };
+    }
+  }, [isProviderDropdownOpen]);
   
   const handleProviderToggle = (provider: string) => {
     const newSelectedProviders = filters.selectedProviders.includes(provider)
@@ -58,62 +90,28 @@ export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false *
   const allProvidersSelected = filters.selectedProviders.length === 0;
 
   return (
-    <div className="flex flex-wrap items-center gap-1 sm:gap-2 p-1 sm:p-2 bg-gray-50/30 rounded-lg border border-border opacity-60 hover:opacity-100 transition-opacity duration-200">
+    <div className="flex flex-wrap items-center gap-0.5 sm:gap-2 p-1 sm:p-2 bg-gray-50/30 rounded-lg border border-border opacity-60 hover:opacity-100 transition-opacity duration-200">
       {/* Provider Filter Dropdown */}
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative z-50" ref={dropdownRef}>
         <button
-          onClick={() => setIsProviderDropdownOpen(!isProviderDropdownOpen)}
-          className="flex items-center gap-1 px-1.5 sm:px-2 py-1 border border-gray-200 rounded-md bg-white/50 hover:bg-white hover:border-gray-300 focus:outline-none transition-colors text-xs"
+          ref={buttonRef}
+          onClick={() => {
+            if (buttonRef.current) {
+              const rect = buttonRef.current.getBoundingClientRect();
+              setDropdownPosition({
+                top: rect.bottom + 4,
+                left: rect.left
+              });
+            }
+            setIsProviderDropdownOpen(!isProviderDropdownOpen);
+          }}
+          className="flex items-center gap-0.5 sm:gap-1 px-1 sm:px-2 py-1 border border-gray-200 rounded-md bg-white/50 hover:bg-white hover:border-gray-300 focus:outline-none transition-colors text-xs"
         >
           <span className="text-xs text-gray-600 whitespace-nowrap">
             Companies {!allProvidersSelected && `(${filters.selectedProviders.length})`}
           </span>
           <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform ${isProviderDropdownOpen ? 'rotate-180' : ''}`} />
         </button>
-        
-        {isProviderDropdownOpen && (
-          <div className="absolute top-full left-0 mt-1 w-64 sm:w-80 bg-white border border-gray-300 rounded-md shadow-lg z-[9999]">
-            <div className="p-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-                {uniqueProviders.map((provider) => {
-                  const isExplicitlySelected = filters.selectedProviders.includes(provider);
-                  const isDefaultSelected = allProvidersSelected;
-                  const showAsSelected = isDefaultSelected || isExplicitlySelected;
-                  
-                  return (
-                    <label 
-                      key={provider} 
-                      className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer rounded"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={showAsSelected}
-                        onChange={() => handleProviderToggle(provider)}
-                        style={{
-                          accentColor: isExplicitlySelected ? '#2563eb' : '#9ca3af'
-                        }}
-                        className="rounded border-gray-300"
-                      />
-                      <Image
-                        src={getProviderLogo(provider).src}
-                        alt={`${provider} logo`}
-                        width={16}
-                        height={16}
-                        className="flex-shrink-0"
-                      />
-                      <span className="text-sm">{
-                        provider === 'openai' ? 'OpenAI' :
-                        provider === 'xai' ? 'xAI' :
-                        provider === 'deepseek' ? 'DeepSeek' :
-                        provider.charAt(0).toUpperCase() + provider.slice(1)
-                      }</span>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
       
       {/* Search Bar */}
@@ -122,16 +120,16 @@ export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false *
         placeholder="Search..."
         value={filters.search}
         onChange={(e) => onFiltersChange({ ...filters, search: e.target.value })}
-        className="w-20 sm:w-32 md:w-40 px-1.5 sm:px-2 py-1 border border-gray-200 rounded-md bg-white/50 hover:bg-white hover:border-gray-300 focus:outline-none focus:border-gray-400 transition-colors text-xs text-gray-600 placeholder:text-gray-400"
+        className="w-16 sm:w-32 md:w-40 px-1 sm:px-2 py-1 border border-gray-200 rounded-md bg-white/50 hover:bg-white hover:border-gray-300 focus:outline-none focus:border-gray-400 transition-colors text-xs text-gray-600 placeholder:text-gray-400"
       />
       
       {/* Vertical Separator - Hidden on mobile */}
       <div className="hidden lg:block h-6 w-px bg-gray-200"></div>
       
       {/* Model Size Filter Group */}
-      <div className="flex items-center gap-1 sm:gap-2">
+      <div className="flex items-center gap-0.5 sm:gap-2 ml-2">
         <span className="text-xs text-gray-500 hidden sm:inline">Size:</span>
-        <div className="flex gap-1 sm:gap-2">
+        <div className="flex gap-0.5 sm:gap-2">
           <label className="flex items-center gap-0.5 sm:gap-1 cursor-pointer hover:text-gray-700 transition-colors">
             <input
               type="checkbox"
@@ -220,6 +218,60 @@ export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false *
           </label>
         </div>
       </div> */}
+      
+      {/* Portal Dropdown */}
+      {isProviderDropdownOpen && typeof window !== 'undefined' && createPortal(
+        <div 
+          ref={portalDropdownRef}
+          className="fixed w-64 sm:w-80 bg-popover border border-border rounded-md shadow-lg"
+          style={{ 
+            top: dropdownPosition.top,
+            left: dropdownPosition.left,
+            zIndex: 99999
+          }}
+        >
+          <div className="p-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+              {uniqueProviders.map((provider) => {
+                const isExplicitlySelected = filters.selectedProviders.includes(provider);
+                const isDefaultSelected = allProvidersSelected;
+                const showAsSelected = isDefaultSelected || isExplicitlySelected;
+                
+                return (
+                  <label 
+                    key={provider} 
+                    className="flex items-center gap-2 p-2 hover:bg-accent cursor-pointer rounded"
+                  >
+                      <input
+                        type="checkbox"
+                        checked={showAsSelected}
+                        onChange={() => handleProviderToggle(provider)}
+                        style={{
+                          accentColor: isExplicitlySelected ? '#2563eb' : '#9ca3af'
+                        }}
+                        className="rounded border-border"
+                      />
+                    <Image
+                      src={getProviderLogo(provider).src}
+                      alt={`${provider} logo`}
+                      width={16}
+                      height={16}
+                      className="flex-shrink-0"
+                    />
+                      <span className="text-sm text-foreground">{
+                        provider === 'openai' ? 'OpenAI' :
+                        provider === 'xai' ? 'xAI' :
+                        provider === 'deepseek' ? 'DeepSeek' :
+                        provider.charAt(0).toUpperCase() + provider.slice(1)
+                      }</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
