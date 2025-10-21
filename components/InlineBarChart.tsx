@@ -12,12 +12,14 @@ interface InlineBarChartProps {
   datasets: Dataset[];
   models: Model[];
   onShowDetails?: (datasetId: string) => void;
+  onMobilePopup?: (type: 'dataset-info', content: { description: string; datasetId: string }) => boolean;
 }
 
 export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   datasets,
   models,
-  onShowDetails
+  onShowDetails,
+  onMobilePopup
 }) => {
   const [includedDatasets, setIncludedDatasets] = useState<Record<string, boolean>>(
     datasets.reduce((acc, dataset) => ({ ...acc, [dataset.id]: true }), {})
@@ -40,6 +42,15 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     selectedProviders: ["Anthropic", "Google", "OpenAI", "xAI"], // Default providers explicitly selected
     selectedModels: defaultSelectedModels
   });
+
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Toggle dataset inclusion
   const toggleDatasetInclusion = (datasetId: string) => {
@@ -273,48 +284,82 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
             <div key={chartInfo.datasetId} className="flex flex-col">
               {/* Benchmark Title with Logo, Hover, and Toggle Button */}
               <div className="flex items-center justify-center mb-3 w-full">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex flex-col cursor-pointer">
-                        {/* Capability Category (Secondary Text) */}
-                        {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
-                          <div className="flex items-center justify-center gap-1 mb-1">
-                            {chartInfo.dataset.capabilities
-                              .map(capabilityId => BENCHMARK_TYPES[capabilityId])
-                              .filter(capability => capability !== undefined)
-                              .map((capability, idx) => (
-                                <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide">
-                                  {capability.name}
-                                </span>
-                              ))
-                            }
+                {!isMobile ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex flex-col cursor-pointer">
+                          {/* Capability Category (Secondary Text) */}
+                          {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
+                            <div className="flex items-center justify-center gap-1 mb-1">
+                              {chartInfo.dataset.capabilities
+                                .map(capabilityId => BENCHMARK_TYPES[capabilityId])
+                                .filter(capability => capability !== undefined)
+                                .map((capability, idx) => (
+                                  <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide">
+                                    {capability.name}
+                                  </span>
+                                ))
+                              }
+                            </div>
+                          ) : null}
+                          {/* Benchmark Name */}
+                          <div className="grid grid-cols-3 items-center w-full">
+                            <div className="flex justify-end">
+                              {chartInfo.dataset.logo && (
+                                <Image
+                                  src={chartInfo.dataset.logo}
+                                  alt={`${chartInfo.datasetName} logo`}
+                                  width={20}
+                                  height={20}
+                                  className="mr-2"
+                                />
+                              )}
+                            </div>
+                            <div className="flex justify-center">
+                              <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
+                                {chartInfo.datasetName}
+                              </h3>
+                            </div>
+                            <div></div>
                           </div>
-                        ) : null}
-                        {/* Benchmark Name */}
-                        <div className="grid grid-cols-3 items-center w-full">
-                          <div className="flex justify-end">
-                            {chartInfo.dataset.logo && (
-                              <Image
-                                src={chartInfo.dataset.logo}
-                                alt={`${chartInfo.datasetName} logo`}
-                                width={20}
-                                height={20}
-                                className="mr-2"
-                              />
-                            )}
-                          </div>
-                          <div className="flex justify-center">
-                            <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
-                              {chartInfo.datasetName}
-                            </h3>
-                          </div>
-                          <div></div>
                         </div>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent className="w-72 bg-white text-black border border-gray-200 shadow-lg p-3">
-                      {(() => {
+                      </TooltipTrigger>
+                      <TooltipContent className="w-72 bg-background text-foreground border border-black shadow-lg p-3">
+                        {(() => {
+                          // Split by periods first, then by HTML line breaks (same logic as table tooltips)
+                          let firstPart = chartInfo.dataset.description.split('. ')[0];
+                          firstPart = firstPart.split('<br>')[0];
+                          firstPart = firstPart.split('<br/>')[0];
+                          firstPart = firstPart.split('<BR>')[0];
+                          
+                          // Add period if it doesn't end with one and the original had more content
+                          const hasMoreContent = chartInfo.dataset.description.length > firstPart.length;
+                          const firstSentence = firstPart + (hasMoreContent && !firstPart.endsWith('.') ? '.' : '');
+                          
+                          return (
+                            <div className="text-sm leading-relaxed text-wrap" dangerouslySetInnerHTML={{ __html: firstSentence }} />
+                          );
+                        })()}
+                        {onShowDetails && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onShowDetails(chartInfo.datasetId);
+                            }}
+                            className="mt-3 px-3 py-1 bg-background text-foreground border border-foreground text-xs rounded hover:bg-foreground hover:text-background transition-colors"
+                          >
+                            Examples and Details
+                          </button>
+                        )}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <div 
+                    className="flex flex-col cursor-pointer"
+                    onClick={() => {
+                      if (onMobilePopup) {
                         // Split by periods first, then by HTML line breaks (same logic as table tooltips)
                         let firstPart = chartInfo.dataset.description.split('. ')[0];
                         firstPart = firstPart.split('<br>')[0];
@@ -325,24 +370,49 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         const hasMoreContent = chartInfo.dataset.description.length > firstPart.length;
                         const firstSentence = firstPart + (hasMoreContent && !firstPart.endsWith('.') ? '.' : '');
                         
-                        return (
-                          <div className="text-sm leading-relaxed text-wrap" dangerouslySetInnerHTML={{ __html: firstSentence }} />
-                        );
-                      })()}
-                      {onShowDetails && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onShowDetails(chartInfo.datasetId);
-                          }}
-                          className="mt-3 px-3 py-1 bg-background text-foreground border border-foreground text-xs rounded hover:bg-foreground hover:text-background transition-colors"
-                        >
-                          Examples and Details
-                        </button>
-                      )}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                        onMobilePopup('dataset-info', { 
+                          description: firstSentence, 
+                          datasetId: chartInfo.datasetId 
+                        });
+                      }
+                    }}
+                  >
+                    {/* Capability Category (Secondary Text) */}
+                    {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
+                      <div className="flex items-center justify-center gap-1 mb-1">
+                        {chartInfo.dataset.capabilities
+                          .map(capabilityId => BENCHMARK_TYPES[capabilityId])
+                          .filter(capability => capability !== undefined)
+                          .map((capability, idx) => (
+                            <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide">
+                              {capability.name}
+                            </span>
+                          ))
+                        }
+                      </div>
+                    ) : null}
+                    {/* Benchmark Name */}
+                    <div className="grid grid-cols-3 items-center w-full">
+                      <div className="flex justify-end">
+                        {chartInfo.dataset.logo && (
+                          <Image
+                            src={chartInfo.dataset.logo}
+                            alt={`${chartInfo.datasetName} logo`}
+                            width={20}
+                            height={20}
+                            className="mr-2"
+                          />
+                        )}
+                      </div>
+                      <div className="flex justify-center">
+                        <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
+                          {chartInfo.datasetName}
+                        </h3>
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                )}
               </div>
               
               {/* Bar Chart */}

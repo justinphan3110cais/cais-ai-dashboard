@@ -181,7 +181,7 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
 
       {/* Model Multi-Select Search with Label */}
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-700">Models:</span>
+        <span className="hidden sm:block text-sm font-medium text-gray-700">Models:</span>
         <div className="relative" ref={modelDropdownRef}>
           <button
             onClick={() => setModelSearchOpen(!modelSearchOpen)}

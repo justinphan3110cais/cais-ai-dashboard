@@ -42,12 +42,14 @@ const DatasetHeader = ({
   dataset, 
   onSort, 
   sortConfig,
-  onShowDetails
+  onShowDetails,
+  onMobilePopup
 }: { 
   dataset: Dataset; 
   onSort: (datasetId: string) => void;
   sortConfig: SortConfig;
   onShowDetails: (datasetId: string, datasetName: string) => void;
+  onMobilePopup?: (type: 'dataset-info', content: { description: string; datasetId: string }) => boolean;
 }) => {
   const getSortIcon = () => {
     if (sortConfig.key !== dataset.id) return null;
@@ -56,12 +58,85 @@ const DatasetHeader = ({
     return null; // No sort indicator when direction is null
   };
 
+  // Check if we're on mobile (using window width as proxy since we can't access the parent's isMobile state)
+  const [isMobileLocal, setIsMobileLocal] = React.useState(false);
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobileLocal(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleClick = () => {
+    if (isMobileLocal && onMobilePopup) {
+      const firstPart = dataset.description.split('. ')[0];
+      const hasMoreContent = dataset.description.length > firstPart.length;
+      const firstSentence = firstPart + (hasMoreContent && !firstPart.endsWith('.') ? '.' : '');
+      
+      if (onMobilePopup('dataset-info', { 
+        description: firstSentence, 
+        datasetId: dataset.id 
+      })) {
+        return; // Mobile popup was shown, don't sort
+      }
+    }
+    onSort(dataset.id);
+  };
+
+  if (isMobileLocal) {
+    // Mobile: Simple button without tooltip
+    return (
+      <button
+        onClick={handleClick}
+        className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
+      >
+        <div className="flex flex-col items-center justify-center gap-1 px-1">
+          {/* Capability Category (Secondary Text) */}
+          {dataset.capabilities && dataset.capabilities.length > 0 && (
+            <div className="flex items-center gap-1 flex-wrap justify-center">
+              {dataset.capabilities
+                .map(capabilityId => BENCHMARK_TYPES[capabilityId])
+                .filter(capability => capability !== undefined)
+                .map((capability, idx) => (
+                  <span key={idx} className="text-[10px] text-muted-foreground uppercase tracking-wide leading-none text-center">
+                    {capability.name}
+                  </span>
+                ))
+              }
+            </div>
+          )}
+          {/* Dataset Name and Logo */}
+          <div className="relative flex items-center justify-center w-full">
+            <div className="flex items-center gap-1 justify-center">
+              {dataset.logo && (
+                <Image
+                  src={dataset.logo}
+                  alt={`${dataset.name} logo`}
+                  width={16}
+                  height={16}
+                  className="flex-shrink-0"
+                />
+              )}
+              <span className="text-xs font-medium text-center">
+                {dataset.displayName || dataset.name}
+              </span>
+            </div>
+            {getSortIcon() && (
+              <span className="absolute right-0 text-xs">{getSortIcon()}</span>
+            )}
+          </div>
+        </div>
+      </button>
+    );
+  }
+
+  // Desktop: Button with tooltip
   return (
     <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-            onClick={() => onSort(dataset.id)}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleClick}
             className="text-center hover:text-blue-600 transition-colors cursor-pointer w-full"
           >
             <div className="flex flex-col items-center justify-center gap-1 px-1">
@@ -99,10 +174,10 @@ const DatasetHeader = ({
                   <span className="absolute right-0 text-xs">{getSortIcon()}</span>
                 )}
               </div>
-    </div>
-                </button>
-              </TooltipTrigger>
-        <TooltipContent className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3">
+            </div>
+          </button>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-xs bg-background text-foreground border border-black shadow-lg p-3">
           {(() => {
             // Split by periods first, then by HTML line breaks
             let firstPart = dataset.description.split('. ')[0];
@@ -127,9 +202,9 @@ const DatasetHeader = ({
           >
             Examples and Details
           </button>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 
@@ -144,7 +219,8 @@ const LeaderboardTable = ({
   expanded = false,
   isEditMode = false,
   onUpdateScore,
-  onShowDetails
+  onShowDetails,
+  onMobilePopup
 }: { 
   datasets: Dataset[];
   models: Model[];
@@ -155,6 +231,7 @@ const LeaderboardTable = ({
   isEditMode?: boolean;
   onUpdateScore?: (modelName: string, datasetId: string, newValue: number | null) => void;
   onShowDetails: (datasetId: string, datasetName: string) => void;
+  onMobilePopup?: (type: 'dataset-info', content: { description: string; datasetId: string }) => boolean;
 }) => {
   // Helper function to get processed score (applies postprocessScore if it exists)
   const getProcessedScore = (dataset: Dataset, rawScore: number | null): number | null => {
@@ -210,7 +287,7 @@ const LeaderboardTable = ({
               key={dataset.name} 
               className={`text-center ${bgColor} min-w-[100px] w-auto border-b-2 border-b-gray-300 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''} py-1`}
             >
-              <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} />
+              <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} onMobilePopup={onMobilePopup} />
             </TableHead>
           ))}
             </TableRow>
@@ -401,6 +478,13 @@ export function ModelResultsTable() {
     dataset: null as Dataset | null
   });
 
+  // Mobile popup state for help tooltips
+  const [mobilePopup, setMobilePopup] = useState({
+    isOpen: false,
+    type: null as 'text-help' | 'safety-help' | 'dataset-info' | null,
+    content: null as { description: string; datasetId: string } | null
+  });
+
   // View mode state for each table
   const [viewModes, setViewModes] = useState({
     textCapabilities: 'table' as 'table' | 'chart',
@@ -416,6 +500,26 @@ export function ModelResultsTable() {
     const editModeEnabled = process.env.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
     setIsEditMode(editModeEnabled);
   }, []);
+
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640); // sm breakpoint
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Handle mobile popup
+  const handleMobilePopup = (type: 'text-help' | 'safety-help' | 'dataset-info', content?: { description: string; datasetId: string }) => {
+    if (isMobile) {
+      setMobilePopup({ isOpen: true, type, content: content || null });
+      return true; // Indicate popup was shown
+    }
+    return false; // Indicate normal tooltip should work
+  };
 
   // Save models to JSON file
   const saveModels = async () => {
@@ -671,35 +775,44 @@ export function ModelResultsTable() {
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex items-center gap-2">
                 <h3 className="text-lg sm:text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
-                <TooltipProvider delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button 
-                        className="flex items-center justify-center p-1 bg-transparent border-none cursor-help touch-manipulation"
-                        onTouchStart={(e) => e.preventDefault()}
-                      >
-                        <HelpCircle className="w-4 h-4 text-blue-600" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent 
-                      className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3 z-50"
-                      side="bottom"
-                      align="center"
-                    >
-                      <div className="text-sm leading-relaxed text-wrap">
-                        The benchmarks here do not fully indicate how far we are from to AGI. For direct AGI measurements, please see{' '}
-                        <a 
-                          href="https://agidefinition.ai" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-foreground hover:text-foreground border-b border-dashed border-black font-medium"
+{!isMobile ? (
+                  <TooltipProvider delayDuration={0}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button 
+                          className="flex items-center justify-center p-1 bg-transparent border-none cursor-help"
+                          onClick={() => window.open('https://agidefinition.ai', '_blank')}
                         >
-                          here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
-                        </a>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                          <HelpCircle className="w-4 h-4 text-blue-600" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent 
+                        className="max-w-xs bg-background text-foreground border border-black shadow-lg p-3 z-50"
+                        side="bottom"
+                        align="center"
+                      >
+                        <div className="text-sm leading-relaxed text-wrap">
+                          The benchmarks here do not fully indicate how far we are from to AGI. For direct AGI measurements, please see{' '}
+                          <a 
+                            href="https://agidefinition.ai" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-foreground hover:text-foreground border-b border-dashed border-black font-medium"
+                          >
+                            here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                          </a>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <button 
+                    className="flex items-center justify-center p-1 bg-transparent border-none cursor-help"
+                    onClick={() => handleMobilePopup('text-help')}
+                  >
+                    <HelpCircle className="w-4 h-4 text-blue-600" />
+                  </button>
+                )}
               </div>
               <button
                 onClick={() => toggleViewMode('textCapabilities')}
@@ -755,12 +868,14 @@ export function ModelResultsTable() {
             isEditMode={isEditMode}
             onUpdateScore={updateModelScore}
             onShowDetails={handleShowDetails}
+            onMobilePopup={handleMobilePopup}
           />
         ) : (
           <InlineBarChart
             datasets={TEXT_CAPABILITIES_DATASETS}
             models={textCapabilitiesSortedModels}
             onShowDetails={handleShowDetails}
+            onMobilePopup={handleMobilePopup}
           />
         )}
         {viewModes.textCapabilities === 'table' && (
@@ -873,12 +988,14 @@ export function ModelResultsTable() {
             isEditMode={isEditMode}
             onUpdateScore={updateModelScore}
             onShowDetails={handleShowDetails}
+            onMobilePopup={handleMobilePopup}
           />
         ) : (
           <InlineBarChart
             datasets={MULTIMODAL_DATASETS}
             models={multimodalSortedModels}
             onShowDetails={handleShowDetails}
+            onMobilePopup={handleMobilePopup}
           />
         )}
         {viewModes.multimodal === 'table' && !expandState.multimodal && (
@@ -935,39 +1052,48 @@ export function ModelResultsTable() {
               <div className="flex-shrink-0">
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg sm:text-xl font-semibold text-red-700">Safety</h3>
-                  <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button 
-                          className="flex items-center justify-center p-1 bg-transparent border-none cursor-help touch-manipulation"
-                          onTouchStart={(e) => e.preventDefault()}
+{!isMobile ? (
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button 
+                            className="flex items-center justify-center p-1 bg-transparent border-none cursor-help"
+                            onClick={() => window.open('https://arxiv.org/abs/2407.21792', '_blank')}
+                          >
+                            <HelpCircle className="w-4 h-4 text-red-600" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent 
+                          className="max-w-xs bg-background text-foreground border border-black shadow-lg p-3 z-50"
+                          side="bottom"
+                          align="center"
                         >
-                          <HelpCircle className="w-4 h-4 text-red-600" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent 
-                        className="max-w-xs bg-white text-black border border-gray-200 shadow-lg p-3 z-50"
-                        side="bottom"
-                        align="center"
-                      >
-                        <div className="text-sm leading-relaxed text-wrap space-y-2">
-                          <div>
-                            <a 
-                              href="https://arxiv.org/abs/2407.21792" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
-                            >
-                              How does safety differ from capabilities? <ExternalLink className="w-3 h-3 inline-block align-text-top" />
-                            </a>
+                          <div className="text-sm leading-relaxed text-wrap space-y-2">
+                            <div>
+                              <a 
+                                href="https://arxiv.org/abs/2407.21792" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
+                              >
+                                How does safety differ from capabilities? <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                              </a>
+                            </div>
+                            <div>
+                              Safety benchmarks are benchmarks that are uncorrelated with general capabilities or training compute.
+                            </div>
                           </div>
-                          <div>
-                            Safety benchmarks are benchmarks that are uncorrelated with general capabilities or training compute.
-                          </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <button 
+                      className="flex items-center justify-center p-1 bg-transparent border-none cursor-help"
+                      onClick={() => handleMobilePopup('safety-help')}
+                    >
+                      <HelpCircle className="w-4 h-4 text-red-600" />
+                    </button>
+                  )}
                 </div>
                 <p className="text-sm text-foreground mt-1">Lower is Better</p>
               </div>
@@ -1025,12 +1151,14 @@ export function ModelResultsTable() {
             isEditMode={isEditMode}
             onUpdateScore={updateModelScore}
             onShowDetails={handleShowDetails}
+            onMobilePopup={handleMobilePopup}
           />
         ) : (
           <InlineBarChart
             datasets={SAFETY_DATASETS}
             models={safetySortedModels}
             onShowDetails={handleShowDetails}
+            onMobilePopup={handleMobilePopup}
           />
         )}
         {viewModes.safety === 'table' && !expandState.safety && (
@@ -1086,6 +1214,76 @@ export function ModelResultsTable() {
         onClose={handleCloseDetails}
         dataset={dialogState.dataset}
       />
+
+      {/* Mobile Popup */}
+      {mobilePopup.isOpen && (
+        <>
+          {/* Invisible backdrop to close popup */}
+          <div 
+            className="fixed inset-0 z-40"
+            onClick={() => setMobilePopup({ isOpen: false, type: null, content: null })}
+          />
+          
+          {/* Popup content - styled like existing tooltips */}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 max-w-xs w-[90vw]">
+            <div className="bg-background text-foreground border border-black shadow-lg rounded-md p-3">
+              <div className="text-sm leading-relaxed text-wrap space-y-2">
+                {mobilePopup.type === 'text-help' && (
+                  <>
+                    <div>The benchmarks here do not fully indicate how far we are from to AGI. For direct AGI measurements, please see{' '}
+                      <a 
+                        href="https://agidefinition.ai" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-foreground hover:text-foreground border-b border-dashed border-black font-medium"
+                        onClick={() => setMobilePopup({ isOpen: false, type: null, content: null })}
+                      >
+                        here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                      </a>
+                    </div>
+                  </>
+                )}
+                
+                {mobilePopup.type === 'safety-help' && (
+                  <>
+                    <div>
+                      <a 
+                        href="https://arxiv.org/abs/2407.21792" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
+                        onClick={() => setMobilePopup({ isOpen: false, type: null, content: null })}
+                      >
+                        How does safety differ from capabilities? <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                      </a>
+                    </div>
+                    <div>
+                      Safety benchmarks are benchmarks that are uncorrelated with general capabilities or training compute.
+                    </div>
+                  </>
+                )}
+                
+                {mobilePopup.type === 'dataset-info' && mobilePopup.content && (
+                  <>
+                    <div dangerouslySetInnerHTML={{ __html: mobilePopup.content.description }} />
+                    <button
+                      onClick={() => {
+                        if (mobilePopup.content) {
+                          handleShowDetails(mobilePopup.content.datasetId);
+                        }
+                        setMobilePopup({ isOpen: false, type: null, content: null });
+                      }}
+                      className="mt-3 px-3 py-1 bg-background text-foreground border border-foreground text-xs rounded hover:bg-foreground hover:text-background transition-colors"
+                    >
+                      Examples and Details
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
  
     </div>
   );

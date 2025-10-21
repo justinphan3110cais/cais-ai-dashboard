@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
 import { Globe, FileText, Copy, Check, Loader, Github } from 'lucide-react';
 import Image from 'next/image';
 import { Dataset } from '@/lib/types';
@@ -70,7 +70,9 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="!w-[90vw] !max-w-[90vw] max-h-[90vh] overflow-y-auto sm:!max-w-[90vw]">
+      <DialogPortal>
+        <DialogOverlay className="!z-[250]" />
+        <DialogContent className="!w-[90vw] !max-w-[90vw] max-h-[90vh] overflow-y-auto sm:!max-w-[90vw] !z-[300]">
         <div className="pt-6 space-y-6">
           {/* Header with title and links inline */}
           <div className="flex items-center gap-4 flex-wrap">
@@ -213,7 +215,8 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
             </div>
           </div>
         </div>
-      </DialogContent>
+        </DialogContent>
+      </DialogPortal>
     </Dialog>
   );
 };
