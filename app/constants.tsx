@@ -350,6 +350,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
     logo: intphys2_logo.src,
     category: "vision",
     capabilities: ["realworld_physics"],
+    randomChance: 50,
     paperLink: "https://arxiv.org/abs/2506.09849",
     githubLink: "https://github.com/facebookresearch/IntPhys2/tree/main",
     huggingfaceLink: "https://huggingface.co/datasets/facebook/IntPhys2",

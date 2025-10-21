@@ -193,6 +193,11 @@ const DatasetHeader = ({
               <div className="text-sm leading-relaxed text-wrap" dangerouslySetInnerHTML={{ __html: firstSentence }} />
             );
           })()}
+          {dataset.randomChance && (
+            <div className="mt-2 text-sm text-muted-foreground">
+              Random chance: {dataset.randomChance.toFixed(1)}%
+            </div>
+          )}
           <button
             onClick={(e) => {
               e.stopPropagation();

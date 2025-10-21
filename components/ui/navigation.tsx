@@ -62,16 +62,8 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Right side: About Us + GitHub Link */}
+        {/* Right side: GitHub Link */}
         <div className="flex items-center space-x-2">
-          <a
-            href="https://safe.ai/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:block text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors px-3 py-2 rounded-md hover:bg-gray-100"
-          >
-            About Us
-          </a>
           <a
             href={GITHUB_URL}
             target="_blank"

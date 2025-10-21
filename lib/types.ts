@@ -14,6 +14,7 @@ export interface Dataset {
   citationUrl?: string; // URL to fetch citation from
   citation?: string; // Direct citation text
   postprocessScore?: (score: number) => number; // Optional function to transform scores (e.g., 100 - score)
+  randomChance?: number; // Optional random chance baseline score (e.g., 50 for binary classification)
   examples?: {
     type: 'image' | 'video';
     src: string | import('next/image').StaticImageData; // Can be string (for videos) or StaticImageData (for images)

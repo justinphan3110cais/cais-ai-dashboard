@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, LabelList, ReferenceLine } from 'recharts';
 import Image from "next/image";
 import { Dataset, Model } from "@/lib/types";
 import { getProviderLogo, PROVIDER_COLORS, BENCHMARK_TYPES } from "@/app/constants";
@@ -415,6 +415,18 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                 )}
               </div>
               
+              {/* Random Chance Legend */}
+              {chartInfo.dataset.randomChance && (
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <div 
+                    className="w-8 h-0.5 border-t-2 border-dashed border-muted-foreground"
+                  ></div>
+                  <span className="text-sm text-muted-foreground font-semibold">
+                    Random: {chartInfo.dataset.randomChance}%
+                  </span>
+                </div>
+              )}
+              
               {/* Bar Chart */}
               <div className="h-80 overflow-visible">
                 <ResponsiveContainer width="100%" height="100%">
@@ -449,6 +461,15 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         />
                       ))}
                     </Bar>
+                    {/* Random Chance Reference Line - After Bar to render on top */}
+                    {chartInfo.dataset.randomChance && (
+                      <ReferenceLine 
+                        y={chartInfo.dataset.randomChance} 
+                        stroke="#6b7280" 
+                        strokeWidth={2}
+                        strokeDasharray="5 5"
+                      />
+                    )}
                   </BarChart>
                 </ResponsiveContainer>
               </div>
