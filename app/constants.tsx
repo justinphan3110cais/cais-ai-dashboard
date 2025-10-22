@@ -152,7 +152,7 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
 };
 
 export const PAPER_URL = "https://arxiv.org/abs/2507.23701";
-export const GITHUB_URL = "https://github.com/centerforaisafety/cais_simple_eval";
+export const GITHUB_URL = "https://github.com/centerforaisafety/leaderboard";
 
 export const BIBTEX_CITATION = `@misc{caisaileaderboard,
       title={CAIS AI Leaderboard}, 
