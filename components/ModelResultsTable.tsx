@@ -1073,20 +1073,15 @@ export function ModelResultsTable() {
                           side="bottom"
                           align="center"
                         >
-                          <div className="text-sm leading-relaxed text-wrap space-y-2">
-                            <div>
-                              <a 
-                                href="https://arxiv.org/abs/2407.21792" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
-                              >
-                                How does safety differ from capabilities? <ExternalLink className="w-3 h-3 inline-block align-text-top" />
-                              </a>
-                            </div>
-                            <div>
-                              Safety benchmarks are benchmarks that are uncorrelated with general capabilities or training compute.
-                            </div>
+                          <div className="text-sm leading-relaxed text-wrap">
+                            Safety benchmarks include benchmarks that have low correlation with general capabilities or training compute. Please read more <a 
+                              href="https://arxiv.org/abs/2407.21792" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
+                            >
+                              here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                            </a>.
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -1250,22 +1245,17 @@ export function ModelResultsTable() {
                 )}
                 
                 {mobilePopup.type === 'safety-help' && (
-                  <>
-                    <div>
-                      <a 
-                        href="https://arxiv.org/abs/2407.21792" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
-                        onClick={() => setMobilePopup({ isOpen: false, type: null, content: null })}
-                      >
-                        How does safety differ from capabilities? <ExternalLink className="w-3 h-3 inline-block align-text-top" />
-                      </a>
-                    </div>
-                    <div>
-                      Safety benchmarks are benchmarks that are uncorrelated with general capabilities or training compute.
-                    </div>
-                  </>
+                  <div>
+                    Safety benchmarks include benchmarks that have low correlation with general capabilities or training compute. Please read more <a 
+                      href="https://arxiv.org/abs/2407.21792" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
+                      onClick={() => setMobilePopup({ isOpen: false, type: null, content: null })}
+                    >
+                      here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                    </a>.
+                  </div>
                 )}
                 
                 {mobilePopup.type === 'dataset-info' && mobilePopup.content && (

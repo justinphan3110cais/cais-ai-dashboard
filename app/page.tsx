@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { BIBTEX_CITATION } from "@/app/constants";
 import { ModelResultsTable } from "@/components/ModelResultsTable";
 import { Navigation } from "@/components/ui/navigation";
@@ -17,8 +18,24 @@ export default function LandingPage() {
         top: elementPosition,
         behavior: 'smooth'
       });
+      // Update URL hash for shareable links
+      window.history.pushState(null, '', `#${section}`);
     }
   };
+
+  // Handle initial hash navigation on page load
+  React.useEffect(() => {
+    const handleHashNavigation = () => {
+      const hash = window.location.hash.slice(1); // Remove the '#'
+      if (hash && (hash === 'text' || hash === 'vision' || hash === 'safety')) {
+        setTimeout(() => handleNavigate(hash), 100); // Small delay to ensure DOM is ready
+      }
+    };
+
+    handleHashNavigation();
+    window.addEventListener('hashchange', handleHashNavigation);
+    return () => window.removeEventListener('hashchange', handleHashNavigation);
+  }, []);
 
   return (
     <div className="min-h-screen">
