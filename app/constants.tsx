@@ -481,7 +481,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     id: "masks",
     name: "MASK",
     link: "https://www.mask-benchmark.ai",
-    description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a dataset that tests the extent to which AIs can be pressured to overtly lie. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores. The benchmark underscores the need for robust evaluations to ensure LLMs remain trustworthy.",
+    description: "<a href='https://www.mask-benchmark.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>MASK</a> is a dataset that tests the extent to which AIs can be pressured to overtly lie. While larger models obtain higher accuracy, they do not become more honest. Surprisingly, frontier LLMs show a substantial propensity to lie when pressured, resulting in low honesty scores.",
     category: "safety",
     logo: mask_logo.src,
     capabilities: ["dishonesty"],
