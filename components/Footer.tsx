@@ -4,9 +4,10 @@ import caisLogo from "@/assets/cais_logo.svg";
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white">
+    <>
+      <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Logo and Mission Statement */}
+        {/* Logo, Mission Statement, and Newsletter Form */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 mb-12">
           <Link href="/" className="flex-shrink-0">
             <Image
@@ -21,6 +22,80 @@ export function Footer() {
             <h4 className="text-lg font-medium text-white leading-relaxed max-w-2xl mx-auto lg:mx-0">
               CAIS is an AI safety non-profit. Our mission is to reduce societal-scale risks from artificial intelligence.
             </h4>
+          </div>
+          
+          {/* Newsletter Form */}
+          <div className="flex-shrink-0">
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+              <form 
+                name="wf-form-AI-Safety-Newsletter-Component" 
+                data-name="AI Safety Newsletter Component" 
+                action="https://safe.ai/newsletter/success" 
+                method="get" 
+                id="wf-form-AI-Safety-Newsletter-Component"
+                aria-label="AI Safety Newsletter Component"
+              >
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Keep up to date with AI Safety</h2>
+                  <div className="flex flex-col sm:flex-row items-stretch gap-3 max-w-lg">
+                    <div className="sm:w-2/3">
+                      <label htmlFor="Email-3" className="sr-only">Email Address</label>
+                      <input 
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500 text-sm" 
+                        maxLength={256} 
+                        name="Email" 
+                        placeholder="Your email address" 
+                        type="email" 
+                        id="Email-3" 
+                        required 
+                      />
+                    </div>
+                    <input 
+                      type="submit" 
+                      className="px-6 py-2.5 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors cursor-pointer text-sm sm:w-1/3" 
+                      value="Submit" 
+                    />
+                  </div>
+                </div>
+                
+                <div className="border-t border-gray-200 pt-4 mt-2"></div>
+                
+                <div className="flex flex-wrap items-center gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="AI-Safety-Newsletter" 
+                      id="AI-Safety-Newsletter" 
+                      defaultChecked 
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">AI Safety Newsletter</span>
+                  </label>
+                  
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="AI-Frontiers" 
+                      id="AI-Frontiers" 
+                      defaultChecked 
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">AI Frontiers</span>
+                  </label>
+                  
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="MLS-Newsletter" 
+                      id="MLS-Newsletter" 
+                      defaultChecked 
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">MLS Newsletter</span>
+                  </label>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
 
@@ -203,5 +278,6 @@ export function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }
