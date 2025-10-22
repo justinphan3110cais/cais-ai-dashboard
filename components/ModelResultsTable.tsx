@@ -1080,7 +1080,7 @@ export function ModelResultsTable() {
                               rel="noopener noreferrer"
                               className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
                             >
-                              here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                              <span className="inline-flex items-center gap-1">here <ExternalLink className="w-3 h-3" /></span>
                             </a>.
                           </div>
                         </TooltipContent>
@@ -1253,7 +1253,7 @@ export function ModelResultsTable() {
                       className="text-foreground hover:text-foreground underline decoration-dashed underline-offset-4 font-semibold"
                       onClick={() => setMobilePopup({ isOpen: false, type: null, content: null })}
                     >
-                      here <ExternalLink className="w-3 h-3 inline-block align-text-top" />
+                      <span className="inline-flex items-center gap-1">here <ExternalLink className="w-3 h-3" /></span>
                     </a>.
                   </div>
                 )}
