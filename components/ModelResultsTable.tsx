@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { EyeOff, ChevronDown, ChevronUp, Save, BarChart3, Table as TableIcon, HelpCircle, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronUp, Save, BarChart3, Table as TableIcon, HelpCircle, ExternalLink } from "lucide-react";
 import hf_logo from "@/assets/hf-logo.png";
 import { MODELS, TEXT_CAPABILITIES_DATASETS, MULTIMODAL_DATASETS, SAFETY_DATASETS, getProviderLogo, BENCHMARK_TYPES } from "@/app/constants";
 import { Dataset, Model } from "@/lib/types";
@@ -320,20 +320,6 @@ const LeaderboardTable = ({
                 >
                   {model.name}
                 </span>
-                {model.isTextOnlyModel && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex-shrink-0">
-                          <EyeOff className="w-4 h-4 text-gray-500" />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-gray-800 text-white">
-                        <p>Text-only model</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
                 {model.modelWeights && (
                       <TooltipProvider>
                         <Tooltip>

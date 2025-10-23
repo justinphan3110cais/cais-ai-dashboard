@@ -16,7 +16,7 @@
       "mindcube": 59.7,
       "omnispatial": null,
       "terminal_bench": 30.5,
-      "machiavelli": 69.8,
+      "machiavelli": 76.6,
       "art": 54
     },
     "isTopModel": true,
@@ -37,7 +37,7 @@
       "terminal_bench": 33.3,
       "masks": 96.13,
       "vct_refusal": 68.5,
-      "machiavelli": 69.3,
+      "machiavelli": 73.7,
       "textquests_harm": 19.6,
       "enigmaeval": 6,
       "intphys2": 56.3,
@@ -70,7 +70,7 @@
       "mindcube": 64.7,
       "omnispatial": null,
       "terminal_bench": 37.6,
-      "machiavelli": 76.9,
+      "machiavelli": 81.5,
       "art": 65
     },
     "isTopModel": true,
@@ -90,7 +90,7 @@
       "terminal_bench": 17.7,
       "masks": 30,
       "vct_refusal": 43.8,
-      "machiavelli": 74.1,
+      "machiavelli": 79.9,
       "textquests_harm": 19.3,
       "enigmaeval": 4.7,
       "intphys2": 53.4,
@@ -147,7 +147,7 @@
       "mindcube": 59.6,
       "omnispatial": null,
       "terminal_bench": 24.8,
-      "machiavelli": 77.6,
+      "machiavelli": 83.9,
       "art": 90.6
     },
     "isTopModel": true,
@@ -198,7 +198,7 @@
       "mindcube": 59.3,
       "omnispatial": null,
       "terminal_bench": 31.2,
-      "machiavelli": 68.5,
+      "machiavelli": 78.9,
       "art": 54.9
     },
     "isTopModel": false,
@@ -301,7 +301,7 @@
       "mindcube": 53,
       "omnispatial": null,
       "terminal_bench": 15.6,
-      "machiavelli": 78.3,
+      "machiavelli": 77.8,
       "art": 91.7
     },
     "isTopModel": false,
@@ -317,7 +317,7 @@
       "hle": 19.8,
       "arc_agi_2": 4.17,
       "textquests": 15.2,
-      "swebench_verified": null,
+      "swebench_verified": 46.2,
       "masks": 53,
       "textquests_harm": 15.4,
       "vct_refusal": 0,
@@ -433,7 +433,7 @@
       "mindcube": 49.2,
       "omnispatial": null,
       "terminal_bench": 4.3,
-      "machiavelli": 84.2,
+      "machiavelli": 92.6,
       "art": 93.6
     },
     "isTopModel": false,
@@ -509,7 +509,7 @@
       "mindcube": 40.3,
       "omnispatial": null,
       "terminal_bench": 11.3,
-      "machiavelli": null,
+      "machiavelli": 70.9,
       "art": 76.1
     },
     "isTopModel": false,
@@ -534,7 +534,7 @@
       "mindcube": 49.7,
       "omnispatial": null,
       "terminal_bench": 25.5,
-      "machiavelli": null,
+      "machiavelli": 70.9,
       "art": 51.6
     },
     "isTopModel": false,
