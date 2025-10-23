@@ -27,7 +27,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
 
   // Get default selected models (flagship models with standard size only from default providers)
   const defaultSelectedModels = useMemo(() => {
-    const defaultProviders = ["openai", "anthropic", "xai", "google"];
+    const defaultProviders = ["openai", "anthropic", "xai", "google", "deepseek"];
     return models
       .filter(model => 
         model.flagship === true && 
@@ -39,7 +39,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
 
   // Chart filters - Initialize with default providers
   const [chartFilters, setChartFilters] = useState({
-    selectedProviders: ["Anthropic", "Google", "OpenAI", "xAI"], // Default providers explicitly selected
+    selectedProviders: ["Anthropic", "Google", "OpenAI", "xAI", "DeepSeek"], // Default providers explicitly selected
     selectedModels: defaultSelectedModels
   });
 
@@ -173,7 +173,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
             y={Number(y) - 8} 
             fill="#374151" 
             textAnchor="middle" 
-            fontSize="10"
+            fontSize="12"
             fontWeight="600"
           >
             {typeof value === 'number' ? value.toFixed(1) : value}
@@ -189,8 +189,8 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               <Image
                 src={providerLogo.src || ''}
                 alt={`${entry.provider} logo`}
-                width={16}
-                height={16}
+                width={18}
+                height={18}
                 className="rounded"
               />
             </div>
@@ -257,7 +257,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                     angle={-45}
                     textAnchor="end"
                     height={60}
-                    tick={{ fontSize: 10, fill: '#374151', dy: 20, fontWeight: 600 }}
+                    tick={{ fontSize: 12, fill: '#374151', dy: 24, fontWeight: 600 }}
                     axisLine={false}
                     tickLine={false}
                   />
@@ -417,7 +417,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               
               {/* Random Chance Legend */}
               {chartInfo.dataset.randomChance && (
-                <div className="flex items-center justify-center gap-2 mb-3">
+                <div className="flex items-center justify-center gap-2 mb-0">
                   <div 
                     className="w-8 h-0.5 border-t-2 border-dashed border-muted-foreground"
                   ></div>
@@ -433,10 +433,10 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                   <BarChart
                     data={chartInfo.data}
                     margin={{
-                      top: 30,
+                      top: chartInfo.dataset.randomChance ? 20 : 30,
                       right: 10,
                       left: 30,
-                      bottom: 80,
+                      bottom: chartInfo.dataset.randomChance ? 100 : 80,
                     }}
                   >
                     <XAxis 
@@ -444,7 +444,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       angle={-45}
                       textAnchor="end"
                       height={60}
-                      tick={{ fontSize: 10, fill: '#374151', dy: 19, fontWeight: 600 }}
+                      tick={{ fontSize: 12, fill: '#374151', dy: 24, fontWeight: 600 }}
                       axisLine={false}
                       tickLine={false}
                     />

@@ -137,7 +137,7 @@
       "hle": 21.64,
       "arc_agi_2": 4,
       "textquests": 23.2,
-      "swebench_verified": 53.6,
+      "swebench_verified": 47,
       "masks": 55.67,
       "textquests_harm": 15.9,
       "vct_refusal": 0,
@@ -311,11 +311,11 @@
     "releaseDate": "2025-06-17"
   },
   {
-    "name": "DeepSeek R1-0528",
+    "name": "DeepSeek 3.2 Exp",
     "provider": "deepseek",
     "scores": {
-      "hle": 14,
-      "arc_agi_2": 1.1,
+      "hle": 19.8,
+      "arc_agi_2": 4.17,
       "textquests": 15.2,
       "swebench_verified": null,
       "masks": 53,
@@ -326,16 +326,16 @@
       "erqa": null,
       "mindcube": null,
       "omnispatial": null,
-      "terminal_bench": 14.5,
-      "machiavelli": null
+      "terminal_bench": 29.1,
+      "machiavelli": null,
+      "art": 50
     },
-    "isTopModel": false,
-    "modelWeights": "deepseek-ai/DeepSeek-R1-0528",
-    "modelCardUrl": "https://api-docs.deepseek.com/news/news250528",
+    "isTopModel": true,
+    "modelCardUrl": "https://api-docs.deepseek.com/news/news250929",
     "isTextOnlyModel": true,
     "model_size": "standard",
     "flagship": true,
-    "releaseDate": "2025-05-28"
+    "releaseDate": "2025-09-29"
   },
   {
     "name": "o4-mini",
@@ -423,7 +423,7 @@
       "hle": 6.9,
       "arc_agi_2": 0,
       "textquests": 11.7,
-      "swebench_verified": null,
+      "swebench_verified": 22,
       "masks": 46,
       "textquests_harm": 22.8,
       "vct_refusal": 0,

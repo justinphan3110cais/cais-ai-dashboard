@@ -43,8 +43,8 @@ export const PROVIDER_COLORS: Record<string, string> = {
   openai: '#22c55e', // Green
   anthropic: '#f97316', // Orange
   xai: '#374151', // Gray/Black
-  google: '#3b82f6', // Lighter blue
-  deepseek: '#06b6d4', // Cyan/Light blue
+  google: '#FBBC04', // Lighter blue
+  deepseek: '#4D6BFE', // DeepSeek blue
   meta: '#38bdf8', // Sky blue
   qwen: '#a855f7', // Purple
   moonshot: '#6b7280', // Gray

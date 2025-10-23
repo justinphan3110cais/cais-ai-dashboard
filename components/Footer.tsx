@@ -20,7 +20,7 @@ export function Footer() {
           </Link>
           <div className="flex-1 text-center lg:text-left">
             <h4 className="text-lg font-medium text-white leading-relaxed max-w-2xl mx-auto lg:mx-0">
-              CAIS is an AI safety non-profit. Our mission is to reduce societal-scale risks from artificial intelligence.
+            Center for AI Safety is a research nonprofit. Our mission is to reduce societal-scale risks from artificial intelligence.
             </h4>
           </div>
           
