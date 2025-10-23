@@ -100,7 +100,7 @@
       "art": 80.3
     },
     "isTopModel": false,
-    "modelCardUrl": null,
+    "modelCardUrl": "https://x.ai/news/grok-4-fast",
     "model_size": "mini",
     "flagship": true,
     "releaseDate": "2025-09-19"
@@ -327,7 +327,7 @@
       "mindcube": null,
       "omnispatial": null,
       "terminal_bench": 29.1,
-      "machiavelli": null,
+      "machiavelli": 84.1,
       "art": 50
     },
     "isTopModel": true,
@@ -515,6 +515,7 @@
     "isTopModel": false,
     "model_size": "nano",
     "flagship": true,
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
     "releaseDate": "2025-08-07"
   },
   {
@@ -538,6 +539,7 @@
       "art": 51.6
     },
     "isTopModel": false,
+    "modelCardUrl": "https://www.anthropic.com/news/claude-haiku-4-5",
     "model_size": "mini",
     "flagship": true,
     "releaseDate": "2025-10-15"

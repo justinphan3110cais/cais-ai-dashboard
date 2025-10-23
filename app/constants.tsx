@@ -145,9 +145,9 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
   },
   adversarial_robustness: {
     id: "adversarial_robustness",
-    name: "Attack Success Rate",
+    name: "Jailbreak Success Rate",
     icon: Bot,
-    tooltipText: "Attack Success Rate Benchmark"
+    tooltipText: "Jailbreak Success Rate Benchmark"
   }
 };
 
