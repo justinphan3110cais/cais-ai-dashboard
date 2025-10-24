@@ -4,7 +4,7 @@ import React, { useState, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, LabelList, ReferenceLine } from 'recharts';
 import Image from "next/image";
 import { Dataset, Model } from "@/lib/types";
-import { getProviderLogo, PROVIDER_COLORS, BENCHMARK_TYPES } from "@/app/constants";
+import { getProviderLogo, PROVIDER_COLORS, BENCHMARK_TYPES, DEFAULT_CHART_MODELS } from "@/app/constants";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ChartFilterBar } from "@/components/ui/ChartFilterBar";
 
@@ -13,38 +13,42 @@ interface InlineBarChartProps {
   models: Model[];
   onShowDetails?: (datasetId: string) => void;
   onMobilePopup?: (type: 'dataset-info', content: { description: string; datasetId: string }) => boolean;
+  sectionType?: 'text' | 'vision' | 'safety';
 }
 
 export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   datasets,
   models,
   onShowDetails,
-  onMobilePopup
+  onMobilePopup,
+  sectionType = 'text'
 }) => {
   const [includedDatasets, setIncludedDatasets] = useState<Record<string, boolean>>(
     datasets.reduce((acc, dataset) => ({ ...acc, [dataset.id]: true }), {})
   );
 
-  // Get default selected models (flagship models with standard size only from default providers)
-  const defaultSelectedModels = useMemo(() => {
-    const defaultProviders = ["openai", "anthropic", "xai", "google", "deepseek"];
-    return models
-      .filter(model => 
-        model.flagship === true && 
-        model.model_size === 'standard' &&
-        defaultProviders.includes(model.provider.toLowerCase())
-      )
-      .map(model => model.name);
-  }, [models]);
+  // Get section colors
+  const getSectionColors = () => {
+    switch (sectionType) {
+      case 'vision':
+        return { bg: 'bg-green-50', border: 'border-green-300', borderSelected: 'border-green-500' };
+      case 'safety':
+        return { bg: 'bg-red-50', border: 'border-red-300', borderSelected: 'border-red-500' };
+      default:
+        return { bg: 'bg-blue-50', border: 'border-blue-300', borderSelected: 'border-blue-500' };
+    }
+  };
+  const colors = getSectionColors();
 
-  // Chart filters - Initialize with default providers
+  // Chart filters
   const [chartFilters, setChartFilters] = useState({
-    selectedProviders: ["Anthropic", "Google", "OpenAI", "xAI", "DeepSeek"], // Default providers explicitly selected
-    selectedModels: defaultSelectedModels
+    selectedProviders: [] as string[],
+    selectedModels: DEFAULT_CHART_MODELS
   });
 
-  // Mobile detection
+  // Mobile detection and expand state for mobile
   const [isMobile, setIsMobile] = useState(false);
+  const [showAllCharts, setShowAllCharts] = useState(false);
   React.useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 640);
     checkMobile();
@@ -60,19 +64,9 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     }));
   };
 
-  // Filter models based on chart filters
+  // Filter models based on selected models from chart filters
   const filteredModels = useMemo(() => {
-    return models.filter(model => {
-      // Filter by provider (case-insensitive)
-      const providerMatch = chartFilters.selectedProviders.some(
-        p => p.toLowerCase() === model.provider.toLowerCase()
-      );
-      
-      // Filter by selected models
-      const modelMatch = chartFilters.selectedModels.includes(model.name);
-      
-      return providerMatch && modelMatch;
-    });
+    return models.filter(model => chartFilters.selectedModels.includes(model.name));
   }, [models, chartFilters]);
 
   // Prepare data: For each dataset, create chart data with model names on X-axis
@@ -210,77 +204,90 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
 
       {/* Chart Content - One chart per benchmark with model names on X-axis */}
       {chartsData.length > 0 && filteredModels.length > 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
-          {/* Average Chart - First Position */}
-          <div className="flex flex-col">
-            {/* Average Title */}
-            <h3 className="text-center font-semibold text-gray-900 mb-2">
-              Average
-            </h3>
-            
-            {/* Checkboxes below Average title */}
-            <div className="mb-3">
-              <div className="flex flex-wrap gap-2 justify-center items-center">
-                {datasets.map(dataset => (
-                  <label key={dataset.id} className="flex items-center gap-1.5 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={includedDatasets[dataset.id] || false}
-                      onChange={() => toggleDatasetInclusion(dataset.id)}
-                      className="w-3 h-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      style={{ accentColor: includedDatasets[dataset.id] ? '#2563eb' : '#9ca3af' }}
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
+            {/* Average Chart - First Position */}
+            <div className="flex flex-col">
+              {/* Average Title */}
+              <h3 className="text-center font-semibold text-gray-900 mb-2">
+                Average
+              </h3>
+              
+              {/* Checkboxes below Average title */}
+              <div className="mb-3">
+                <div className="flex flex-wrap gap-2 justify-center items-center">
+                  {datasets.map(dataset => (
+                    <button
+                      key={dataset.id}
+                      onClick={() => toggleDatasetInclusion(dataset.id)}
+                      className={`relative flex items-center gap-1.5 px-2 py-1 rounded-md border transition-all ${
+                        includedDatasets[dataset.id] 
+                          ? `${colors.borderSelected} ${colors.bg} shadow-sm` 
+                          : `${colors.border} bg-white hover:bg-gray-50 opacity-50 hover:opacity-75`
+                      }`}
+                      title={dataset.name}
+                    >
+                      {/* Logo */}
+                      {dataset.logo && (
+                        <Image
+                          src={dataset.logo}
+                          alt={`${dataset.name} logo`}
+                          width={20}
+                          height={20}
+                          className="flex-shrink-0"
+                        />
+                      )}
+                      <span className="text-xs text-gray-700 whitespace-nowrap">
+                        {dataset.name === "Agent Red Teaming" ? "Jailbreak" : 
+                         dataset.name === "VCT" ? "VCT-Refusal" : 
+                         dataset.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Average Chart */}
+              <div className="h-80 overflow-visible">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={averageData}
+                    margin={{
+                      top: 30,
+                      right: 10,
+                      left: 30,
+                      bottom: 80,
+                    }}
+                  >
+                    <XAxis 
+                      dataKey="modelName" 
+                      angle={-45}
+                      textAnchor="end"
+                      height={60}
+                      tick={{ fontSize: 12, fill: '#374151', dy: 24, fontWeight: 600 }}
+                      axisLine={false}
+                      tickLine={false}
                     />
-                    <span className="text-xs text-gray-700">
-                      {dataset.name === "Agent Red Teaming" ? "Red Teaming" : 
-                       dataset.name === "VCT" ? "VCT-Refusal" : 
-                       dataset.name}
-                    </span>
-                  </label>
-                ))}
+                    <YAxis hide />
+                    <Bar 
+                      dataKey="score"
+                      radius={[4, 4, 0, 0]}
+                    >
+                      <LabelList content={createCustomLabel(averageData)} />
+                      {averageData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={PROVIDER_COLORS[entry.provider] || PROVIDER_COLORS['moonshot']} 
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
-            
-            {/* Average Chart */}
-            <div className="h-80 overflow-visible">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={averageData}
-                  margin={{
-                    top: 30,
-                    right: 10,
-                    left: 30,
-                    bottom: 80,
-                  }}
-                >
-                  <XAxis 
-                    dataKey="modelName" 
-                    angle={-45}
-                    textAnchor="end"
-                    height={60}
-                    tick={{ fontSize: 12, fill: '#374151', dy: 24, fontWeight: 600 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis hide />
-                  <Bar 
-                    dataKey="score"
-                    radius={[4, 4, 0, 0]}
-                  >
-                    <LabelList content={createCustomLabel(averageData)} />
-                    {averageData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={PROVIDER_COLORS[entry.provider] || PROVIDER_COLORS['moonshot']} 
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
 
-          {/* Individual Benchmark Charts */}
-          {chartsData.map((chartInfo) => (
+            {/* Individual Benchmark Charts - Hidden on mobile unless expanded */}
+            {(!isMobile || showAllCharts) && chartsData.map((chartInfo) => (
             <div key={chartInfo.datasetId} className="flex flex-col">
               {/* Benchmark Title with Logo, Hover, and Toggle Button */}
               <div className="flex items-center justify-center mb-3 w-full">
@@ -291,12 +298,12 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         <div className="flex flex-col cursor-pointer">
                           {/* Capability Category (Secondary Text) */}
                           {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
-                            <div className="flex items-center justify-center gap-1 mb-1">
+                            <div className="flex items-center justify-center gap-1 mb-1 flex-wrap">
                               {chartInfo.dataset.capabilities
                                 .map(capabilityId => BENCHMARK_TYPES[capabilityId])
                                 .filter(capability => capability !== undefined)
                                 .map((capability, idx) => (
-                                  <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide">
+                                  <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide whitespace-nowrap">
                                     {capability.name}
                                   </span>
                                 ))
@@ -304,24 +311,19 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                             </div>
                           ) : null}
                           {/* Benchmark Name */}
-                          <div className="grid grid-cols-3 items-center w-full">
-                            <div className="flex justify-end">
-                              {chartInfo.dataset.logo && (
-                                <Image
-                                  src={chartInfo.dataset.logo}
-                                  alt={`${chartInfo.datasetName} logo`}
-                                  width={20}
-                                  height={20}
-                                  className="mr-2"
-                                />
-                              )}
-                            </div>
-                            <div className="flex justify-center">
-                              <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
-                                {chartInfo.datasetName}
-                              </h3>
-                            </div>
-                            <div></div>
+                          <div className="flex items-center justify-center gap-2 w-full">
+                            {chartInfo.dataset.logo && (
+                              <Image
+                                src={chartInfo.dataset.logo}
+                                alt={`${chartInfo.datasetName} logo`}
+                                width={20}
+                                height={20}
+                                className="flex-shrink-0"
+                              />
+                            )}
+                            <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600 whitespace-nowrap">
+                              {chartInfo.datasetName}
+                            </h3>
                           </div>
                         </div>
                       </TooltipTrigger>
@@ -379,12 +381,12 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                   >
                     {/* Capability Category (Secondary Text) */}
                     {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
-                      <div className="flex items-center justify-center gap-1 mb-1">
+                      <div className="flex items-center justify-center gap-1 mb-1 flex-wrap">
                         {chartInfo.dataset.capabilities
                           .map(capabilityId => BENCHMARK_TYPES[capabilityId])
                           .filter(capability => capability !== undefined)
                           .map((capability, idx) => (
-                            <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide">
+                            <span key={idx} className="text-xs text-muted-foreground uppercase tracking-wide whitespace-nowrap">
                               {capability.name}
                             </span>
                           ))
@@ -392,24 +394,19 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       </div>
                     ) : null}
                     {/* Benchmark Name */}
-                    <div className="grid grid-cols-3 items-center w-full">
-                      <div className="flex justify-end">
-                        {chartInfo.dataset.logo && (
-                          <Image
-                            src={chartInfo.dataset.logo}
-                            alt={`${chartInfo.datasetName} logo`}
-                            width={20}
-                            height={20}
-                            className="mr-2"
-                          />
-                        )}
-                      </div>
-                      <div className="flex justify-center">
-                        <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600">
-                          {chartInfo.datasetName}
-                        </h3>
-                      </div>
-                      <div></div>
+                    <div className="flex items-center justify-center gap-2 w-full">
+                      {chartInfo.dataset.logo && (
+                        <Image
+                          src={chartInfo.dataset.logo}
+                          alt={`${chartInfo.datasetName} logo`}
+                          width={20}
+                          height={20}
+                          className="flex-shrink-0"
+                        />
+                      )}
+                      <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600 whitespace-nowrap">
+                        {chartInfo.datasetName}
+                      </h3>
                     </div>
                   </div>
                 )}
@@ -475,7 +472,38 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               </div>
             </div>
           ))}
-        </div>
+          </div>
+          
+          {/* View All Button - Only on Mobile */}
+          {isMobile && !showAllCharts && (
+            <div className="mt-4">
+              <button
+                onClick={() => setShowAllCharts(true)}
+                className="w-full py-3 flex items-center justify-center gap-2 text-foreground bg-gray-50 hover:bg-gray-100 rounded-md transition-colors border border-black"
+              >
+                <span className="text-sm font-medium">View All Benchmarks</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+          )}
+          
+          {/* Collapse Button - Only on Mobile when expanded */}
+          {isMobile && showAllCharts && (
+            <div className="mt-4">
+              <button
+                onClick={() => setShowAllCharts(false)}
+                className="w-full py-3 flex items-center justify-center gap-2 text-foreground bg-gray-50 hover:bg-gray-100 rounded-md transition-colors border border-black"
+              >
+                <span className="text-sm font-medium">Show Less</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <div className="flex items-center justify-center h-96 text-gray-500">
           <div className="text-center">

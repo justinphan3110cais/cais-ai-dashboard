@@ -50,6 +50,15 @@ export const PROVIDER_COLORS: Record<string, string> = {
   moonshot: '#6b7280', // Gray
 };
 
+// Default models to show in bar charts
+export const DEFAULT_CHART_MODELS = [
+  "GPT-5",
+  "Grok 4",
+  "Gemini 2.5 Pro",
+  "Sonnet 4.5",
+  "DeepSeek 3.2 Exp"
+];
+
 // Benchmark type definitions
 export interface BenchmarkType {
   id: string;

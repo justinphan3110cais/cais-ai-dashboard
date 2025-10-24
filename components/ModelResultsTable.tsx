@@ -460,6 +460,45 @@ export function ModelResultsTable() {
     direction: 'asc',
   });
 
+  // Auto-enable nano when searching in text table
+  useEffect(() => {
+    if (textFilters.search.trim() !== '') {
+      setTextFilters(prev => ({
+        ...prev,
+        modelSizes: {
+          ...prev.modelSizes,
+          nano: true
+        }
+      }));
+    }
+  }, [textFilters.search]);
+
+  // Auto-enable nano when searching in vision table
+  useEffect(() => {
+    if (visionFilters.search.trim() !== '') {
+      setVisionFilters(prev => ({
+        ...prev,
+        modelSizes: {
+          ...prev.modelSizes,
+          nano: true
+        }
+      }));
+    }
+  }, [visionFilters.search]);
+
+  // Auto-enable nano when searching in safety table
+  useEffect(() => {
+    if (safetyFilters.search.trim() !== '') {
+      setSafetyFilters(prev => ({
+        ...prev,
+        modelSizes: {
+          ...prev.modelSizes,
+          nano: true
+        }
+      }));
+    }
+  }, [safetyFilters.search]);
+
   // Edit mode state
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -476,11 +515,18 @@ export function ModelResultsTable() {
     content: null as { description: string; datasetId: string } | null
   });
 
-  // View mode state for each table
+  // View mode state for each table - Initialize based on mobile detection
+  const getInitialViewMode = () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 640) {
+      return 'chart' as 'table' | 'chart';
+    }
+    return 'table' as 'table' | 'chart';
+  };
+
   const [viewModes, setViewModes] = useState({
-    textCapabilities: 'table' as 'table' | 'chart',
-    multimodal: 'table' as 'table' | 'chart',
-    safety: 'table' as 'table' | 'chart'
+    textCapabilities: getInitialViewMode(),
+    multimodal: getInitialViewMode(),
+    safety: getInitialViewMode()
   });
   const [models, setModels] = useState<Model[]>(MODELS);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -864,9 +910,10 @@ export function ModelResultsTable() {
         ) : (
           <InlineBarChart
             datasets={TEXT_CAPABILITIES_DATASETS}
-            models={textCapabilitiesSortedModels}
+            models={models}
             onShowDetails={handleShowDetails}
             onMobilePopup={handleMobilePopup}
+            sectionType="text"
           />
         )}
         {viewModes.textCapabilities === 'table' && (
@@ -984,9 +1031,10 @@ export function ModelResultsTable() {
         ) : (
           <InlineBarChart
             datasets={MULTIMODAL_DATASETS}
-            models={multimodalSortedModels}
+            models={models}
             onShowDetails={handleShowDetails}
             onMobilePopup={handleMobilePopup}
+            sectionType="vision"
           />
         )}
         {viewModes.multimodal === 'table' && !expandState.multimodal && (
@@ -1142,7 +1190,7 @@ export function ModelResultsTable() {
         ) : (
           <InlineBarChart
             datasets={SAFETY_DATASETS}
-            models={safetySortedModels}
+            models={models}
             onShowDetails={handleShowDetails}
             onMobilePopup={handleMobilePopup}
           />

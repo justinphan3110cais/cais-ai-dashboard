@@ -1,13 +1,10 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { createPortal } from "react-dom";
-import { ChevronDown } from "lucide-react";
+import React from "react";
 // TODO: Uncomment for later release - Type filter imports
 // import { Type, Square } from "lucide-react";
 // import hf_logo from "@/assets/hf-logo.png";
-import Image from "next/image";
-import { MODELS, getProviderLogo } from "@/app/constants";
+// import Image from "next/image";
 
 interface FilterState {
   search: string;
@@ -30,90 +27,9 @@ interface FilterBarProps {
 }
 
 export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false */ }: FilterBarProps) => {
-  const [isProviderDropdownOpen, setIsProviderDropdownOpen] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const portalDropdownRef = useRef<HTMLDivElement>(null);
-  
-  // Get unique providers from models
-  const uniqueProviders = Array.from(new Set(MODELS.map(model => model.provider))).sort();
-  
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      const isClickOnButton = buttonRef.current && buttonRef.current.contains(target);
-      const isClickOnDropdown = portalDropdownRef.current && portalDropdownRef.current.contains(target);
-      
-      if (!isClickOnButton && !isClickOnDropdown) {
-        setIsProviderDropdownOpen(false);
-      }
-    };
-
-    if (isProviderDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isProviderDropdownOpen]);
-
-  // Recalculate position on scroll/resize
-  useEffect(() => {
-    const updatePosition = () => {
-      if (isProviderDropdownOpen && buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setDropdownPosition({
-          top: rect.bottom + 4,
-          left: rect.left
-        });
-      }
-    };
-
-    if (isProviderDropdownOpen) {
-      window.addEventListener('scroll', updatePosition);
-      window.addEventListener('resize', updatePosition);
-      return () => {
-        window.removeEventListener('scroll', updatePosition);
-        window.removeEventListener('resize', updatePosition);
-      };
-    }
-  }, [isProviderDropdownOpen]);
-  
-  const handleProviderToggle = (provider: string) => {
-    const newSelectedProviders = filters.selectedProviders.includes(provider)
-      ? filters.selectedProviders.filter(p => p !== provider)
-      : [...filters.selectedProviders, provider];
-    
-    onFiltersChange({ ...filters, selectedProviders: newSelectedProviders });
-  };
-
-  const allProvidersSelected = filters.selectedProviders.length === 0;
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 sm:gap-2 p-1 sm:p-2 bg-gray-50/30 rounded-lg border border-border opacity-60 hover:opacity-100 transition-opacity duration-200">
-      {/* Provider Filter Dropdown */}
-      <div className="relative z-50" ref={dropdownRef}>
-        <button
-          ref={buttonRef}
-          onClick={() => {
-            if (buttonRef.current) {
-              const rect = buttonRef.current.getBoundingClientRect();
-              setDropdownPosition({
-                top: rect.bottom + 4,
-                left: rect.left
-              });
-            }
-            setIsProviderDropdownOpen(!isProviderDropdownOpen);
-          }}
-          className="flex items-center gap-0.5 sm:gap-1 px-1 sm:px-2 py-1 border border-gray-200 rounded-md bg-white/50 hover:bg-white hover:border-gray-300 focus:outline-none transition-colors text-xs"
-        >
-          <span className="text-xs text-gray-600 whitespace-nowrap">
-            Companies {!allProvidersSelected && `(${filters.selectedProviders.length})`}
-          </span>
-          <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform ${isProviderDropdownOpen ? 'rotate-180' : ''}`} />
-        </button>
-      </div>
-      
       {/* Search Bar */}
       <input
         type="text"
@@ -218,60 +134,6 @@ export const FilterBar = ({ filters, onFiltersChange /* , hideTextOnly = false *
           </label>
         </div>
       </div> */}
-      
-      {/* Portal Dropdown */}
-      {isProviderDropdownOpen && typeof window !== 'undefined' && createPortal(
-        <div 
-          ref={portalDropdownRef}
-          className="fixed w-64 sm:w-80 bg-popover border border-border rounded-md shadow-lg"
-          style={{ 
-            top: dropdownPosition.top,
-            left: dropdownPosition.left,
-            zIndex: 99999
-          }}
-        >
-          <div className="p-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-              {uniqueProviders.map((provider) => {
-                const isExplicitlySelected = filters.selectedProviders.includes(provider);
-                const isDefaultSelected = allProvidersSelected;
-                const showAsSelected = isDefaultSelected || isExplicitlySelected;
-                
-                return (
-                  <label 
-                    key={provider} 
-                    className="flex items-center gap-2 p-2 hover:bg-accent cursor-pointer rounded"
-                  >
-                      <input
-                        type="checkbox"
-                        checked={showAsSelected}
-                        onChange={() => handleProviderToggle(provider)}
-                        style={{
-                          accentColor: isExplicitlySelected ? '#2563eb' : '#9ca3af'
-                        }}
-                        className="rounded border-border"
-                      />
-                    <Image
-                      src={getProviderLogo(provider).src}
-                      alt={`${provider} logo`}
-                      width={16}
-                      height={16}
-                      className="flex-shrink-0"
-                    />
-                      <span className="text-sm text-foreground">{
-                        provider === 'openai' ? 'OpenAI' :
-                        provider === 'xai' ? 'xAI' :
-                        provider === 'deepseek' ? 'DeepSeek' :
-                        provider.charAt(0).toUpperCase() + provider.slice(1)
-                      }</span>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
     </div>
   );
 };
