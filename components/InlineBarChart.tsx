@@ -214,13 +214,13 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               </h3>
               
               {/* Checkboxes below Average title */}
-              <div className="mb-3">
-                <div className="flex flex-wrap gap-2 justify-center items-center">
+              <div className="mb-2">
+                <div className="flex flex-wrap gap-1.5 justify-center items-center">
                   {datasets.map(dataset => (
                     <button
                       key={dataset.id}
                       onClick={() => toggleDatasetInclusion(dataset.id)}
-                      className={`relative flex items-center gap-1.5 px-2 py-1 rounded-md border transition-all ${
+                      className={`relative flex items-center gap-1 px-1.5 py-0.5 rounded border transition-all ${
                         includedDatasets[dataset.id] 
                           ? `${colors.borderSelected} ${colors.bg} shadow-sm` 
                           : `${colors.border} bg-white hover:bg-gray-50 opacity-50 hover:opacity-75`
@@ -232,12 +232,12 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         <Image
                           src={dataset.logo}
                           alt={`${dataset.name} logo`}
-                          width={20}
-                          height={20}
+                          width={16}
+                          height={16}
                           className="flex-shrink-0"
                         />
                       )}
-                      <span className="text-xs text-gray-700 whitespace-nowrap">
+                      <span className="text-[11px] text-gray-700 whitespace-nowrap">
                         {dataset.name === "Agent Red Teaming" ? "Jailbreak" : 
                          dataset.name === "VCT" ? "VCT-Refusal" : 
                          dataset.name}
@@ -253,7 +253,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                   <BarChart
                     data={averageData}
                     margin={{
-                      top: 30,
+                      top: 20,
                       right: 10,
                       left: 30,
                       bottom: 80,
@@ -430,10 +430,10 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                   <BarChart
                     data={chartInfo.data}
                     margin={{
-                      top: chartInfo.dataset.randomChance ? 20 : 30,
+                      top: chartInfo.dataset.randomChance ? 30 : 40,
                       right: 10,
                       left: 30,
-                      bottom: chartInfo.dataset.randomChance ? 100 : 80,
+                      bottom: chartInfo.dataset.randomChance ? 90 : 80,
                     }}
                   >
                     <XAxis 
