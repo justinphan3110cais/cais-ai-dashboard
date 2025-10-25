@@ -201,7 +201,7 @@
       "omnispatial": null,
       "terminal_bench": 29.1,
       "machiavelli": 84.1,
-      "art": 50
+      "art": null
     },
     "isTopModel": true,
     "modelCardUrl": "https://api-docs.deepseek.com/news/news250929",
