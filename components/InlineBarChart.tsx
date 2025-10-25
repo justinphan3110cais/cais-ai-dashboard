@@ -40,10 +40,22 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   };
   const colors = getSectionColors();
 
+  // Get initial selected models based on section type
+  const getInitialSelectedModels = () => {
+    if (sectionType === 'vision') {
+      // Filter out text-only models from default list
+      return DEFAULT_CHART_MODELS.filter(modelName => {
+        const model = models.find(m => m.name === modelName);
+        return model && !model.isTextOnlyModel;
+      });
+    }
+    return DEFAULT_CHART_MODELS;
+  };
+
   // Chart filters
   const [chartFilters, setChartFilters] = useState({
     selectedProviders: [] as string[],
-    selectedModels: DEFAULT_CHART_MODELS
+    selectedModels: getInitialSelectedModels()
   });
 
   // Mobile detection and expand state for mobile
@@ -64,10 +76,19 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     }));
   };
 
+  // Get available models based on section type (for dropdown)
+  const availableModels = useMemo(() => {
+    // For vision section, exclude text-only models
+    if (sectionType === 'vision') {
+      return models.filter(model => !model.isTextOnlyModel);
+    }
+    return models;
+  }, [models, sectionType]);
+
   // Filter models based on selected models from chart filters
   const filteredModels = useMemo(() => {
-    return models.filter(model => chartFilters.selectedModels.includes(model.name));
-  }, [models, chartFilters]);
+    return availableModels.filter(model => chartFilters.selectedModels.includes(model.name));
+  }, [availableModels, chartFilters]);
 
   // Prepare data: For each dataset, create chart data with model names on X-axis
   const chartsData = useMemo(() => {
@@ -200,6 +221,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
       <ChartFilterBar 
         filters={chartFilters}
         onFiltersChange={setChartFilters}
+        availableModels={availableModels}
       />
 
       {/* Chart Content - One chart per benchmark with model names on X-axis */}
@@ -238,7 +260,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         />
                       )}
                       <span className="text-[11px] text-gray-700 whitespace-nowrap">
-                        {dataset.name === "Agent Red Teaming" ? "Jailbreak" : 
+                        {dataset.name === "Agent Red Teaming" ? "Jailbreaks" : 
                          dataset.name === "VCT" ? "VCT-Refusal" : 
                          dataset.name}
                       </span>

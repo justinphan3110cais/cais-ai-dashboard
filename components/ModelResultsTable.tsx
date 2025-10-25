@@ -515,19 +515,42 @@ export function ModelResultsTable() {
     content: null as { description: string; datasetId: string } | null
   });
 
-  // View mode state for each table - Initialize based on mobile detection
-  const getInitialViewMode = () => {
-    if (typeof window !== 'undefined' && window.innerWidth < 640) {
-      return 'chart' as 'table' | 'chart';
-    }
-    return 'table' as 'table' | 'chart';
-  };
+  // Mobile detection and mounted state (must be declared before viewModes)
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const [viewModes, setViewModes] = useState({
-    textCapabilities: getInitialViewMode(),
-    multimodal: getInitialViewMode(),
-    safety: getInitialViewMode()
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    setMounted(true);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // View mode state for each table - Start as null until we detect mobile
+  const [viewModes, setViewModes] = useState<{
+    textCapabilities: 'table' | 'chart' | null;
+    multimodal: 'table' | 'chart' | null;
+    safety: 'table' | 'chart' | null;
+  }>({
+    textCapabilities: null,
+    multimodal: null,
+    safety: null
   });
+
+  // Set initial view mode after mounting
+  useEffect(() => {
+    if (mounted) {
+      setViewModes({
+        textCapabilities: isMobile ? 'chart' : 'table',
+        multimodal: isMobile ? 'chart' : 'table',
+        safety: isMobile ? 'chart' : 'table'
+      });
+    }
+  }, [mounted, isMobile]);
+  
   const [models, setModels] = useState<Model[]>(MODELS);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
@@ -536,17 +559,6 @@ export function ModelResultsTable() {
     // In Next.js client components, we need to access env vars this way
     const editModeEnabled = process.env.NEXT_PUBLIC_ENABLE_EDIT_MODE === 'true';
     setIsEditMode(editModeEnabled);
-  }, []);
-
-  // Mobile detection
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640); // sm breakpoint
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Handle mobile popup
@@ -894,7 +906,11 @@ export function ModelResultsTable() {
             </button>
           </div>
         </div>
-        {viewModes.textCapabilities === 'table' ? (
+        {viewModes.textCapabilities === null ? (
+          <div className="h-96 flex items-center justify-center">
+            <div className="text-gray-400">Loading...</div>
+          </div>
+        ) : viewModes.textCapabilities === 'table' ? (
           <LeaderboardTable
             datasets={TEXT_CAPABILITIES_DATASETS}
             models={textCapabilitiesSortedModels}
@@ -1015,7 +1031,11 @@ export function ModelResultsTable() {
             </button>
           </div>
         </div>
-        {viewModes.multimodal === 'table' ? (
+        {viewModes.multimodal === null ? (
+          <div className="h-96 flex items-center justify-center">
+            <div className="text-gray-400">Loading...</div>
+          </div>
+        ) : viewModes.multimodal === 'table' ? (
           <LeaderboardTable
             datasets={MULTIMODAL_DATASETS}
             models={multimodalSortedModels}
@@ -1174,7 +1194,11 @@ export function ModelResultsTable() {
             </button>
           </div>
         </div>
-        {viewModes.safety === 'table' ? (
+        {viewModes.safety === null ? (
+          <div className="h-96 flex items-center justify-center">
+            <div className="text-gray-400">Loading...</div>
+          </div>
+        ) : viewModes.safety === 'table' ? (
           <LeaderboardTable
             datasets={SAFETY_DATASETS}
             models={safetySortedModels}

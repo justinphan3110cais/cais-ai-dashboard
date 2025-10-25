@@ -13,15 +13,19 @@ interface ChartFilterState {
 interface ChartFilterBarProps {
   filters: ChartFilterState;
   onFiltersChange: (filters: ChartFilterState) => void;
+  availableModels?: any[]; // Optional prop to filter available models
 }
 
-export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps) => {
+export const ChartFilterBar = ({ filters, onFiltersChange, availableModels }: ChartFilterBarProps) => {
   const [modelSearchOpen, setModelSearchOpen] = useState(false);
   const [modelSearchTerm, setModelSearchTerm] = useState("");
   const modelDropdownRef = useRef<HTMLDivElement>(null);
   
+  // Use provided models or default to all MODELS
+  const modelsToShow = availableModels || MODELS;
+  
   // Get unique providers from models for sorting
-  const uniqueProviders = Array.from(new Set(MODELS.map(model => model.provider)))
+  const uniqueProviders = Array.from(new Set(modelsToShow.map(model => model.provider)))
     .sort((a, b) => {
       const topProviders = ["anthropic", "google", "openai", "xai"];
       const aIndex = topProviders.indexOf(a.toLowerCase());
@@ -62,19 +66,19 @@ export const ChartFilterBar = ({ filters, onFiltersChange }: ChartFilterBarProps
   // Get all models, filtered by search term and sorted by provider order
   const sortedModels = useMemo(() => {
     // Filter by search term only - no flagship/size restrictions
-    const filtered = MODELS.filter(model => 
+    const filtered = modelsToShow.filter(model => 
       model.name.toLowerCase().includes(modelSearchTerm.toLowerCase())
     );
     
     // Sort by provider order (using uniqueProviders which has the correct order)
-    const sortByProvider = (a: typeof MODELS[0], b: typeof MODELS[0]) => {
+    const sortByProvider = (a: typeof modelsToShow[0], b: typeof modelsToShow[0]) => {
       const aIndex = uniqueProviders.indexOf(a.provider);
       const bIndex = uniqueProviders.indexOf(b.provider);
       return aIndex - bIndex;
     };
     
     return filtered.sort(sortByProvider);
-  }, [modelSearchTerm, uniqueProviders]);
+  }, [modelSearchTerm, uniqueProviders, modelsToShow]);
 
   return (
     <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 p-3 sm:p-4 bg-gray-50/30 rounded-lg border border-border">

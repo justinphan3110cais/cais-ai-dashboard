@@ -287,5 +287,32 @@
     "model_size": "mini",
     "flagship": true,
     "releaseDate": "2025-10-15"
+  },
+  {
+    "name": "Qwen3-Max-Instruct",
+    "provider": "qwen",
+    "scores": {
+      "hle": 11.1,
+      "arc_agi_2": 0,
+      "textquests": 13.2,
+      "swebench_verified": 55.8,
+      "masks": 42.1,
+      "textquests_harm": 20.2,
+      "vct_refusal": 0,
+      "enigmaeval": null,
+      "intphys2": null,
+      "erqa": null,
+      "mindcube": null,
+      "omnispatial": null,
+      "terminal_bench": 19.1,
+      "machiavelli": null,
+      "art": null
+    },
+    "isTopModel": false,
+    "modelCardUrl": "https://qwen.ai/blog?id=241398b9cd6353de490b0f82806c7848c5d2777d&from=research.latest-advancements-list",
+    "isTextOnlyModel": true,
+    "model_size": "standard",
+    "flagship": true,
+    "releaseDate": "2025-09-23"
   }
 ]
