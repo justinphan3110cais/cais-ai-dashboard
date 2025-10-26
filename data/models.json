@@ -201,7 +201,7 @@
       "omnispatial": null,
       "terminal_bench": 29.1,
       "machiavelli": 84.1,
-      "art": null
+      "art": 80.9
     },
     "isTopModel": true,
     "modelCardUrl": "https://api-docs.deepseek.com/news/news250929",
@@ -305,8 +305,8 @@
       "mindcube": null,
       "omnispatial": null,
       "terminal_bench": 19.1,
-      "machiavelli": null,
-      "art": null
+      "machiavelli": 77.3,
+      "art": 88.0
     },
     "isTopModel": false,
     "modelCardUrl": "https://qwen.ai/blog?id=241398b9cd6353de490b0f82806c7848c5d2777d&from=research.latest-advancements-list",
