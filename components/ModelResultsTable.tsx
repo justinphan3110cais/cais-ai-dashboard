@@ -401,7 +401,7 @@ const LeaderboardTable = ({
   );
 };
 
-export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table' | 'chart' }) {
+export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table' | 'chart' | null }) {
   // Separate filter states for each table
   const [textFilters, setTextFilters] = useState<FilterState>({
     search: '',
