@@ -514,7 +514,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     id: "machiavelli",
     name: "Machiavelli",
     link: "https://aypan17.github.io/machiavelli/",
-    description: "<a href='https://aypan17.github.io/machiavelli/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Machiavelli</a> measures harmful behaviors in LLM agents across 134 text-based games. We use its deception measurements from its various goal-oriented scenarios.",
+    description: "<a href='https://aypan17.github.io/machiavelli/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Machiavelli</a> measures harmful behaviors in LLM agents across 30 text-based games. We use its deception measurements from its various goal-oriented scenarios.",
     category: "safety",
     capabilities: ["deception_propensity"],
     citation: `@misc{pan2023rewardsjustifymeansmeasuring,
