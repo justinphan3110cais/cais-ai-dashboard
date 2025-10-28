@@ -118,7 +118,7 @@ const DatasetHeader = ({
                 />
               )}
               <span className="text-xs font-medium text-center">
-                {dataset.displayName || dataset.name}
+                {dataset.name === "Humanity's Last Exam" ? "HLE" : (dataset.displayName || dataset.name)}
               </span>
             </div>
             {getSortIcon() && (

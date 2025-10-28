@@ -229,7 +229,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
             {/* Average Chart - First Position */}
-            <div className="flex flex-col border border-gray-200 rounded-lg p-3">
+            <div className="flex flex-col border border-gray-200 rounded-lg">
               {/* Average Title */}
               <h3 className={`text-center font-bold text-lg mb-2 px-3 py-1 rounded-md ${
                 sectionType === 'vision' ? 'text-green-700 bg-green-50' :
@@ -241,7 +241,9 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               
               {/* Checkboxes below Average title */}
               <div className="mb-2">
-                <div className="flex flex-wrap gap-1 justify-center items-center">
+                <div className={`flex flex-wrap gap-1 justify-center items-center max-w-[250px] mx-auto ${
+                  sectionType === 'vision' ? 'sm:max-w-[400px]' : 'sm:max-w-[370px]'
+                }`}>
                   {datasets.map(dataset => (
                     <button
                       key={dataset.id}
@@ -289,7 +291,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       dataKey="modelName" 
                       angle={-45}
                       textAnchor="end"
-                      height={60}
+                      height={80}
                       tick={{ fontSize: 12, fill: '#374151', dy: 24, fontWeight: 600 }}
                       axisLine={false}
                       tickLine={false}
@@ -459,14 +461,14 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       top: chartInfo.dataset.randomChance ? 30 : 40,
                       right: 10,
                       left: 30,
-                      bottom: chartInfo.dataset.randomChance ? 83 : chartInfo.dataset.name === "Humanity's Last Exam" && !isMobile ? 33: 63,
+                      bottom: chartInfo.dataset.randomChance ? 83 : chartsData.length > 4 && !isMobile ? 33: 63,
                     }}
                   >
                     <XAxis 
                       dataKey="modelName" 
                       angle={-45}
                       textAnchor="end"
-                      height={60}
+                      height={80}
                       tick={{ fontSize: 12, fill: '#374151', dy: 24, fontWeight: 600 }}
                       axisLine={false}
                       tickLine={false}
