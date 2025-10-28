@@ -421,13 +421,13 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
       src: mindcube_examples,
       alt: "Example spatial reasoning questions from MindCube benchmark showing multi-view image groups and reasoning challenges."
     }],
-    citation: `@misc{chen2025mindcubevisualquestionanswering,
-      title={MindCube: Visual Question Answering with Multi-Agent Debate and Retrieval-Augmented Generation}, 
-      author={Jiaxuan Chen and others},
+    citation: `@misc{yin2025spatialmentalmodelinglimited,
+      title={Spatial Mental Modeling from Limited Views}, 
+      author={Baiqiao Yin and Qineng Wang and Pingyue Zhang and Jianshu Zhang and Kangrui Wang and Zihan Wang and Jieyu Zhang and Keshigeyan Chandrasegaran and Han Liu and Ranjay Krishna and Saining Xie and Manling Li and Jiajun Wu and Li Fei-Fei},
       year={2025},
       eprint={2506.21458},
       archivePrefix={arXiv},
-      primaryClass={cs.CV},
+      primaryClass={cs.AI},
       url={https://arxiv.org/abs/2506.21458}, 
 }`
   }

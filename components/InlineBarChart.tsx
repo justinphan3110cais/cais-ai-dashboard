@@ -229,15 +229,19 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
             {/* Average Chart - First Position */}
-            <div className="flex flex-col">
+            <div className="flex flex-col border border-gray-200 rounded-lg p-3">
               {/* Average Title */}
-              <h3 className="text-center font-semibold text-gray-900 mb-2">
+              <h3 className={`text-center font-bold text-lg mb-2 px-3 py-1 rounded-md ${
+                sectionType === 'vision' ? 'text-green-700 bg-green-50' :
+                sectionType === 'safety' ? 'text-red-700 bg-red-50' :
+                'text-blue-700 bg-blue-50'
+              }`}>
                 Average
               </h3>
               
               {/* Checkboxes below Average title */}
               <div className="mb-2">
-                <div className="flex flex-wrap gap-1.5 justify-center items-center">
+                <div className="flex flex-wrap gap-1 justify-center items-center">
                   {datasets.map(dataset => (
                     <button
                       key={dataset.id}
@@ -254,12 +258,12 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         <Image
                           src={dataset.logo}
                           alt={`${dataset.name} logo`}
-                          width={16}
-                          height={16}
+                          width={14}
+                          height={14}
                           className="flex-shrink-0"
                         />
                       )}
-                      <span className="text-[11px] text-gray-700 whitespace-nowrap">
+                      <span className="text-sm text-foreground whitespace-nowrap">
                         {dataset.name === "Agent Red Teaming" ? "Jailbreaks" : 
                          dataset.name === "VCT" ? "VCT-Refusal" : 
                          dataset.name}
@@ -275,10 +279,10 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                   <BarChart
                     data={averageData}
                     margin={{
-                      top: 20,
+                      top: isMobile ? 20 :10,
                       right: 10,
                       left: 30,
-                      bottom: 80,
+                      bottom: 90,
                     }}
                   >
                     <XAxis 
@@ -312,12 +316,12 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
             {(!isMobile || showAllCharts) && chartsData.map((chartInfo) => (
             <div key={chartInfo.datasetId} className="flex flex-col">
               {/* Benchmark Title with Logo, Hover, and Toggle Button */}
-              <div className="flex items-center justify-center mb-3 w-full">
+              <div className="mb-3 w-full">
                 {!isMobile ? (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="flex flex-col cursor-pointer">
+                        <div className="flex flex-col cursor-pointer w-full">
                           {/* Capability Category (Secondary Text) */}
                           {chartInfo.dataset.capabilities && chartInfo.dataset.capabilities.length > 0 ? (
                             <div className="flex items-center justify-center gap-1 mb-1 flex-wrap">
@@ -333,7 +337,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                             </div>
                           ) : null}
                           {/* Benchmark Name */}
-                          <div className="flex items-center justify-center gap-2 w-full">
+                          <div className="flex items-center justify-center gap-2 w-full px-3 py-1 rounded-md bg-gray-50">
                             {chartInfo.dataset.logo && (
                               <Image
                                 src={chartInfo.dataset.logo}
@@ -343,7 +347,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                                 className="flex-shrink-0"
                               />
                             )}
-                            <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600 whitespace-nowrap">
+                            <h3 className="font-semibold text-gray-700 whitespace-nowrap">
                               {chartInfo.datasetName}
                             </h3>
                           </div>
@@ -416,7 +420,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       </div>
                     ) : null}
                     {/* Benchmark Name */}
-                    <div className="flex items-center justify-center gap-2 w-full">
+                    <div className="flex items-center justify-center gap-2 w-full px-3 py-1 rounded-md bg-gray-50">
                       {chartInfo.dataset.logo && (
                         <Image
                           src={chartInfo.dataset.logo}
@@ -426,7 +430,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                           className="flex-shrink-0"
                         />
                       )}
-                      <h3 className="font-semibold text-gray-900 border-b border-dashed border-gray-600 whitespace-nowrap">
+                      <h3 className="font-semibold text-gray-700 whitespace-nowrap">
                         {chartInfo.datasetName}
                       </h3>
                     </div>
@@ -455,7 +459,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       top: chartInfo.dataset.randomChance ? 30 : 40,
                       right: 10,
                       left: 30,
-                      bottom: chartInfo.dataset.randomChance ? 90 : 80,
+                      bottom: chartInfo.dataset.randomChance ? 83 : chartInfo.dataset.name === "Humanity's Last Exam" && !isMobile ? 33: 63,
                     }}
                   >
                     <XAxis 

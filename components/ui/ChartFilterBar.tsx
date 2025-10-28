@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { MODELS, getProviderLogo } from "@/app/constants";
+import { Model } from "@/lib/types";
 
 interface ChartFilterState {
   selectedProviders: string[];
@@ -13,7 +14,7 @@ interface ChartFilterState {
 interface ChartFilterBarProps {
   filters: ChartFilterState;
   onFiltersChange: (filters: ChartFilterState) => void;
-  availableModels?: any[]; // Optional prop to filter available models
+  availableModels?: Model[]; // Optional prop to filter available models
 }
 
 export const ChartFilterBar = ({ filters, onFiltersChange, availableModels }: ChartFilterBarProps) => {
