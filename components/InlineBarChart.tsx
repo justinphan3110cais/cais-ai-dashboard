@@ -284,7 +284,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       top: isMobile ? 20 :10,
                       right: 10,
                       left: 30,
-                      bottom: 90,
+                      bottom: chartsData.length > 4 && !isMobile ? 77: 67,
                     }}
                   >
                     <XAxis 
@@ -461,14 +461,14 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       top: chartInfo.dataset.randomChance ? 30 : 40,
                       right: 10,
                       left: 30,
-                      bottom: chartInfo.dataset.randomChance ? 83 : chartsData.length > 4 && !isMobile ? 33: 63,
+                      bottom: chartInfo.dataset.randomChance ? 63 : chartsData.length > 4 && !isMobile ? 23: 43,
                     }}
                   >
                     <XAxis 
                       dataKey="modelName" 
                       angle={-45}
                       textAnchor="end"
-                      height={80}
+                      height={90}
                       tick={{ fontSize: 12, fill: '#374151', dy: 24, fontWeight: 600 }}
                       axisLine={false}
                       tickLine={false}

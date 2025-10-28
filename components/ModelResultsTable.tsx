@@ -2,8 +2,11 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp, Save, BarChart3, Table as TableIcon, HelpCircle, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronUp, Save, ChartColumnBig, Table as TableIcon, HelpCircle, ExternalLink } from "lucide-react";
 import hf_logo from "@/assets/hf-logo.png";
+import textLogo from "@/assets/dataset-logos/text_logo.svg";
+import visionLogo from "@/assets/dataset-logos/vision_logo.svg";
+import safetyLogo from "@/assets/dataset-logos/safety_logo.svg";
 import { MODELS, TEXT_CAPABILITIES_DATASETS, MULTIMODAL_DATASETS, SAFETY_DATASETS, getProviderLogo, BENCHMARK_TYPES } from "@/app/constants";
 import { Dataset, Model } from "@/lib/types";
 import {
@@ -398,7 +401,7 @@ const LeaderboardTable = ({
   );
 };
 
-export function ModelResultsTable() {
+export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table' | 'chart' }) {
   // Separate filter states for each table
   const [textFilters, setTextFilters] = useState<FilterState>({
     search: '',
@@ -561,6 +564,17 @@ export function ModelResultsTable() {
     setIsEditMode(editModeEnabled);
   }, []);
 
+  // Sync global view mode with all sections
+  useEffect(() => {
+    if (globalViewMode && mounted) {
+      setViewModes({
+        textCapabilities: globalViewMode,
+        multimodal: globalViewMode,
+        safety: globalViewMode
+      });
+    }
+  }, [globalViewMode, mounted]);
+
   // Handle mobile popup
   const handleMobilePopup = (type: 'text-help' | 'safety-help' | 'dataset-info', content?: { description: string; datasetId: string }) => {
     if (isMobile) {
@@ -622,14 +636,6 @@ export function ModelResultsTable() {
       isOpen: false,
       dataset: null
     });
-  };
-
-  // View mode handlers
-  const toggleViewMode = (section: 'textCapabilities' | 'multimodal' | 'safety') => {
-    setViewModes(prev => ({
-      ...prev,
-      [section]: prev[section] === 'table' ? 'chart' : 'table'
-    }));
   };
 
   // Memoized filtered models for each table
@@ -823,6 +829,13 @@ export function ModelResultsTable() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex items-center gap-2">
+                <Image
+                  src={textLogo}
+                  alt="Text icon"
+                  width={24}
+                  height={24}
+                  className="flex-shrink-0"
+                />
                 <h3 className="text-lg sm:text-xl font-semibold text-blue-700 flex-shrink-0">Text</h3>
 {!isMobile ? (
                   <TooltipProvider delayDuration={0}>
@@ -863,22 +876,20 @@ export function ModelResultsTable() {
                   </button>
                 )}
               </div>
+            <div className="flex items-center gap-1 bg-white border border-blue-300 rounded-md p-0.5 sm:hidden">
               <button
-                onClick={() => toggleViewMode('textCapabilities')}
-                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
+                onClick={() => setViewModes(prev => ({ ...prev, textCapabilities: 'table' }))}
+                className={`p-2 rounded ${viewModes.textCapabilities === 'table' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-blue-700'} transition-colors`}
               >
-                {viewModes.textCapabilities === 'table' ? (
-                  <>
-                    <BarChart3 className="w-4 h-4" />
-                    Bar Charts
-                  </>
-                ) : (
-                  <>
-                    <TableIcon className="w-4 h-4" />
-                    Table View
-                  </>
-                )}
+                <TableIcon className="w-4 h-4" />
               </button>
+              <button
+                onClick={() => setViewModes(prev => ({ ...prev, textCapabilities: 'chart' }))}
+                className={`p-2 rounded ${viewModes.textCapabilities === 'chart' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-blue-700'} transition-colors`}
+              >
+                <ChartColumnBig className="w-4 h-4" />
+              </button>
+            </div>
             </div>
             {viewModes.textCapabilities === 'table' && (
               <div className="w-full sm:flex-1">
@@ -888,22 +899,20 @@ export function ModelResultsTable() {
                 />
               </div>
             )}
-            <button
-              onClick={() => toggleViewMode('textCapabilities')}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors text-sm font-medium flex-shrink-0"
-            >
-              {viewModes.textCapabilities === 'table' ? (
-                <>
-                  <BarChart3 className="w-4 h-4" />
-                  Bar Charts
-                </>
-              ) : (
-                <>
-                  <TableIcon className="w-4 h-4" />
-                  Table View
-                </>
-              )}
-            </button>
+            <div className="hidden sm:flex items-center gap-1 bg-white border border-blue-300 rounded-md p-0.5">
+              <button
+                onClick={() => setViewModes(prev => ({ ...prev, textCapabilities: 'table' }))}
+                className={`p-2 rounded ${viewModes.textCapabilities === 'table' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-blue-700'} transition-colors`}
+              >
+                <TableIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewModes(prev => ({ ...prev, textCapabilities: 'chart' }))}
+                className={`p-2 rounded ${viewModes.textCapabilities === 'chart' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-blue-700'} transition-colors`}
+              >
+                <ChartColumnBig className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
         {viewModes.textCapabilities === null ? (
@@ -987,23 +996,30 @@ export function ModelResultsTable() {
         <div className="bg-green-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
-              <h3 className="text-lg sm:text-xl font-semibold text-green-700 flex-shrink-0">Vision</h3>
-              <button
-                onClick={() => toggleViewMode('multimodal')}
-                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
-              >
-                {viewModes.multimodal === 'table' ? (
-                  <>
-                    <BarChart3 className="w-4 h-4" />
-                    Bar Charts
-                  </>
-                ) : (
-                  <>
-                    <TableIcon className="w-4 h-4" />
-                    Table View
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-2">
+                <Image
+                  src={visionLogo}
+                  alt="Vision icon"
+                  width={24}
+                  height={24}
+                  className="flex-shrink-0"
+                />
+                <h3 className="text-lg sm:text-xl font-semibold text-green-700 flex-shrink-0">Vision</h3>
+              </div>
+              <div className="flex items-center gap-1 bg-white border border-green-300 rounded-md p-0.5 sm:hidden">
+                <button
+                  onClick={() => setViewModes(prev => ({ ...prev, multimodal: 'table' }))}
+                  className={`p-2 rounded ${viewModes.multimodal === 'table' ? 'bg-green-100 text-green-700' : 'text-gray-500 hover:text-green-700'} transition-colors`}
+                >
+                  <TableIcon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewModes(prev => ({ ...prev, multimodal: 'chart' }))}
+                  className={`p-2 rounded ${viewModes.multimodal === 'chart' ? 'bg-green-100 text-green-700' : 'text-gray-500 hover:text-green-700'} transition-colors`}
+                >
+                  <ChartColumnBig className="w-4 h-4" />
+                </button>
+              </div>
             </div>
             {viewModes.multimodal === 'table' && (
               <div className="w-full sm:flex-1">
@@ -1013,22 +1029,20 @@ export function ModelResultsTable() {
                 />
               </div>
             )}
-            <button
-              onClick={() => toggleViewMode('multimodal')}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-green-300 text-green-700 rounded-md hover:bg-green-50 transition-colors text-sm font-medium flex-shrink-0"
-            >
-              {viewModes.multimodal === 'table' ? (
-                <>
-                  <BarChart3 className="w-4 h-4" />
-                  Bar Charts
-                </>
-              ) : (
-                <>
-                  <TableIcon className="w-4 h-4" />
-                  Table View
-                </>
-              )}
-            </button>
+            <div className="hidden sm:flex items-center gap-1 bg-white border border-green-300 rounded-md p-0.5">
+              <button
+                onClick={() => setViewModes(prev => ({ ...prev, multimodal: 'table' }))}
+                className={`p-2 rounded ${viewModes.multimodal === 'table' ? 'bg-green-100 text-green-700' : 'text-gray-500 hover:text-green-700'} transition-colors`}
+              >
+                <TableIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewModes(prev => ({ ...prev, multimodal: 'chart' }))}
+                className={`p-2 rounded ${viewModes.multimodal === 'chart' ? 'bg-green-100 text-green-700' : 'text-gray-500 hover:text-green-700'} transition-colors`}
+              >
+                <ChartColumnBig className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
         {viewModes.multimodal === null ? (
@@ -1110,6 +1124,13 @@ export function ModelResultsTable() {
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex-shrink-0">
                 <div className="flex items-center gap-2">
+                  <Image
+                    src={safetyLogo}
+                    alt="Safety icon"
+                    width={24}
+                    height={24}
+                    className="flex-shrink-0"
+                  />
                   <h3 className="text-lg sm:text-xl font-semibold text-red-700">Safety</h3>
 {!isMobile ? (
                     <TooltipProvider delayDuration={0}>
@@ -1151,22 +1172,20 @@ export function ModelResultsTable() {
                 </div>
                 <p className="text-sm text-foreground mt-1">Lower is Better</p>
               </div>
-              <button
-                onClick={() => toggleViewMode('safety')}
-                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium flex-shrink-0 sm:hidden"
-              >
-                {viewModes.safety === 'table' ? (
-                  <>
-                    <BarChart3 className="w-4 h-4" />
-                    Bar Charts
-                  </>
-                ) : (
-                  <>
-                    <TableIcon className="w-4 h-4" />
-                    Table View
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-1 bg-white border border-red-300 rounded-md p-0.5 sm:hidden">
+                <button
+                  onClick={() => setViewModes(prev => ({ ...prev, safety: 'table' }))}
+                  className={`p-2 rounded ${viewModes.safety === 'table' ? 'bg-red-100 text-red-700' : 'text-gray-500 hover:text-red-700'} transition-colors`}
+                >
+                  <TableIcon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewModes(prev => ({ ...prev, safety: 'chart' }))}
+                  className={`p-2 rounded ${viewModes.safety === 'chart' ? 'bg-red-100 text-red-700' : 'text-gray-500 hover:text-red-700'} transition-colors`}
+                >
+                  <ChartColumnBig className="w-4 h-4" />
+                </button>
+              </div>
             </div>
             {viewModes.safety === 'table' && (
               <div className="w-full sm:flex-1">
@@ -1176,22 +1195,20 @@ export function ModelResultsTable() {
                 />
               </div>
             )}
-            <button
-              onClick={() => toggleViewMode('safety')}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors text-sm font-medium flex-shrink-0"
-            >
-              {viewModes.safety === 'table' ? (
-                <>
-                  <BarChart3 className="w-4 h-4" />
-                  Bar Charts
-                </>
-              ) : (
-                <>
-                  <TableIcon className="w-4 h-4" />
-                  Table View
-                </>
-              )}
-            </button>
+            <div className="hidden sm:flex items-center gap-1 bg-white border border-red-300 rounded-md p-0.5">
+              <button
+                onClick={() => setViewModes(prev => ({ ...prev, safety: 'table' }))}
+                className={`p-2 rounded ${viewModes.safety === 'table' ? 'bg-red-100 text-red-700' : 'text-gray-500 hover:text-red-700'} transition-colors`}
+              >
+                <TableIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewModes(prev => ({ ...prev, safety: 'chart' }))}
+                className={`p-2 rounded ${viewModes.safety === 'chart' ? 'bg-red-100 text-red-700' : 'text-gray-500 hover:text-red-700'} transition-colors`}
+              >
+                <ChartColumnBig className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
         {viewModes.safety === null ? (

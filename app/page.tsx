@@ -9,6 +9,14 @@ import logo from "@/assets/logo.svg";
 import heroBackground from "@/assets/hero-background.webp";
 
 export default function LandingPage() {
+  const [globalViewMode, setGlobalViewMode] = React.useState<'table' | 'chart' | null>(null);
+
+  // Initialize global view mode based on screen size
+  React.useEffect(() => {
+    const isMobile = window.innerWidth < 640;
+    setGlobalViewMode(isMobile ? 'chart' : 'table');
+  }, []);
+
   const handleNavigate = (section: string) => {
     const element = document.getElementById(`${section}-section`);
     if (element) {
@@ -20,6 +28,38 @@ export default function LandingPage() {
       });
       // Update URL hash for shareable links
       window.history.pushState(null, '', `#${section}`);
+    }
+  };
+
+  // Get the currently visible section based on scroll position
+  const getCurrentVisibleSection = () => {
+    const sections = ['text', 'vision', 'safety'];
+    const navHeight = 64;
+    const scrollPosition = window.scrollY + navHeight + 100; // Add offset for better detection
+
+    for (const section of sections) {
+      const element = document.getElementById(`${section}-section`);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        const elementTop = window.scrollY + rect.top;
+        const elementBottom = elementTop + rect.height;
+        
+        if (scrollPosition >= elementTop && scrollPosition <= elementBottom) {
+          return section;
+        }
+      }
+    }
+    return null;
+  };
+
+  // Handle global view mode change with scroll to current section
+  const handleGlobalViewModeChange = (mode: 'table' | 'chart') => {
+    const currentSection = getCurrentVisibleSection();
+    setGlobalViewMode(mode);
+    
+    // Scroll to the current section after a brief delay to allow re-render
+    if (currentSection) {
+      setTimeout(() => handleNavigate(currentSection), 50);
     }
   };
 
@@ -40,7 +80,11 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen">
       {/* Navigation Bar */}
-      <Navigation onNavigate={handleNavigate} />
+      <Navigation 
+        onNavigate={handleNavigate}
+        globalViewMode={globalViewMode}
+        onGlobalViewModeChange={handleGlobalViewModeChange}
+      />
       
       {/* Hero Section with Background - Full Width */}
       <div className="relative w-full mb-8 pt-16">
@@ -86,7 +130,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="flex justify-center">
             <div className="w-full">
-              <ModelResultsTable />
+              <ModelResultsTable globalViewMode={globalViewMode} />
             </div>
           </div>
         </div>
