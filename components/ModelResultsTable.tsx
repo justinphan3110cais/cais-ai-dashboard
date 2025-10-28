@@ -304,9 +304,9 @@ const LeaderboardTable = ({
             className={`border-b border-gray-200 ${getRowStyling()} ${model.modelCardUrl ? 'group' : ''}`}
           >
               <TableCell 
-                className={`text-center border-r border-gray-300 sticky left-0 bg-white`}
+                className={`text-center border-r border-gray-300 sticky left-0 bg-white min-w-[180px]`}
                 style={{ position: 'sticky', left: 0, zIndex: 30, backgroundColor: 'white' }}
-              >              <div className="flex items-center gap-2 pr-2 overflow-hidden">
+              >              <div className="flex items-center gap-2 pr-2">
                 <Image
                   src={getProviderLogo(model.provider).src}
                   alt={`${model.provider} logo`}
@@ -315,7 +315,7 @@ const LeaderboardTable = ({
                   className="flex-shrink-0"
                 />
                 <span 
-                  className={`text-sm font-medium truncate ${model.modelCardUrl ? 'cursor-pointer group-hover:border-b group-hover:border-dashed group-hover:border-gray-600' : ''}`}
+                  className={`text-sm font-medium ${model.modelCardUrl ? 'cursor-pointer group-hover:border-b group-hover:border-dashed group-hover:border-gray-600' : ''}`}
                   onClick={() => model.modelCardUrl && window.open(model.modelCardUrl, '_blank')}
                 >
                   {model.name}
