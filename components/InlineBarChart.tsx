@@ -317,10 +317,10 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               </div>
             </div>
 
-            {/* Individual Benchmark Charts - Show only first chart unless expanded */}
+            {/* Individual Benchmark Charts - Show only first chart on desktop unless expanded, hide all on mobile unless expanded */}
             {chartsData.map((chartInfo, chartIndex) => (
-              // Show first chart always, rest only when expanded
-              (chartIndex === 0 || showAllCharts) && (
+              // On mobile: show only when expanded. On desktop: show first chart always, rest only when expanded
+              ((isMobile && showAllCharts) || (!isMobile && (chartIndex === 0 || showAllCharts))) && (
             <div key={chartInfo.datasetId} className="flex flex-col">
               {/* Benchmark Title with Logo, Hover, and Toggle Button */}
               <div className="mb-3 w-full">
