@@ -4,6 +4,7 @@ import { BIBTEX_CITATION } from "@/app/constants";
 import { ModelResultsTable } from "@/components/ModelResultsTable";
 import { Navigation } from "@/components/ui/navigation";
 import { Footer } from "@/components/Footer";
+import { ChartColumnBig, Table as TableIcon } from "lucide-react";
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
 import heroBackground from "@/assets/hero-background.webp";
@@ -177,6 +178,34 @@ export default function LandingPage() {
       
       {/* Footer */}
       <Footer />
+
+      {/* Floating View Mode Toggle */}
+      {globalViewMode && (
+        <div className="fixed bottom-6 right-6 z-[150] flex items-center gap-1 bg-white border-2 border-gray-800 rounded-lg p-1 shadow-lg">
+          <button
+            onClick={() => handleGlobalViewModeChange('table')}
+            className={`p-3 rounded-md transition-colors ${
+              globalViewMode === 'table' 
+                ? 'bg-gray-800 text-white' 
+                : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+            }`}
+            title="Table View"
+          >
+            <TableIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => handleGlobalViewModeChange('chart')}
+            className={`p-3 rounded-md transition-colors ${
+              globalViewMode === 'chart' 
+                ? 'bg-gray-800 text-white' 
+                : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+            }`}
+            title="Bar Charts"
+          >
+            <ChartColumnBig className="w-5 h-5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

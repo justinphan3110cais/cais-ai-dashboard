@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ChartColumnBig, Table as TableIcon } from 'lucide-react';
 import caisLogo from '@/assets/cais_icon_black_text.svg';
 import caisLogoShort from '@/assets/cais_logo.svg';
 import textLogoColored from '@/assets/dataset-logos/text_logo_colored.svg';
@@ -14,7 +13,7 @@ interface NavigationProps {
   onGlobalViewModeChange: (mode: 'table' | 'chart') => void;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ onNavigate, globalViewMode, onGlobalViewModeChange }) => {
+export const Navigation: React.FC<NavigationProps> = ({ onNavigate, globalViewMode }) => {
   const navigationItems = [
     { id: 'text', label: 'Text', description: 'Text capabilities benchmarks', logo: textLogoColored },
     { id: 'vision', label: 'Vision', description: 'Multimodal and vision benchmarks', logo: visionLogoColored },
@@ -136,27 +135,6 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate, globalViewMo
               </React.Fragment>
             ))}
           </div>
-        </div>
-
-        {/* Separator - only on mobile */}
-        <div className="h-6 w-px bg-gray-300 sm:hidden" />
-
-        {/* Right side: View Mode Switch */}
-        <div className="flex items-cente ml-2 gap-0.5 sm:gap-1 bg-white border border-gray-800 rounded-md p-0.5">
-          <button
-            onClick={() => onGlobalViewModeChange('table')}
-            className={`p-1 sm:p-2 rounded ${globalViewMode === 'table' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-800'} transition-colors`}
-            title="Table View"
-          >
-            <TableIcon className="w-3 h-3 sm:w-4 sm:h-4" />
-          </button>
-          <button
-            onClick={() => onGlobalViewModeChange('chart')}
-            className={`p-1 sm:p-2 rounded ${globalViewMode === 'chart' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-800'} transition-colors`}
-            title="Bar Charts"
-          >
-            <ChartColumnBig className="w-3 h-3 sm:w-4 sm:h-4" />
-          </button>
         </div>
       </div>
     </nav>

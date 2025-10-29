@@ -58,7 +58,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     selectedModels: getInitialSelectedModels()
   });
 
-  // Mobile detection and expand state for mobile
+  // Mobile detection and expand state
   const [isMobile, setIsMobile] = useState(false);
   const [showAllCharts, setShowAllCharts] = useState(false);
   React.useEffect(() => {
@@ -182,12 +182,13 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
       
       return (
         <g>
-          {/* Score text - centered on top of bar */}
+          {/* Score text - centered in the middle of bar */}
           <text 
             x={Number(x) + Number(width) / 2} 
-            y={Number(y) - 8} 
-            fill="#374151" 
+            y={Number(y) + Number(height) / 2} 
+            fill="white"
             textAnchor="middle" 
+            dominantBaseline="middle"
             fontSize="12"
             fontWeight="600"
           >
@@ -236,7 +237,9 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                 sectionType === 'safety' ? 'text-red-700 bg-red-50' :
                 'text-blue-700 bg-blue-50'
               }`}>
-                Average
+                {sectionType === 'vision' ? 'Vision Capabilities Average' :
+                 sectionType === 'safety' ? 'Safety Average' :
+                 'Text Capabilities Average'}
               </h3>
               
               {/* Checkboxes below Average title */}
@@ -314,8 +317,10 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               </div>
             </div>
 
-            {/* Individual Benchmark Charts - Hidden on mobile unless expanded */}
-            {(!isMobile || showAllCharts) && chartsData.map((chartInfo) => (
+            {/* Individual Benchmark Charts - Show only first chart unless expanded */}
+            {chartsData.map((chartInfo, chartIndex) => (
+              // Show first chart always, rest only when expanded
+              (chartIndex === 0 || showAllCharts) && (
             <div key={chartInfo.datasetId} className="flex flex-col">
               {/* Benchmark Title with Logo, Hover, and Toggle Button */}
               <div className="mb-3 w-full">
@@ -499,11 +504,12 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                 </ResponsiveContainer>
               </div>
             </div>
+            )
           ))}
           </div>
           
-          {/* View All Button - Only on Mobile */}
-          {isMobile && !showAllCharts && (
+          {/* View All Button - Show when not all charts are visible */}
+          {!showAllCharts && chartsData.length > 1 && (
             <div className="mt-4">
               <button
                 onClick={() => setShowAllCharts(true)}
@@ -517,8 +523,8 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
             </div>
           )}
           
-          {/* Collapse Button - Only on Mobile when expanded */}
-          {isMobile && showAllCharts && (
+          {/* Collapse Button - Show when all charts are visible */}
+          {showAllCharts && chartsData.length > 1 && (
             <div className="mt-4">
               <button
                 onClick={() => setShowAllCharts(false)}
