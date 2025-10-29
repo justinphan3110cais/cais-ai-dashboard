@@ -189,7 +189,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
             fill="white"
             textAnchor="middle" 
             dominantBaseline="middle"
-            fontSize="12"
+            fontSize="14"
             fontWeight="600"
           >
             {typeof value === 'number' ? value.toFixed(1) : value}
