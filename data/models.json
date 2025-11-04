@@ -59,7 +59,7 @@
     "name": "Grok 4",
     "provider": "xai",
     "scores": {
-      "hle": 25.4,
+      "hle": 24.52,
       "arc_agi_2": 16,
       "textquests": 31.2,
       "swebench_verified": 48.4,
@@ -74,7 +74,7 @@
       "terminal_bench": 37.6,
       "machiavelli": 81.5,
       "art": 65,
-      "hle_calibration_error": 68.7
+      "hle_calibration_error": 56.4
     },
     "isTopModel": true,
     "modelCardUrl": "https://x.ai/news/grok-4",
@@ -194,7 +194,7 @@
     "name": "DeepSeek 3.2 Exp",
     "provider": "deepseek",
     "scores": {
-      "hle": 19.8,
+      "hle": 15.4,
       "arc_agi_2": 4.17,
       "textquests": 15.2,
       "swebench_verified": 46.2,
@@ -209,7 +209,7 @@
       "terminal_bench": 29.1,
       "machiavelli": 84.1,
       "art": 80.9,
-      "hle_calibration_error": 68
+      "hle_calibration_error": 70.1
     },
     "isTopModel": true,
     "modelCardUrl": "https://api-docs.deepseek.com/news/news250929",
@@ -222,7 +222,7 @@
     "name": "Gemini 2.5 Flash-Lite",
     "provider": "google",
     "scores": {
-      "hle": 6.9,
+      "hle": 6.7,
       "arc_agi_2": 0,
       "textquests": 11.7,
       "swebench_verified": 22,
@@ -237,7 +237,7 @@
       "terminal_bench": 4.3,
       "machiavelli": 92.6,
       "art": 93.6,
-      "hle_calibration_error": 80
+      "hle_calibration_error": 83.4
     },
     "isTopModel": false,
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
