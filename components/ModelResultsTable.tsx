@@ -4,9 +4,9 @@ import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { ChevronDown, ChevronUp, Save, ChartColumnBig, Table as TableIcon, HelpCircle, ExternalLink } from "lucide-react";
 import hf_logo from "@/assets/hf-logo.png";
-import textLogo from "@/assets/dataset-logos/text_logo.svg";
-import visionLogo from "@/assets/dataset-logos/vision_logo.svg";
-import safetyLogo from "@/assets/dataset-logos/safety_logo.svg";
+import textLogo from "@/assets/dataset-logos/text_logo_colored.svg";
+import visionLogo from "@/assets/dataset-logos/vision_logo_colored.svg";
+import safetyLogo from "@/assets/dataset-logos/safety_logo_colored.svg";
 import { MODELS, TEXT_CAPABILITIES_DATASETS, MULTIMODAL_DATASETS, SAFETY_DATASETS, getProviderLogo, BENCHMARK_TYPES } from "@/app/constants";
 import { Dataset, Model } from "@/lib/types";
 import {

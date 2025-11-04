@@ -157,6 +157,12 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
     name: "Jailbreaks Success Rate",
     icon: Bot,
     tooltipText: "Jailbreaks Success Rate Benchmark"
+  },
+  overconfident: {
+    id: "overconfident",
+    name: "Overconfident",
+    icon: Bot,
+    tooltipText: "Overconfident Benchmark"
   }
 };
 
@@ -485,6 +491,25 @@ export const SAFETY_DATASETS: Dataset[] = [
       primaryClass={cs.CY},
       url={https://arxiv.org/abs/2504.16137}, 
 }`
+  },
+  {
+    id: "hle_calibration_error",
+    name: "Humanity's Last Exam",
+    title: "Humanity's Last Exam - Calibration Error",
+    link: "https://lastexam.ai",
+    description: "<a href='https://lastexam.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Humanity's Last Exam (HLE)</a> Calibration Error measures how well AI models calibrate their confidence with their actual accuracy. This metric evaluates whether models are overconfident or underconfident in their predictions across 2,500 expert-written academic questions spanning 100+ disciplines. Lower calibration error indicates better alignment between a model's expressed confidence and its true performance.",
+    logo: hle_logo,
+    category: "safety",
+    capabilities: ["overconfident"],
+    paperLink: "https://arxiv.org/abs/2312.08793",
+    githubLink: "https://github.com/centerforaisafety/hle",
+    huggingfaceLink: "https://huggingface.co/datasets/cais/hle",
+    citationUrl: "https://raw.githubusercontent.com/centerforaisafety/hle/main/citation.txt",
+    examples: [{
+      type: "image",
+      src: hle_examples,
+      alt: "Samples of the diverse and challenging questions submitted to Humanity's Last Exam."
+    }]
   },
   {
     id: "masks",
