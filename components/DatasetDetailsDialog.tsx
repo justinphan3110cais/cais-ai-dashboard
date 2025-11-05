@@ -19,6 +19,15 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
   const [copied, setCopied] = useState(false);
   const [citation, setCitation] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!isOpen || (!dataset?.citationUrl && !dataset?.citation)) {
@@ -152,7 +161,7 @@ const DatasetDetailsDialog: React.FC<DatasetDetailsDialogProps> = ({
                         />
                       ) : example.type === 'video' ? (
                         <video
-                          src={example.src as string}
+                          src={(isMobile && example.mobileSrc) ? example.mobileSrc : (example.src as string)}
                           controls
                           className="max-w-full max-h-96 w-auto h-auto rounded-md"
                         >

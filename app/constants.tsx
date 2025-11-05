@@ -29,6 +29,7 @@ import mask_examples from "@/assets/dataset-examples/mask_examples.png";
 import art_examples from "@/assets/dataset-examples/art_examples.png";
 // Video files are served from public folder
 const intphys2_examples = "/dataset-examples/intphys2_examples.mp4";
+const intphys2_examples_mobile = "/dataset-examples/intphys2_examples_mobile.mp4";
 import erqa_examples from "@/assets/dataset-examples/erqa_examples.png";
 import mindcube_examples from "@/assets/dataset-examples/mindcube_examples.png";
 import arc_agi_2_examples from "@/assets/dataset-examples/arc_agi_2_examples.png";
@@ -154,15 +155,15 @@ export const BENCHMARK_TYPES: Record<string, BenchmarkType> = {
   },
   adversarial_robustness: {
     id: "adversarial_robustness",
-    name: "Jailbreaks Success Rate",
+    name: "Jailbreaks",
     icon: Bot,
-    tooltipText: "Jailbreaks Success Rate Benchmark"
+    tooltipText: "Jailbreaks Benchmark"
   },
   overconfident: {
     id: "overconfident",
-    name: "Overconfident",
+    name: "Overconfidence",
     icon: Bot,
-    tooltipText: "Overconfident Benchmark"
+    tooltipText: "Overconfidence Benchmark"
   }
 };
 
@@ -374,6 +375,7 @@ export const MULTIMODAL_DATASETS: Dataset[] = [
     examples: [{
       type: "video",
       src: intphys2_examples,
+      mobileSrc: intphys2_examples_mobile, // Mobile-optimized version
       alt: "Example of a scene in IntPhys2. Each scene consists of a set of four videos. Two pairs depict possible outcomes, while the other two represent impossible outcomes. The presence of an obstacle or occluder determines the outcome: a possible outcome in the first pair becomes impossible in the second, and vice versa. In this example, a silver ball rolls down a path. If a brick obstacle is present, the ball should collide with it and change its trajectory. If the ball passes through the brick obstacle without altering its path, this outcome is deemed impossible. Conversely, when no obstacle is present, the ball's trajectory should remain unchanged, making this the likely outcome."
     }],
     citation: `@misc{bordes2025intphys2benchmarkingintuitive,
@@ -495,9 +497,9 @@ export const SAFETY_DATASETS: Dataset[] = [
   {
     id: "hle_calibration_error",
     name: "Humanity's Last Exam",
-    title: "Humanity's Last Exam - Calibration Error",
+    title: "Humanity's Last Exam - Miscalibration",
     link: "https://lastexam.ai",
-    description: "<a href='https://lastexam.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Humanity's Last Exam (HLE)</a> Calibration Error measures how well AI models calibrate their confidence with their actual accuracy. This metric evaluates whether models are overconfident or underconfident in their predictions across 2,500 expert-written academic questions spanning 100+ disciplines. Lower calibration error indicates better alignment between a model's expressed confidence and its true performance.",
+    description: "<a href='https://lastexam.ai' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>Humanity's Last Exam (HLE)</a> Miscalibration measures how well AI models calibrate their confidence with their actual accuracy. This metric evaluates whether models are overconfident or underconfident in their predictions across 2,500 expert-written academic questions spanning 100+ disciplines. Lower calibration error indicates better alignment between a model's expressed confidence and its true performance.",
     logo: hle_logo,
     category: "safety",
     capabilities: ["overconfident"],

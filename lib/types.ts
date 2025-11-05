@@ -18,6 +18,7 @@ export interface Dataset {
   examples?: {
     type: 'image' | 'video';
     src: string | import('next/image').StaticImageData; // Can be string (for videos) or StaticImageData (for images)
+    mobileSrc?: string; // Optional mobile-optimized video source
     alt?: string;
   }[];
 }

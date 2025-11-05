@@ -228,7 +228,8 @@ const LeaderboardTable = ({
   isEditMode = false,
   onUpdateScore,
   onShowDetails,
-  onMobilePopup
+  onMobilePopup,
+  showAverageArrow = false
 }: { 
   datasets: Dataset[];
   models: Model[];
@@ -240,6 +241,7 @@ const LeaderboardTable = ({
   onUpdateScore?: (modelName: string, datasetId: string, newValue: number | null) => void;
   onShowDetails: (datasetId: string, datasetName: string) => void;
   onMobilePopup?: (type: 'dataset-info', content: { description: string; datasetId: string }) => boolean;
+  showAverageArrow?: boolean;
 }) => {
   // Helper function to get processed score (applies postprocessScore if it exists)
   const getProcessedScore = (dataset: Dataset, rawScore: number | null): number | null => {
@@ -286,9 +288,19 @@ const LeaderboardTable = ({
           </TableHead>
           {/* Average column - show second (after Model) */}
           <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
-            <div className="flex items-center justify-center gap-1">
-              <span className="text-xs font-bold">Average</span>
-            </div>
+            <button
+              onClick={() => onSort('average')}
+              className="w-full text-center hover:text-blue-600 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-center gap-1 relative">
+                <span className="text-xs font-bold">Average</span>
+                {showAverageArrow && sortConfig.key === 'average' && (
+                  <span className="text-xs">
+                    {sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : ''}
+                  </span>
+                )}
+              </div>
+            </button>
           </TableHead>
           {datasets.map((dataset, index) => (
             <TableHead 
@@ -446,6 +458,13 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
     textCapabilities: false,
     multimodal: false,
     safety: false,
+  });
+
+  // Track if user has explicitly clicked on average column (to show/hide arrow)
+  const [averageClickedState, setAverageClickedState] = useState({
+    text: false,
+    multimodal: false,
+    safety: false
   });
 
   const [textCapabilitiesSortConfig, setTextCapabilitiesSortConfig] = useState<SortConfig>({
@@ -735,18 +754,26 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
   };
 
   const handleTextCapabilitiesSort = (datasetId: string) => {
-    // Ignore sorting for average column
-    if (datasetId === 'average') return;
-    
     setTextCapabilitiesSortConfig(prev => {
-      if (prev.key !== datasetId) {
+      if (datasetId === 'average') {
+        // Check if user has clicked before (averageClickedState.text)
+        if (!averageClickedState.text) {
+          // First click: show arrow and sort ascending (opposite of default desc)
+          setAverageClickedState(p => ({ ...p, text: true }));
+          return { key: 'average', direction: 'asc' };
+        } else {
+          // Second click: hide arrow and back to default (desc)
+          setAverageClickedState(p => ({ ...p, text: false }));
+          return { key: 'average', direction: 'desc' };
+        }
+      } else if (prev.key !== datasetId) {
         // First click on new column: desc
         return { key: datasetId, direction: 'desc' };
       } else if (prev.direction === 'desc') {
-        // Second click: asc
+        // For other columns: second click asc
         return { key: datasetId, direction: 'asc' };
       } else if (prev.direction === 'asc') {
-        // Third click: no sort
+        // For other columns: third click no sort
         return { key: null, direction: null };
       } else {
         // Back to desc (shouldn't happen but fallback)
@@ -756,18 +783,26 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
   };
 
   const handleMultimodalSort = (datasetId: string) => {
-    // Ignore sorting for average column
-    if (datasetId === 'average') return;
-    
     setMultimodalSortConfig(prev => {
-      if (prev.key !== datasetId) {
+      if (datasetId === 'average') {
+        // Check if user has clicked before (averageClickedState.multimodal)
+        if (!averageClickedState.multimodal) {
+          // First click: show arrow and sort ascending (opposite of default desc)
+          setAverageClickedState(p => ({ ...p, multimodal: true }));
+          return { key: 'average', direction: 'asc' };
+        } else {
+          // Second click: hide arrow and back to default (desc)
+          setAverageClickedState(p => ({ ...p, multimodal: false }));
+          return { key: 'average', direction: 'desc' };
+        }
+      } else if (prev.key !== datasetId) {
         // First click on new column: desc
         return { key: datasetId, direction: 'desc' };
       } else if (prev.direction === 'desc') {
-        // Second click: asc
+        // For other columns: second click asc
         return { key: datasetId, direction: 'asc' };
       } else if (prev.direction === 'asc') {
-        // Third click: no sort
+        // For other columns: third click no sort
         return { key: null, direction: null };
       } else {
         // Back to desc (shouldn't happen but fallback)
@@ -777,18 +812,26 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
   };
 
   const handleSafetySort = (datasetId: string) => {
-    // Ignore sorting for average column
-    if (datasetId === 'average') return;
-    
     setSafetySortConfig(prev => {
-      if (prev.key !== datasetId) {
+      if (datasetId === 'average') {
+        // Check if user has clicked before (averageClickedState.safety)
+        if (!averageClickedState.safety) {
+          // First click: show arrow and sort descending (opposite of default asc)
+          setAverageClickedState(p => ({ ...p, safety: true }));
+          return { key: 'average', direction: 'desc' };
+        } else {
+          // Second click: hide arrow and back to default (asc)
+          setAverageClickedState(p => ({ ...p, safety: false }));
+          return { key: 'average', direction: 'asc' };
+        }
+      } else if (prev.key !== datasetId) {
         // First click on new column: desc
         return { key: datasetId, direction: 'desc' };
       } else if (prev.direction === 'desc') {
-        // Second click: asc
+        // For other columns: second click asc
         return { key: datasetId, direction: 'asc' };
       } else if (prev.direction === 'asc') {
-        // Third click: no sort
+        // For other columns: third click no sort
         return { key: null, direction: null };
       } else {
         // Back to desc (shouldn't happen but fallback)
@@ -931,6 +974,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
             onUpdateScore={updateModelScore}
             onShowDetails={handleShowDetails}
             onMobilePopup={handleMobilePopup}
+            showAverageArrow={averageClickedState.text}
           />
         ) : (
           <InlineBarChart
@@ -1061,6 +1105,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
             onUpdateScore={updateModelScore}
             onShowDetails={handleShowDetails}
             onMobilePopup={handleMobilePopup}
+            showAverageArrow={averageClickedState.multimodal}
           />
         ) : (
           <InlineBarChart
@@ -1227,6 +1272,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
             onUpdateScore={updateModelScore}
             onShowDetails={handleShowDetails}
             onMobilePopup={handleMobilePopup}
+            showAverageArrow={averageClickedState.safety}
           />
         ) : (
           <InlineBarChart

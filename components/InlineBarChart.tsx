@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, LabelList, ReferenceLine } from 'recharts';
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { Dataset, Model } from "@/lib/types";
 import { getProviderLogo, PROVIDER_COLORS, BENCHMARK_TYPES, DEFAULT_CHART_MODELS } from "@/app/constants";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -26,6 +26,63 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   const [includedDatasets, setIncludedDatasets] = useState<Record<string, boolean>>(
     datasets.reduce((acc, dataset) => ({ ...acc, [dataset.id]: true }), {})
   );
+
+
+  // Group datasets by category for button display
+  const categoryGroups = useMemo(() => {
+    const groups: Record<string, { datasets: Dataset[], logo: string | StaticImageData | undefined, category: string, order: number, mobileOrder: number }> = {};
+    
+    // Define custom order for text section categories (buttons)
+    const textCategoryOrder: Record<string, number> = {
+      'expert': 0,           // Expert-Level Reasoning
+      'coding': 1,           // Coding
+      'fluid_reasoning': 2,  // Abstract Reasoning (ARC-AGI)
+      'games': 3             // Text-Based Video Games
+    };
+
+    // Define custom mobile order for safety section (overconfidence moves to index 1)
+    const safetyMobileOrder: Record<string, number> = {
+      'adversarial_robustness': 0,  // Jailbreaks
+      'overconfident': 1,            // Overconfidence - moved up for mobile
+      'bioweapons_compliance': 2,    // Bioweapons Assistance
+      'dishonesty': 3,               // Deception
+      'harmful_propensity': 4        // Harmful Propensities
+    };
+    
+    datasets.forEach(dataset => {
+      if (dataset.capabilities && dataset.capabilities.length > 0) {
+        let categoryId = dataset.capabilities[0]; // Use first capability as key
+        
+        // Merge deception_propensity into dishonesty (both show as "Deception")
+        if (categoryId === 'deception_propensity') {
+          categoryId = 'dishonesty';
+        }
+        
+        const categoryName = BENCHMARK_TYPES[categoryId]?.name || BENCHMARK_TYPES['deception_propensity']?.name || '';
+        
+        if (!groups[categoryId]) {
+          groups[categoryId] = {
+            datasets: [],
+            logo: dataset.logo,
+            category: categoryName,
+            order: sectionType === 'text' ? (textCategoryOrder[categoryId] ?? 999) : 999,
+            mobileOrder: sectionType === 'safety' ? (safetyMobileOrder[categoryId] ?? 999) : 999
+          };
+        }
+        groups[categoryId].datasets.push(dataset);
+        
+        // Use specific logos for certain categories
+        if (categoryId === 'coding' && dataset.id === 'terminal_bench') {
+          groups[categoryId].logo = dataset.logo; // Use terminalbench logo for coding
+        }
+        if (categoryId === 'dishonesty' && dataset.id === 'masks') {
+          groups[categoryId].logo = dataset.logo; // Use MASK logo (includes both dishonesty and deception_propensity)
+        }
+      }
+    });
+    
+    return groups;
+  }, [datasets, sectionType]);
 
   // Get section colors
   const getSectionColors = () => {
@@ -68,12 +125,28 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Toggle dataset inclusion
-  const toggleDatasetInclusion = (datasetId: string) => {
-    setIncludedDatasets(prev => ({
-      ...prev,
-      [datasetId]: !prev[datasetId]
-    }));
+  // Toggle dataset inclusion - if toggling a category, toggle all datasets in that category
+  const toggleDatasetInclusion = (datasetIdOrCategoryId: string) => {
+    // Check if this is a category group
+    const categoryGroup = categoryGroups[datasetIdOrCategoryId];
+    
+    if (categoryGroup) {
+      // Toggle all datasets in this category (works for both single and multiple datasets)
+      const allEnabled = categoryGroup.datasets.every(d => includedDatasets[d.id]);
+      setIncludedDatasets(prev => {
+        const newState = { ...prev };
+        categoryGroup.datasets.forEach(d => {
+          newState[d.id] = !allEnabled;
+        });
+        return newState;
+      });
+    } else {
+      // Fallback: single dataset toggle (shouldn't reach here with current implementation)
+      setIncludedDatasets(prev => ({
+        ...prev,
+        [datasetIdOrCategoryId]: !prev[datasetIdOrCategoryId]
+      }));
+    }
   };
 
   // Get available models based on section type (for dropdown)
@@ -90,8 +163,24 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     return availableModels.filter(model => chartFilters.selectedModels.includes(model.name));
   }, [availableModels, chartFilters]);
 
+  // Define bottom margin for charts based on section type
+  const chartBottomMargin: Record<string, number> = {
+    text: 33,
+    vision: 33,
+    safety: 33
+  };
+
   // Prepare data: For each dataset, create chart data with model names on X-axis
   const chartsData = useMemo(() => {
+    // Define custom order for text section individual charts
+    const textDatasetOrder: Record<string, number> = {
+      'hle': 0,
+      'arc_agi_2': 1,
+      'textquests': 2,
+      'swebench_verified': 3,
+      'terminal_bench': 4
+    };
+    
     return datasets
       .map(dataset => {
         const modelScores = filteredModels.map(model => {
@@ -123,10 +212,12 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
           datasetName: dataset.name,
           datasetId: dataset.id,
           dataset: dataset,
-          data: modelScores
+          data: modelScores,
+          order: sectionType === 'text' ? (textDatasetOrder[dataset.id] ?? 999) : 999
         };
-      });
-  }, [datasets, filteredModels]);
+      })
+      .sort((a, b) => a.order - b.order); // Sort by custom order
+  }, [datasets, filteredModels, sectionType]);
 
   // Calculate average scores for each model
   const averageData = useMemo(() => {
@@ -244,37 +335,55 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               
               {/* Checkboxes below Average title */}
               <div className="mb-2">
-                <div className={`flex flex-wrap gap-1 justify-center items-center max-w-[250px] mx-auto ${
-                  sectionType === 'vision' ? 'sm:max-w-[400px]' : 'sm:max-w-[370px]'
+                <div className={`flex flex-wrap gap-1 justify-center items-center mx-auto ${
+                  sectionType === 'vision' ? 'max-w-[250px] sm:max-w-[400px]' : 
+                  sectionType === 'safety' ? 'max-w-[320px] sm:max-w-[450px]' : 
+                  'max-w-[250px] sm:max-w-[370px]'
                 }`}>
-                  {datasets.map(dataset => (
-                    <button
-                      key={dataset.id}
-                      onClick={() => toggleDatasetInclusion(dataset.id)}
-                      className={`relative flex items-center gap-1 px-1.5 py-0.5 rounded border transition-all ${
-                        includedDatasets[dataset.id] 
-                          ? `${colors.borderSelected} ${colors.bg} shadow-sm` 
-                          : `${colors.border} bg-white hover:bg-gray-50 opacity-50 hover:opacity-75`
-                      }`}
-                      title={dataset.name}
-                    >
-                      {/* Logo */}
-                      {dataset.logo && (
-                        <Image
-                          src={dataset.logo}
-                          alt={`${dataset.name} logo`}
-                          width={14}
-                          height={14}
-                          className="flex-shrink-0"
-                        />
-                      )}
-                      <span className="text-sm text-foreground whitespace-nowrap">
-                        {dataset.name === "Agent Red Teaming" ? "Jailbreaks" : 
-                         dataset.name === "VCT" ? "VCT-Refusal" : 
-                         dataset.name}
-                      </span>
-                    </button>
-                  ))}
+                  {Object.entries(categoryGroups)
+                    .sort(([, a], [, b]) => {
+                      // Use mobileOrder for safety on mobile, otherwise use regular order
+                      if (isMobile && sectionType === 'safety') {
+                        return a.mobileOrder - b.mobileOrder;
+                      }
+                      return a.order - b.order;
+                    })
+                    .map(([categoryId, group]) => {
+                    // Check if all datasets in this group are enabled
+                    const allEnabled = group.datasets.every(d => includedDatasets[d.id]);
+                    // Get tooltip text - show all dataset names in the group
+                    const tooltipText = group.datasets.map(d => d.name).join(', ');
+                    
+                    return (
+                      <button
+                        key={categoryId}
+                        onClick={() => toggleDatasetInclusion(categoryId)}
+                        className={`relative flex items-center gap-1 px-1.5 py-0.5 rounded border transition-all ${
+                          allEnabled 
+                            ? `${colors.borderSelected} ${colors.bg} shadow-sm` 
+                            : `${colors.border} bg-white hover:bg-gray-50 opacity-50 hover:opacity-75`
+                        }`}
+                        title={tooltipText}
+                      >
+                        {/* Logo */}
+                        {group.logo && (
+                          <Image
+                            src={group.logo}
+                            alt={`${group.category} logo`}
+                            width={14}
+                            height={14}
+                            className="flex-shrink-0"
+                          />
+                        )}
+                        {/* Category */}
+                        {group.category && (
+                          <span className="text-[10px] text-foreground uppercase tracking-wide whitespace-nowrap leading-tight font-medium">
+                            {group.category}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
               
@@ -466,7 +575,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       top: chartInfo.dataset.randomChance ? 30 : 40,
                       right: 10,
                       left: 30,
-                      bottom: chartInfo.dataset.randomChance ? 63 : chartsData.length > 4 && !isMobile ? 23: 43,
+                      bottom: chartInfo.dataset.randomChance ? 43 : (isMobile ? 43 : chartBottomMargin[sectionType]),
                     }}
                   >
                     <XAxis 
