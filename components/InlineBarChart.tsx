@@ -308,7 +308,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   };
 
   return (
-    <div className="p-6">
+    <div className="bg-white border border-black rounded-lg p-6">
       {/* Chart Filter Bar */}
       <ChartFilterBar 
         filters={chartFilters}

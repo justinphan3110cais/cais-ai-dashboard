@@ -221,7 +221,6 @@ const DatasetHeader = ({
 const LeaderboardTable = ({ 
   datasets, 
   models, 
-  bgColor, 
   sortConfig, 
   onSort,
   expanded = false,
@@ -233,7 +232,6 @@ const LeaderboardTable = ({
 }: { 
   datasets: Dataset[];
   models: Model[];
-  bgColor: string;
   sortConfig: SortConfig;
   onSort: (datasetId: string) => void;
   expanded?: boolean;
@@ -281,13 +279,13 @@ const LeaderboardTable = ({
       <TableHeader className="sticky top-0 bg-background z-40">
             <TableRow>
           <TableHead 
-            className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
+            className={`w-[200px] border-r border-black border-b-2 border-b-black sticky left-0 bg-white`}
             style={{ position: 'sticky', left: 0, top: 0, zIndex: 40 }}
           >
             <div className="font-semibold">Model</div>
           </TableHead>
           {/* Average column - show second (after Model) */}
-          <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
+          <TableHead className={`text-center bg-white min-w-[80px] font-bold border-b-2 border-b-black border-r border-black`}>
             <button
               onClick={() => onSort('average')}
               className="w-full text-center hover:text-blue-600 transition-colors cursor-pointer"
@@ -305,7 +303,7 @@ const LeaderboardTable = ({
           {datasets.map((dataset, index) => (
             <TableHead 
               key={dataset.name} 
-              className={`text-center ${bgColor} min-w-[100px] w-auto border-b-2 border-b-gray-300 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''} py-1`}
+              className={`text-center bg-white min-w-[100px] w-auto border-b-2 border-b-black ${index < datasets.length - 1 ? 'border-r border-black' : ''} py-1`}
             >
               <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} onMobilePopup={onMobilePopup} />
             </TableHead>
@@ -319,7 +317,7 @@ const LeaderboardTable = ({
             className={`border-b border-gray-200 ${getRowStyling()} ${model.modelCardUrl ? 'group' : ''}`}
           >
               <TableCell 
-                className={`text-center border-r border-gray-300 sticky left-0 bg-white min-w-[180px]`}
+                className={`text-center border-r border-black sticky left-0 bg-white min-w-[180px]`}
                 style={{ position: 'sticky', left: 0, zIndex: 30, backgroundColor: 'white' }}
               >              <div className="flex items-center gap-2 pr-2">
                 <Image
@@ -351,7 +349,7 @@ const LeaderboardTable = ({
                               />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent className="bg-gray-100 text-foreground border border-gray-300">
+                          <TooltipContent className="bg-gray-100 text-foreground border border-black">
                             <div className="flex items-center gap-2">
                               <Image
                             src={getProviderLogo(model.provider).src}
@@ -369,7 +367,7 @@ const LeaderboardTable = ({
                 </TableCell>
             
             {/* Average column - show second (after Model) */}
-            <TableCell className={`text-center ${bgColor}/30 font-bold border-r border-gray-300`}>
+            <TableCell className={`text-center font-bold border-r border-black`}>
               <span className="font-mono text-sm">
                 {formatValue(calculateAverage(model, datasets))}
               </span>
@@ -381,7 +379,7 @@ const LeaderboardTable = ({
               return (
                 <TableCell 
                   key={dataset.name} 
-                  className={`text-center ${bgColor}/30 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''}`}
+                  className={`text-center ${index < datasets.length - 1 ? 'border-r border-black' : ''}`}
                 >
                   <EditableTableCell
                     value={displayScore}
@@ -399,7 +397,7 @@ const LeaderboardTable = ({
   );
 
   return (
-    <div className="border border-gray-300 rounded-md">
+    <div className="border border-black rounded-md bg-white">
       {expanded ? (
         <div className="overflow-auto scrollbar-hidden" style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}>
           {tableContent}
@@ -845,7 +843,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
   const safetySortedModels = sortModels(safetyFilteredModels, SAFETY_DATASETS, safetySortConfig);
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full">
       {isEditMode && (
         <div className="flex justify-end">
           <button
@@ -867,9 +865,10 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
       )}
       
       {/* Text-based Capabilities Card */}
-      <div id="text-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-blue-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+      <div id="text-section" className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-blue-50 py-8">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="bg-white border border-black rounded-t-lg px-3 sm:px-6 py-3 sm:py-4 mb-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex items-center gap-2">
                 <Image
@@ -919,7 +918,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                   </button>
                 )}
               </div>
-            <div className="flex items-center gap-1 bg-white border border-blue-300 rounded-md p-0.5 sm:hidden">
+            <div className="flex items-center gap-1 bg-white border border-black rounded-md p-0.5 sm:hidden">
               <button
                 onClick={() => setViewModes(prev => ({ ...prev, textCapabilities: 'table' }))}
                 className={`p-2 rounded ${viewModes.textCapabilities === 'table' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-blue-700'} transition-colors`}
@@ -942,7 +941,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                 />
               </div>
             )}
-            <div className="hidden sm:flex items-center gap-1 bg-white border border-blue-300 rounded-md p-0.5">
+            <div className="hidden sm:flex items-center gap-1 bg-white border border-black rounded-md p-0.5">
               <button
                 onClick={() => setViewModes(prev => ({ ...prev, textCapabilities: 'table' }))}
                 className={`p-2 rounded ${viewModes.textCapabilities === 'table' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-blue-700'} transition-colors`}
@@ -957,8 +956,8 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
               </button>
             </div>
           </div>
-        </div>
-        {viewModes.textCapabilities === null ? (
+          </div>
+          {viewModes.textCapabilities === null ? (
           <div className="h-96 flex items-center justify-center">
             <div className="text-gray-400">Loading...</div>
           </div>
@@ -966,7 +965,6 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
           <LeaderboardTable
             datasets={TEXT_CAPABILITIES_DATASETS}
             models={textCapabilitiesSortedModels}
-            bgColor="bg-blue-50"
             sortConfig={textCapabilitiesSortConfig}
             onSort={handleTextCapabilitiesSort}
             expanded={expandState.textCapabilities}
@@ -988,7 +986,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
         {viewModes.textCapabilities === 'table' && (
           <>
             {!expandState.textCapabilities && (
-              <div className="border-t border-gray-200 bg-gray-50">
+              <div className="border-x border-b border-t border-black rounded-b-lg bg-white">
                 <button
                   onClick={() => {
                     setExpandState(prev => ({ ...prev, textCapabilities: true }));
@@ -1002,7 +1000,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                       }
                     }));
                   }}
-                  className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                  className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors"
                 >
                   <span className="text-sm font-medium">View All</span>
                   <ChevronDown className="w-4 h-4" />
@@ -1010,7 +1008,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
               </div>
             )}
             {expandState.textCapabilities && (
-              <div className="border-t border-gray-200 bg-gray-50">
+              <div className="border-x border-b border-t border-black rounded-b-lg bg-white">
                 <button
                   onClick={() => {
                     setExpandState(prev => ({ ...prev, textCapabilities: false }));
@@ -1024,7 +1022,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                       }
                     }));
                   }}
-                  className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                  className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors"
                 >
                   <span className="text-sm font-medium">Collapse</span>
                   <ChevronUp className="w-4 h-4" />
@@ -1033,12 +1031,14 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
             )}
           </>
         )}
+        </div>
       </div>
 
       {/* Multimodal Capabilities Card */}
-      <div id="vision-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-green-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+      <div id="vision-section" className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-green-50 py-8">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="bg-white border border-black rounded-t-lg px-3 sm:px-6 py-3 sm:py-4 mb-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex items-center gap-2">
                 <Image
@@ -1050,7 +1050,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                 />
                 <h3 className="text-lg sm:text-xl font-semibold text-green-700 flex-shrink-0">Vision</h3>
               </div>
-              <div className="flex items-center gap-1 bg-white border border-green-300 rounded-md p-0.5 sm:hidden">
+              <div className="flex items-center gap-1 bg-white border border-black rounded-md p-0.5 sm:hidden">
                 <button
                   onClick={() => setViewModes(prev => ({ ...prev, multimodal: 'table' }))}
                   className={`p-2 rounded ${viewModes.multimodal === 'table' ? 'bg-green-100 text-green-700' : 'text-gray-500 hover:text-green-700'} transition-colors`}
@@ -1073,7 +1073,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                 />
               </div>
             )}
-            <div className="hidden sm:flex items-center gap-1 bg-white border border-green-300 rounded-md p-0.5">
+            <div className="hidden sm:flex items-center gap-1 bg-white border border-black rounded-md p-0.5">
               <button
                 onClick={() => setViewModes(prev => ({ ...prev, multimodal: 'table' }))}
                 className={`p-2 rounded ${viewModes.multimodal === 'table' ? 'bg-green-100 text-green-700' : 'text-gray-500 hover:text-green-700'} transition-colors`}
@@ -1088,8 +1088,8 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
               </button>
             </div>
           </div>
-        </div>
-        {viewModes.multimodal === null ? (
+          </div>
+          {viewModes.multimodal === null ? (
           <div className="h-96 flex items-center justify-center">
             <div className="text-gray-400">Loading...</div>
           </div>
@@ -1097,7 +1097,6 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
           <LeaderboardTable
             datasets={MULTIMODAL_DATASETS}
             models={multimodalSortedModels}
-            bgColor="bg-green-50"
             sortConfig={multimodalSortConfig}
             onSort={handleMultimodalSort}
             expanded={expandState.multimodal}
@@ -1117,7 +1116,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
           />
         )}
         {viewModes.multimodal === 'table' && !expandState.multimodal && (
-          <div className="border-t border-gray-200 bg-gray-50">
+          <div className="border-x border-b border-t border-black rounded-b-lg bg-white">
             <button
               onClick={() => {
                 setExpandState(prev => ({ ...prev, multimodal: true }));
@@ -1131,7 +1130,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                   }
                 }));
               }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors"
             >
               <span className="text-sm font-medium">View All</span>
               <ChevronDown className="w-4 h-4" />
@@ -1139,7 +1138,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
           </div>
         )}
         {viewModes.multimodal === 'table' && expandState.multimodal && (
-          <div className="border-t border-gray-200 bg-gray-50">
+          <div className="border-x border-b border-t border-black rounded-b-lg bg-white">
             <button
               onClick={() => {
                 setExpandState(prev => ({ ...prev, multimodal: false }));
@@ -1153,19 +1152,21 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                   }
                 }));
               }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors"
             >
               <span className="text-sm font-medium">Collapse</span>
               <ChevronUp className="w-4 h-4" />
             </button>
           </div>
         )}
+        </div>
       </div>
  
       {/* Safety Card */}
-      <div id="safety-section" className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-red-50 px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+      <div id="safety-section" className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-red-50 py-8">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="bg-white border border-black rounded-t-lg px-3 sm:px-6 py-3 sm:py-4 mb-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
               <div className="flex-shrink-0">
                 <div className="flex items-center gap-2">
@@ -1217,7 +1218,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                 </div>
                 <p className="text-sm text-foreground mt-1">Lower is Better</p>
               </div>
-              <div className="flex items-center gap-1 bg-white border border-red-300 rounded-md p-0.5 sm:hidden">
+              <div className="flex items-center gap-1 bg-white border border-black rounded-md p-0.5 sm:hidden">
                 <button
                   onClick={() => setViewModes(prev => ({ ...prev, safety: 'table' }))}
                   className={`p-2 rounded ${viewModes.safety === 'table' ? 'bg-red-100 text-red-700' : 'text-gray-500 hover:text-red-700'} transition-colors`}
@@ -1240,7 +1241,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                 />
               </div>
             )}
-            <div className="hidden sm:flex items-center gap-1 bg-white border border-red-300 rounded-md p-0.5">
+            <div className="hidden sm:flex items-center gap-1 bg-white border border-black rounded-md p-0.5">
               <button
                 onClick={() => setViewModes(prev => ({ ...prev, safety: 'table' }))}
                 className={`p-2 rounded ${viewModes.safety === 'table' ? 'bg-red-100 text-red-700' : 'text-gray-500 hover:text-red-700'} transition-colors`}
@@ -1255,8 +1256,8 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
               </button>
             </div>
           </div>
-        </div>
-        {viewModes.safety === null ? (
+          </div>
+          {viewModes.safety === null ? (
           <div className="h-96 flex items-center justify-center">
             <div className="text-gray-400">Loading...</div>
           </div>
@@ -1264,7 +1265,6 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
           <LeaderboardTable
             datasets={SAFETY_DATASETS}
             models={safetySortedModels}
-            bgColor="bg-red-50"
             sortConfig={safetySortConfig}
             onSort={handleSafetySort}
             expanded={expandState.safety}
@@ -1284,7 +1284,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
           />
         )}
         {viewModes.safety === 'table' && !expandState.safety && (
-          <div className="border-t border-gray-200 bg-gray-50">
+          <div className="border-x border-b border-t border-black rounded-b-lg bg-white">
             <button
               onClick={() => {
                 setExpandState(prev => ({ ...prev, safety: true }));
@@ -1298,7 +1298,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                   }
                 }));
               }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors"
             >
               <span className="text-sm font-medium">View All</span>
               <ChevronDown className="w-4 h-4" />
@@ -1306,7 +1306,7 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
           </div>
         )}
         {viewModes.safety === 'table' && expandState.safety && (
-          <div className="border-t border-gray-200 bg-gray-50">
+          <div className="border-x border-b border-t border-black rounded-b-lg bg-white">
             <button
               onClick={() => {
                 setExpandState(prev => ({ ...prev, safety: false }));
@@ -1320,13 +1320,14 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
                   }
                 }));
               }}
-              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors"
             >
               <span className="text-sm font-medium">Collapse</span>
               <ChevronUp className="w-4 h-4" />
             </button>
           </div>
         )}
+        </div>
       </div>
 
 
