@@ -16,31 +16,23 @@ import vIcon from "@/assets/dataset-logos/agi_icons/v.svg";
 import aIcon from "@/assets/dataset-logos/agi_icons/a.svg";
 import sIcon from "@/assets/dataset-logos/agi_icons/s.svg";
 
+interface AGIScores {
+  K: number;
+  RW: number;
+  M: number;
+  R: number;
+  WM: number;
+  MS: number;
+  MR: number;
+  V: number;
+  A: number;
+  S: number;
+}
+
 interface AGIRadarChartProps {
-  gpt4Data?: {
-    K: number;
-    RW: number;
-    M: number;
-    R: number;
-    WM: number;
-    MS: number;
-    MR: number;
-    V: number;
-    A: number;
-    S: number;
-  };
-  gpt5Data?: {
-    K: number;
-    RW: number;
-    M: number;
-    R: number;
-    WM: number;
-    MS: number;
-    MR: number;
-    V: number;
-    A: number;
-    S: number;
-  };
+  gpt4Data?: AGIScores;
+  gpt5Data?: AGIScores;
+  gpt52Data?: AGIScores;
 }
 
 // Definitions for each cognitive component
@@ -73,7 +65,8 @@ const ICONS = {
 
 export function AGIRadarChart({ 
   gpt4Data = { K: 8, RW: 6, M: 4, R: 0, WM: 2, MS: 0, MR: 4, V: 0, A: 0, S: 3 },
-  gpt5Data = { K: 9, RW: 10, M: 10, R: 7, WM: 4, MS: 0, MR: 4, V: 4, A: 6, S: 3 }
+  gpt5Data = { K: 9, RW: 10, M: 10, R: 7, WM: 4, MS: 0, MR: 4, V: 4, A: 6, S: 3 },
+  gpt52Data = { K: 9, RW: 10, M: 10, R: 8, WM: 4, MS: 0, MR: 4, V: 5, A: 6, S: 3 }
 }: AGIRadarChartProps) {
   const [hoveredDimension, setHoveredDimension] = React.useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = React.useState<{ x: number; y: number } | null>(null);
@@ -122,65 +115,76 @@ export function AGIRadarChart({
       fullName: 'General Knowledge',
       'GPT-4': gpt4Data.K,
       'GPT-5': gpt5Data.K,
+      'GPT-5.2': gpt52Data.K,
     },
     {
       dimension: 'Reading & Writing',
       fullName: 'Reading and Writing',
       'GPT-4': gpt4Data.RW,
       'GPT-5': gpt5Data.RW,
+      'GPT-5.2': gpt52Data.RW,
     },
     {
       dimension: 'Math',
       fullName: 'Mathematical Ability',
       'GPT-4': gpt4Data.M,
       'GPT-5': gpt5Data.M,
+      'GPT-5.2': gpt52Data.M,
     },
     {
       dimension: 'Reasoning',
       fullName: 'On-the-Spot Reasoning',
       'GPT-4': gpt4Data.R,
       'GPT-5': gpt5Data.R,
+      'GPT-5.2': gpt52Data.R,
     },
     {
       dimension: 'Working Memory',
       fullName: 'Working Memory',
       'GPT-4': gpt4Data.WM,
       'GPT-5': gpt5Data.WM,
+      'GPT-5.2': gpt52Data.WM,
     },
     {
       dimension: 'Memory Storage',
       fullName: 'Long-Term Memory Storage',
       'GPT-4': gpt4Data.MS,
       'GPT-5': gpt5Data.MS,
+      'GPT-5.2': gpt52Data.MS,
     },
     {
       dimension: 'Memory Retrieval',
       fullName: 'Long-Term Memory Retrieval',
       'GPT-4': gpt4Data.MR,
       'GPT-5': gpt5Data.MR,
+      'GPT-5.2': gpt52Data.MR,
     },
     {
       dimension: 'Visual',
       fullName: 'Visual Processing',
       'GPT-4': gpt4Data.V,
       'GPT-5': gpt5Data.V,
+      'GPT-5.2': gpt52Data.V,
     },
     {
       dimension: 'Auditory',
       fullName: 'Auditory Processing',
       'GPT-4': gpt4Data.A,
       'GPT-5': gpt5Data.A,
+      'GPT-5.2': gpt52Data.A,
     },
     {
       dimension: 'Speed',
       fullName: 'Speed',
       'GPT-4': gpt4Data.S,
       'GPT-5': gpt5Data.S,
+      'GPT-5.2': gpt52Data.S,
     },
   ];
 
   const gpt4Total = Object.values(gpt4Data).reduce((a, b) => a + b, 0);
   const gpt5Total = Object.values(gpt5Data).reduce((a, b) => a + b, 0);
+  const gpt52Total = Object.values(gpt52Data).reduce((a, b) => a + b, 0);
 
   const handleMouseEnter = React.useCallback((dimension: string, event: React.MouseEvent<SVGTextElement>) => {
     // On mobile, don't show hover tooltip (use click instead)
@@ -411,16 +415,25 @@ export function AGIRadarChart({
           </a>
         </div>
         <div
-          className={`flex items-center gap-1.5 border-b-2 border-[#dc2626] pb-1 ${hoveredModel === 'GPT-5' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          className={`flex items-center gap-1.5 border-b-2 border-[#dc2626] pb-1 cursor-pointer transition-opacity ${hoveredModel === 'GPT-5.2' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          onClick={() => handleRadarClick('GPT-5.2')}
         >
-          <span className="text-sm font-medium text-muted-foreground">GPT-5 AGI Score:</span>
-          <span className="text-2xl font-bold text-foreground">{gpt5Total}%</span>
+          <span className="text-sm font-medium text-gray-700">GPT-5.2 AGI Score:</span>
+          <span className="text-2xl font-bold text-foreground">{gpt52Total}%</span>
         </div>
         <div
-          className={`flex items-center gap-1.5 border-b-2 border-[#6b21a8] pb-1 ${hoveredModel === 'GPT-4' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          className={`flex items-center gap-1.5 pb-1 cursor-pointer transition-opacity ${hoveredModel === 'GPT-5' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          onClick={() => handleRadarClick('GPT-5')}
         >
-          <span className="text-sm font-medium text-muted-foreground">GPT-4 AGI Score:</span>
-          <span className="text-sm font-medium text-muted-foreground">{gpt4Total}%</span>
+          <span className="text-sm text-muted-foreground">GPT-5 AGI Score:</span>
+          <span className="text-sm text-muted-foreground">{gpt5Total}%</span>
+        </div>
+        <div
+          className={`flex items-center gap-1.5 border-b-2 border-[#6b21a8] pb-1 cursor-pointer transition-opacity ${hoveredModel === 'GPT-4' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          onClick={() => handleRadarClick('GPT-4')}
+        >
+          <span className="text-sm font-medium text-gray-700">GPT-4 AGI Score:</span>
+          <span className="text-sm font-medium text-foreground">{gpt4Total}%</span>
         </div>
       </div>
 
@@ -460,15 +473,15 @@ export function AGIRadarChart({
               tickSize={30}
             />
             <Radar
-              name="GPT-5"
-              dataKey="GPT-5"
+              name="GPT-5.2"
+              dataKey="GPT-5.2"
               stroke="#dc2626"
               fill="transparent"
-              strokeWidth={isMobile ? 5 : 2.5}
-              strokeOpacity={hoveredModel === null ? 0.7 : (hoveredModel === 'GPT-5' ? 1 : 0.3)}
+              strokeWidth={isMobile ? 5 : (hoveredModel === 'GPT-5.2' ? 4 : 2.5)}
+              strokeOpacity={hoveredModel === null ? 0.7 : (hoveredModel === 'GPT-5.2' ? 1 : 0.3)}
               onMouseEnter={() => {
                 if (!isMobile) {
-                  handleRadarMouseEnter('GPT-5');
+                  handleRadarMouseEnter('GPT-5.2');
                 }
               }}
               onMouseLeave={() => {
@@ -476,14 +489,14 @@ export function AGIRadarChart({
                   handleRadarMouseLeave();
                 }
               }}
-              onClick={() => handleRadarClick('GPT-5')}
+              onClick={() => handleRadarClick('GPT-5.2')}
             />
             <Radar
               name="GPT-4"
               dataKey="GPT-4"
               stroke="#6b21a8"
               fill="transparent"
-              strokeWidth={isMobile ? 5 : 3.2}
+              strokeWidth={isMobile ? 5 : (hoveredModel === 'GPT-4' ? 4.5 : 3.2)}
               strokeOpacity={hoveredModel === null ? 0.7 : (hoveredModel === 'GPT-4' ? 1 : 0.3)}
               onMouseEnter={() => {
                 if (!isMobile) {
@@ -507,23 +520,35 @@ export function AGIRadarChart({
       </ResponsiveContainer>
       
       {/* Custom Legend - positioned on the right side */}
-      <div className="absolute right-0 top-[22%] -translate-y-1/2 hidden md:flex flex-col gap-2">
+      <div className="absolute right-0 top-[15%] -translate-y-1/2 hidden md:flex flex-col gap-2">
         <div
-          className={`flex items-center gap-1.5 border-b-2 border-[#dc2626] pb-1 ${hoveredModel === 'GPT-5' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          className={`flex items-center gap-1.5 border-b-2 border-[#dc2626] pb-1 cursor-pointer transition-opacity ${hoveredModel === 'GPT-5.2' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          onMouseEnter={() => handleRadarMouseEnter('GPT-5.2')}
+          onMouseLeave={() => handleRadarMouseLeave()}
         >
-          <span className="text-sm font-medium text-gray-700 whitespace-nowrap">GPT-5 AGI Score:</span>
-          <span className="text-3xl font-bold text-foreground">{gpt5Total}%</span>
+          <span className="text-sm font-medium text-gray-700 whitespace-nowrap">GPT-5.2 AGI Score:</span>
+          <span className="text-3xl font-bold text-foreground">{gpt52Total}%</span>
         </div>
         <div
-          className={`flex items-center gap-1.5 border-b-2 border-[#6b21a8] pb-1 ${hoveredModel === 'GPT-4' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          className={`flex items-center gap-1.5 pb-1 cursor-pointer transition-opacity ${hoveredModel === 'GPT-5' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          onMouseEnter={() => handleRadarMouseEnter('GPT-5')}
+          onMouseLeave={() => handleRadarMouseLeave()}
         >
-          <span className="text-sm text-muted-foreground whitespace-nowrap">GPT-4 AGI Score:</span>
-          <span className="text-sm text-muted-foreground">{gpt4Total}%</span>
+          <span className="text-sm text-muted-foreground whitespace-nowrap">GPT-5 AGI Score:</span>
+          <span className="text-sm text-muted-foreground">{gpt5Total}%</span>
+        </div>
+        <div
+          className={`flex items-center gap-1.5 border-b-2 border-[#6b21a8] pb-1 cursor-pointer transition-opacity ${hoveredModel === 'GPT-4' ? 'opacity-100' : hoveredModel ? 'opacity-40' : ''}`}
+          onMouseEnter={() => handleRadarMouseEnter('GPT-4')}
+          onMouseLeave={() => handleRadarMouseLeave()}
+        >
+          <span className="text-sm font-medium text-gray-700 whitespace-nowrap">GPT-4 AGI Score:</span>
+          <span className="text-sm font-medium text-foreground">{gpt4Total}%</span>
         </div>
       </div>
     </div>
 
-      {/* Model Tooltip */}
+      {/* Model Comparison Table - shows all models in a grid */}
       {hoveredModel && (
         <>
           {isMobile && (
@@ -559,34 +584,46 @@ export function AGIRadarChart({
                   }
                 : { display: 'none' }
             }
-            className="bg-white border-2 border-black rounded-lg shadow-lg p-3 min-w-[200px] max-w-[90vw]"
+            className="bg-white border-2 border-black rounded-lg shadow-lg p-3 max-w-[90vw]"
           >
-            <h4 className="font-bold text-sm mb-2 border-b border-gray-200 pb-1">
-              {hoveredModel}
-            </h4>
+            {/* Grid Header */}
+            <div className="grid grid-cols-4 gap-2 text-xs border-b border-gray-200 pb-2 mb-2">
+              <div className="font-medium text-gray-500"></div>
+              <div className={`text-center border-b-2 border-[#6b21a8] pb-1 ${hoveredModel === 'GPT-4' ? 'font-bold' : 'font-medium'}`}>GPT-4</div>
+              <div className={`text-center pb-1 ${hoveredModel === 'GPT-5' ? 'font-bold' : 'font-medium'}`}>GPT-5</div>
+              <div className={`text-center border-b-2 border-[#dc2626] pb-1 ${hoveredModel === 'GPT-5.2' ? 'font-bold' : 'font-medium'}`}>GPT-5.2</div>
+            </div>
+            {/* Grid Body */}
             <div className="space-y-1">
               {data.map((item) => (
-                <div key={item.dimension} className="flex justify-between text-xs items-center">
+                <div key={item.dimension} className="grid grid-cols-4 gap-2 text-xs items-center">
                   <div className="flex items-center gap-1">
                     <Image 
                       src={ICONS[item.dimension as keyof typeof ICONS]} 
                       alt={item.dimension} 
-                      width={16} 
-                      height={16} 
+                      width={14} 
+                      height={14} 
                       className="flex-shrink-0"
                     />
-                    <span className="text-gray-600">{item.dimension}</span>
+                    <span className="text-gray-600 truncate">{item.dimension}</span>
                   </div>
-                  <span className="font-medium font-mono">
-                    {item[hoveredModel as 'GPT-4' | 'GPT-5']}
+                  <span className={`font-mono text-center ${hoveredModel === 'GPT-4' ? 'font-bold' : 'font-medium'}`}>
+                    {item['GPT-4']}
+                  </span>
+                  <span className={`font-mono text-center ${hoveredModel === 'GPT-5' ? 'font-bold' : 'font-medium'}`}>
+                    {item['GPT-5']}
+                  </span>
+                  <span className={`font-mono text-center ${hoveredModel === 'GPT-5.2' ? 'font-bold' : 'font-medium'}`}>
+                    {item['GPT-5.2']}
                   </span>
                 </div>
               ))}
-              <div className="border-t border-gray-200 mt-2 pt-1 flex justify-between font-bold text-xs">
-                <span>Total</span>
-                <span>
-                  {hoveredModel === 'GPT-4' ? gpt4Total : gpt5Total}%
-                </span>
+              {/* Totals Row */}
+              <div className="grid grid-cols-4 gap-2 text-xs items-center border-t border-gray-200 pt-2 mt-2">
+                <span className="font-medium">Total</span>
+                <span className={`font-mono text-center ${hoveredModel === 'GPT-4' ? 'font-bold' : 'font-medium'}`}>{gpt4Total}%</span>
+                <span className={`font-mono text-center ${hoveredModel === 'GPT-5' ? 'font-bold' : 'font-medium'}`}>{gpt5Total}%</span>
+                <span className={`font-mono text-center ${hoveredModel === 'GPT-5.2' ? 'font-bold' : 'font-medium'}`}>{gpt52Total}%</span>
               </div>
             </div>
           </div>
@@ -650,7 +687,11 @@ export function AGIRadarChart({
               <div className="space-y-1.5 border-t border-gray-200 pt-2">
                 <div className="flex items-center gap-2 text-xs">
                   <div className="w-3 h-0.5 bg-[#dc2626]"></div>
-                  <span className="font-medium">GPT-5: {dimensionData['GPT-5']}%</span>
+                  <span className="font-medium">GPT-5.2: {dimensionData['GPT-5.2']}%</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="w-3 h-0.5 bg-transparent"></div>
+                  <span className="text-muted-foreground">GPT-5: {dimensionData['GPT-5']}%</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <div className="w-3 h-0.5 bg-[#6b21a8]"></div>
