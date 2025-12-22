@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43.2 32.88">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #080808;
+        stroke-miterlimit: 10;
+        stroke-width: 1.3px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: none;
+      }
+
+      .cls-3, .cls-4 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        stroke-width: 1.56px;
+      }
+
+      .cls-2, .cls-4 {
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-5 {
+        font-family: MyriadPro-Semibold, 'Myriad Pro';
+        font-size: 9.38px;
+        font-weight: 600;
+      }
+
+      .cls-4 {
+        stroke-width: 1.5px;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <polyline class="cls-2" points="42.42 8.83 42.42 32.1 16.34 32.1 16.34 .78 32.4 .78"/>
+      <polygon class="cls-4" points="33.12 .78 33.12 8.83 42.43 8.83 33.12 .78"/>
+      <rect class="cls-3" x="13.26" y="12.54" width="6.15" height="8.38"/>
+      <g>
+        <line class="cls-1" y1="16.91" x2="14.79" y2="16.91"/>
+        <polygon points="12.92 12.99 17.01 16.95 12.92 20.82 12.92 12.99"/>
+      </g>
+      <text class="cls-5" transform="translate(18.41 10.3)"><tspan x="0" y="0">0.2</tspan></text>
+      <text class="cls-5" transform="translate(18.84 19.39)"><tspan x="0" y="0">0.895</tspan></text>
+      <text class="cls-5" transform="translate(18.93 28.49)"><tspan x="0" y="0">0.401</tspan></text>
+    </g>
+  </g>
+</svg>
