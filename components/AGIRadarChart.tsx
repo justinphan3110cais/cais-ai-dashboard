@@ -66,7 +66,7 @@ const ICONS = {
 export function AGIRadarChart({ 
   gpt4Data = { K: 8, RW: 6, M: 4, R: 0, WM: 2, MS: 0, MR: 4, V: 0, A: 0, S: 3 },
   gpt5Data = { K: 9, RW: 10, M: 10, R: 7, WM: 4, MS: 0, MR: 4, V: 4, A: 6, S: 3 },
-  gpt52Data = { K: 9, RW: 10, M: 10, R: 8, WM: 4, MS: 0, MR: 4, V: 5, A: 6, S: 3 }
+  gpt52Data = { K: 9, RW: 10, M: 10, R: 9, WM: 4, MS: 0, MR: 4, V: 4, A: 6, S: 3 }
 }: AGIRadarChartProps) {
   const [hoveredDimension, setHoveredDimension] = React.useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = React.useState<{ x: number; y: number } | null>(null);
