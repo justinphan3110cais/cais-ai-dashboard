@@ -931,9 +931,9 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         const restName = words.slice(1).join(' ');
                         
                         // Smaller font on mobile
-                        const fontSize = isMobile ? '9px' : '11px';
+                        const fontSize = isMobile ? '7.5px' : '11px';
                         // Reduced line spacing on mobile
-                        const lineSpacing = isMobile ? 12 : 15;
+                        const lineSpacing = isMobile ? 10 : 15;
                         
                         return (
                           <g transform={`translate(${x},${y})`}>
