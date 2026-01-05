@@ -8,6 +8,7 @@ import qwen_logo from "@/assets/provider-logos/qwen_logo.png";
 import kimi_logo from "@/assets/provider-logos/kimi_logo.png";
 import o1_logo from "@/assets/provider-logos/o1-logo.png";
 import xai_logo from "@/assets/provider-logos/xai_logo.svg";
+import manus_logo from "@/assets/provider-logos/manus_logo.svg";
 import hle_examples from "@/assets/dataset-examples/hle_examples.png";
 import textquests_logo from "@/assets/dataset-logos/textquests_logo.svg";
 import hle_logo from "@/assets/dataset-logos/hle_logo.svg";
@@ -52,6 +53,7 @@ export const PROVIDER_COLORS: Record<string, string> = {
   meta: '#38bdf8', // Sky blue
   qwen: '#a855f7', // Purple
   moonshot: '#6b7280', // Gray
+  manus: '#0ea5e9', // Sky blue (Manus)
 };
 
 // Provider color shades for bar charts (from dark/base to light)
@@ -64,6 +66,7 @@ export const PROVIDER_COLOR_SHADES: Record<string, string[]> = {
   meta: ['#38bdf8', '#5ac8fa', '#7dd3fc'], // Sky blue shades
   qwen: ['#a855f7', '#b46cf9', '#c084fc'], // Purple shades
   moonshot: ['#6b7280', '#838aa7', '#9ca3af'], // Gray shades
+  manus: ['#0ea5e9', '#38bdf8', '#7dd3fc'], // Sky blue shades (Manus)
 };
 
 // Provider list to show by default (before expand)
@@ -245,6 +248,7 @@ export const PROVIDER_LOGO_MAP = {
   qwen: { src: qwen_logo, width: 18, height: 18 },
   deepseek: { src: deepseek_logo, width: 18, height: 18 },
   moonshot: { src: kimi_logo, width: 18, height: 18 },
+  manus: { src: manus_logo, width: 18, height: 18 },
 };
 
 // Utility function to get provider logo

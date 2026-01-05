@@ -1,36 +1,26 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import rliLogo from "@/assets/dataset-logos/rli_logo.webp";
-import manusLogo from "@/assets/provider-logos/manus_logo.svg";
-import grokLogo from "@/assets/provider-logos/grok_logo.png";
-import claudeLogo from "@/assets/provider-logos/claude_logo.svg";
-import openaiLogo from "@/assets/provider-logos/openai-logomark.png";
-import geminiLogo from "@/assets/provider-logos/gemini_logo.png";
-import { PROVIDER_COLORS } from "@/app/constants";
-import { StaticImageData } from 'next/image';
+import { PROVIDER_COLORS, getProviderLogo } from "@/app/constants";
+import rliData from "@/data/rli.json";
 
 interface RLIModelData {
   name: string;
-  logo: StaticImageData;
   rate: number;
   provider: string;
 }
 
-const RLI_MODELS: RLIModelData[] = [
-  { name: 'Manus', logo: manusLogo, rate: 2.5, provider: 'manus' },
-  { name: 'Grok 4', logo: grokLogo, rate: 2.1, provider: 'xai' },
-  { name: 'Sonnet 4.5', logo: claudeLogo, rate: 2.1, provider: 'anthropic' },
-  { name: 'GPT-5', logo: openaiLogo, rate: 1.7, provider: 'openai' },
-  { name: 'ChatGPT agent', logo: openaiLogo, rate: 1.3, provider: 'openai' },
-  { name: 'Gemini 2.5 Pro', logo: geminiLogo, rate: 0.8, provider: 'google' },
-];
-
 export function RemoteLaborIndex() {
   const [isMobile, setIsMobile] = useState(false);
+  
+  // Sort RLI models by rate descending
+  const RLI_MODELS: RLIModelData[] = useMemo(() => {
+    return [...rliData].sort((a, b) => b.rate - a.rate);
+  }, []);
   
   // Title tooltip state
   const [showTitleTooltip, setShowTitleTooltip] = useState(false);
@@ -103,6 +93,7 @@ export function RemoteLaborIndex() {
       if (!RLI_MODELS[index]) return null;
       
       const entry = RLI_MODELS[index];
+      const providerLogo = getProviderLogo(entry.provider);
       
       return (
         <g>
@@ -127,7 +118,7 @@ export function RemoteLaborIndex() {
           >
             <div className="flex justify-center items-center">
               <Image
-                src={entry.logo}
+                src={providerLogo.src}
                 alt={`${entry.name} logo`}
                 width={18}
                 height={18}
@@ -163,7 +154,7 @@ export function RemoteLaborIndex() {
         {/* Main metric */}
         <div className="flex flex-col items-center gap-1">
           <p className="text-3xl sm:text-4xl font-bold text-foreground">
-            2.5%
+            {RLI_MODELS.length > 0 ? RLI_MODELS[0].rate.toFixed(1) : '0'}%
           </p>
           <p className="text-base sm:text-xl text-gray-700 text-center">
             full automation of remote projects
