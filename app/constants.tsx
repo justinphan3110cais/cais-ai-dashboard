@@ -219,7 +219,7 @@ export const GITHUB_URL = "https://github.com/centerforaisafety/simple-evals";
 
 export const BIBTEX_CITATION = `@misc{caisaidashboard,
       title={CAIS AI Dashboard},
-      author={Long Phan and Dan Hendrycks},
+      author={Long Phan and Arunim Agarwal and Dan Hendrycks},
       year={2025},
       publisher={Center for AI Safety},
       howpublished="\\url{https://dashboard.safe.ai}",
