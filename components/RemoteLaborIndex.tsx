@@ -83,7 +83,7 @@ export function RemoteLaborIndex() {
     setTitleTooltipPos(null);
   }, []);
 
-  // Custom label component for bar chart
+  // Custom label component for bar chart (matching InlineBarChart style)
   const createCustomLabel = () => {
     // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
     return (props: any) => {
@@ -97,6 +97,23 @@ export function RemoteLaborIndex() {
       
       return (
         <g>
+          {/* Provider logo - positioned on top of bar */}
+          <foreignObject 
+            x={Number(x) + Number(width) / 2 - 10} 
+            y={Number(y) - 28} 
+            width={20} 
+            height={20}
+          >
+            <div className="flex justify-center items-center">
+              <Image
+                src={providerLogo.src}
+                alt={`${entry.provider} logo`}
+                width={20}
+                height={20}
+                className="rounded"
+              />
+            </div>
+          </foreignObject>
           {/* Score text - centered in the middle of bar */}
           <text 
             x={Number(x) + Number(width) / 2} 
@@ -104,28 +121,11 @@ export function RemoteLaborIndex() {
             fill="white"
             textAnchor="middle" 
             dominantBaseline="middle"
-            fontSize="12"
+            fontSize={isMobile ? "10" : "12"}
             fontWeight="600"
           >
             {typeof value === 'number' ? value.toFixed(1) : value}%
           </text>
-          {/* Provider logo - positioned between bar and model name */}
-          <foreignObject 
-            x={Number(x) + Number(width) / 2 - 9} 
-            y={Number(y) + Number(height) + 6} 
-            width={18} 
-            height={18}
-          >
-            <div className="flex justify-center items-center">
-              <Image
-                src={providerLogo.src}
-                alt={`${entry.name} logo`}
-                width={18}
-                height={18}
-                className="rounded"
-              />
-            </div>
-          </foreignObject>
         </g>
       );
     };
@@ -163,23 +163,80 @@ export function RemoteLaborIndex() {
       </div>
 
       {/* Bar Chart */}
-      <div className="h-64 w-full">
+      <div 
+        className={`overflow-visible mt-2 mx-auto ${isMobile ? 'h-96 w-full relative' : 'h-80 w-full'}`}
+        style={isMobile ? undefined : { maxWidth: `${RLI_MODELS.length * 75 + 80}px` }}
+      >
+        {/* Mobile Y-axis label positioned absolutely */}
+        {isMobile && (
+          <div className="absolute left-1 top-4 z-10">
+            <p className="text-[12px] text-gray-700 font-medium leading-tight">
+              Automation<br />Rate (%)
+            </p>
+          </div>
+        )}
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={RLI_MODELS}
+            barCategoryGap={isMobile ? "0%" : "1.5%"}
             margin={{
-              top: 10,
-              right: 10,
-              left: isMobile ? 0 : 80,
-              bottom: 60,
+              top: isMobile ? 60 : 35,
+              right: isMobile ? 5 : 10,
+              left: isMobile ? -40 : 60,
+              bottom: 0,
             }}
           >
             <XAxis 
               dataKey="name" 
-              angle={-45}
-              textAnchor="end"
-              height={70}
-              tick={{ fontSize: 11, fill: '#374151', dy: 20, fontWeight: 600 }}
+              height={isMobile ? 70 : 90}
+              interval={0}
+              padding={{ left: 5, right: 0 }}
+              tick={(props: any) => {
+                const { x, y, payload } = props;
+                const modelName = payload.value;
+                const words = modelName.split(' ');
+                const firstName = words[0];
+                const restName = words.slice(1).join(' ');
+                
+                // Smaller font on mobile
+                const fontSize = isMobile ? '7.8px' : '11px';
+                // Reduced line spacing on mobile
+                const lineSpacing = isMobile ? 10 : 15;
+                
+                return (
+                  <g transform={`translate(${x},${y})`}>
+                    {/* First word (horizontal) */}
+                    <text
+                      x={0}
+                      y={10}
+                      textAnchor="middle"
+                      style={{ 
+                        fontSize: fontSize, 
+                        fontWeight: 600, 
+                        fill: '#374151'
+                      }}
+                    >
+                      {firstName}
+                    </text>
+                    
+                    {/* Rest of name (horizontal, second line) */}
+                    {restName && (
+                      <text
+                        x={0}
+                        y={10 + lineSpacing}
+                        textAnchor="middle"
+                        style={{ 
+                          fontSize: fontSize, 
+                          fontWeight: 600, 
+                          fill: '#374151'
+                        }}
+                      >
+                        {restName}
+                      </text>
+                    )}
+                  </g>
+                );
+              }}
               axisLine={false}
               tickLine={false}
             />
@@ -189,17 +246,18 @@ export function RemoteLaborIndex() {
               tick={{ fontSize: 12, fill: '#374151' }}
               axisLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
               tickLine={false}
-              label={{ 
+              label={isMobile ? undefined : { 
                 value: 'Automation Rate (%)', 
                 angle: -90, 
                 position: 'insideLeft',
-                offset: isMobile ? 20 : 0,
+                offset: 10,
                 style: { textAnchor: 'middle', fill: '#374151', fontSize: 14, fontWeight: 500 }
               }}
             />
             <Bar 
               dataKey="rate"
               radius={[4, 4, 0, 0]}
+              maxBarSize={isMobile ? 40 : 70}
             >
               <LabelList content={createCustomLabel()} />
               {RLI_MODELS.map((entry, index) => (
