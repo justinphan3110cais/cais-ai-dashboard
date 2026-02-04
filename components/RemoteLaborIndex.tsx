@@ -124,7 +124,7 @@ export function RemoteLaborIndex() {
             fontSize={isMobile ? "10" : "12"}
             fontWeight="600"
           >
-            {typeof value === 'number' ? value.toFixed(1) : value}%
+            {typeof value === 'number' ? value.toFixed(2) : value}%
           </text>
         </g>
       );
@@ -154,7 +154,7 @@ export function RemoteLaborIndex() {
         {/* Main metric */}
         <div className="flex flex-col items-center gap-1">
           <p className="text-3xl sm:text-4xl font-bold text-foreground">
-            {RLI_MODELS.length > 0 ? RLI_MODELS[0].rate.toFixed(1) : '0'}%
+            {RLI_MODELS.length > 0 ? RLI_MODELS[0].rate.toFixed(2) : '0.00'}%
           </p>
           <p className="text-base sm:text-xl text-gray-700 text-center">
             full automation of remote projects
