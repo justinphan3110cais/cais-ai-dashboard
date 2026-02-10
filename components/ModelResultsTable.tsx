@@ -248,6 +248,8 @@ const DashboardTable = ({
   onMobilePopup?: (type: 'dataset-info', content: { description: string; datasetId: string }) => boolean;
   showAverageArrow?: boolean;
 }) => {
+  const [showModelId, setShowModelId] = useState(false);
+
   // Helper function to get processed score (applies postprocessScore if it exists)
   const getProcessedScore = (dataset: Dataset, rawScore: number | null | undefined): number | null => {
     if (rawScore === null || rawScore === undefined) return null;
@@ -289,7 +291,24 @@ const DashboardTable = ({
             className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
             style={{ position: 'sticky', left: 0, top: 0, zIndex: 40 }}
           >
-            <div className="font-semibold">Model</div>
+            <div className="font-semibold flex items-center gap-1">
+              <span className="hidden md:inline">Model</span>
+              <span className="md:hidden flex items-center">
+                <button
+                  onClick={() => setShowModelId(false)}
+                  className={`transition-colors ${!showModelId ? 'text-foreground underline underline-offset-2' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  Model
+                </button>
+                <span className="text-muted-foreground mx-1">|</span>
+                <button
+                  onClick={() => setShowModelId(true)}
+                  className={`transition-colors ${showModelId ? 'text-foreground underline underline-offset-2' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  ID
+                </button>
+              </span>
+            </div>
           </TableHead>
           {/* Average column - show second (after Model) */}
           <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
@@ -341,7 +360,7 @@ const DashboardTable = ({
                         className={`text-sm font-medium ${model.modelCardUrl ? 'cursor-pointer group-hover:border-b group-hover:border-dashed group-hover:border-gray-600' : ''}`}
                         onClick={() => model.modelCardUrl && window.open(model.modelCardUrl, '_blank')}
                       >
-                        {model.name}
+                        {showModelId ? model.id : model.name}
                       </span>
                     </TooltipTrigger>
                     <TooltipContent className="bg-transparent border-0 shadow-none p-0">
