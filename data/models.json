@@ -186,7 +186,7 @@
     },
     "modelCardUrl": "https://openai.com/index/gpt-5-1",
     "model_size": "standard",
-    "flagship": true,
+    "flagship": false,
     "releaseDate": "2025-11-12"
   },
   {
