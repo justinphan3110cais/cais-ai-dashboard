@@ -375,7 +375,7 @@
     },
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
     "model_size": "standard",
-    "flagship": true,
+    "flagship": false,
     "releaseDate": "2025-06-17"
   },
   {
