@@ -5,7 +5,7 @@
     "provider": "anthropic",
     "scores": {
       "hle": 34.2,
-      "arc_agi_2": 45.3,
+      "arc_agi_2": 44.3,
       "textquests": 40.8,
       "swebench_verified": 75.4,
       "terminal_bench": 54.5,
