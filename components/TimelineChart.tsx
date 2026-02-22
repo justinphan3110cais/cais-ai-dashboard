@@ -22,6 +22,24 @@ const LABEL_POSITION_OVERRIDES: Record<string, {
       'hle': 'above',
     },
   },
+  'Gemini 2.5 Pro': {
+    default: 'below',
+    datasetOverrides: {
+      'hle': 'below',
+    },
+  },
+  'Gemini 2.5 Pro-Exp': {
+    default: 'below',
+    datasetOverrides: {
+      'hle': 'below',
+    },
+  },
+  'Sonnet 3.7': {
+    default: 'below',
+    datasetOverrides: {
+      'hle': 'below',
+    },
+  },
 };
 
 interface TimelineChartProps {
