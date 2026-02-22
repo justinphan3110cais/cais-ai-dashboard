@@ -716,9 +716,12 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
       const modelSize = model.model_size || 'standard';
       if (!textFilters.modelSizes[modelSize]) return false;
       
-      // When expanded, show flagship models OR the baseline model
       if (expandState.textCapabilities) {
-        if (textFilters.showFlagship && model.flagship === false && model.id !== 'gpt-4o-2024-11-20') return false;
+        // When expanded (View All): include non-flagship only if they have scores for all datasets
+        if (model.flagship === false) {
+          const hasAllScores = TEXT_CAPABILITIES_DATASETS.every(d => model.scores[d.id] !== null && model.scores[d.id] !== undefined);
+          if (!hasAllScores) return false;
+        }
       } else {
         // When collapsed, show only flagship models from SHOW_PROVIDER_LIST
         if (textFilters.showFlagship && model.flagship === false) return false;
@@ -744,9 +747,12 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
       const modelSize = model.model_size || 'standard';
       if (!visionFilters.modelSizes[modelSize]) return false;
       
-      // When expanded, show flagship models OR the baseline model
       if (expandState.multimodal) {
-        if (visionFilters.showFlagship && model.flagship === false && model.id !== 'gpt-4o-2024-11-20') return false;
+        // When expanded (View All): include non-flagship only if they have scores for all datasets
+        if (model.flagship === false) {
+          const hasAllScores = MULTIMODAL_DATASETS.every(d => model.scores[d.id] !== null && model.scores[d.id] !== undefined);
+          if (!hasAllScores) return false;
+        }
       } else {
         // When collapsed, show only flagship models from SHOW_PROVIDER_LIST
         if (visionFilters.showFlagship && model.flagship === false) return false;
@@ -771,9 +777,12 @@ export function ModelResultsTable({ globalViewMode }: { globalViewMode?: 'table'
       const modelSize = model.model_size || 'standard';
       if (!safetyFilters.modelSizes[modelSize]) return false;
       
-      // When expanded, show flagship models OR the baseline model
       if (expandState.safety) {
-        if (safetyFilters.showFlagship && model.flagship === false && model.id !== 'gpt-4o-2024-11-20') return false;
+        // When expanded (View All): include non-flagship only if they have scores for all datasets
+        if (model.flagship === false) {
+          const hasAllScores = SAFETY_DATASETS.every(d => model.scores[d.id] !== null && model.scores[d.id] !== undefined);
+          if (!hasAllScores) return false;
+        }
       } else {
         // When collapsed, show only flagship models from SHOW_PROVIDER_LIST
         if (safetyFilters.showFlagship && model.flagship === false) return false;

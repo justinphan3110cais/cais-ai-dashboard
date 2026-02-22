@@ -525,7 +525,7 @@ export const SAFETY_DATASETS: Dataset[] = [
     id: "art",
     name: "Agent Red Teaming",
     link: "https://arxiv.org/abs/2507.20526",
-    description: "<a href='https://arxiv.org/abs/2507.20526' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ART</a> (Agent Red Teaming) measures robustness against malicious use and prompt injections. The benchmark evaluates AI agents across five core behavior categories: Confidentiality Breaches, Conflicting Objectives, Instruction Hierarchy Violations — Information, and Instruction Hierarchy Violations — Actions.",
+    description: "<a href='https://arxiv.org/abs/2507.20526' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>ART</a> (Agent Red Teaming) measures robustness against malicious use and prompt injections. The benchmark evaluates AI agents across five core behavior categories: Confidentiality Breaches, Conflicting Objectives, Instruction Hierarchy Violations — Information, and Instruction Hierarchy Violations — Actions. Results represent the probability that an attacker finds a successful attack after k=100 attempts for each model.",
     logo: art_logo.src,
     category: "safety",
     capabilities: ["adversarial_robustness"],

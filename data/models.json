@@ -1,5 +1,59 @@
 [
   {
+    "name": "Gemini 3.1 Pro",
+    "id": "gemini-3.1-pro-preview-high",
+    "provider": "google",
+    "scores": {
+      "hle": 45.9,
+      "arc_agi_2": 73.33,
+      "textquests": 45.76,
+      "swebench_verified": 75.8,
+      "terminal_bench": 67.05,
+      "masks": 46.2,
+      "vct_refusal": 0.53,
+      "machiavelli": 55.72,
+      "textquests_harm": 18.76,
+      "enigmaeval": 32.4,
+      "intphys2": 53.56,
+      "erqa": 74.17,
+      "mindcube": 84.13,
+      "art": 67.99,
+      "hle_calibration_error": 50.3,
+      "spatialviz": 66.1
+    },
+    "modelCardUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/",
+    "model_size": "standard",
+    "flagship": true,
+    "releaseDate": "2026-02-19"
+  },
+  {
+    "name": "Sonnet 4.6",
+    "id": "sonnet-4-6-adaptive-64k",
+    "provider": "anthropic",
+    "scores": {
+      "hle": 21.07,
+      "arc_agi_2": 24.17,
+      "textquests": 31.48,
+      "swebench_verified": 75.0,
+      "terminal_bench": 53.41,
+      "masks": 88.3,
+      "vct_refusal": 33.16,
+      "machiavelli": 79.06,
+      "textquests_harm": 16.52,
+      "enigmaeval": 9.1,
+      "intphys2": 50.76,
+      "erqa": 56.58,
+      "mindcube": 60.02,
+      "art": 54.75,
+      "hle_calibration_error": 43.08,
+      "spatialviz": 54.94
+    },
+    "modelCardUrl": "https://www.anthropic.com/news/claude-sonnet-4-6",
+    "model_size": "standard",
+    "flagship": true,
+    "releaseDate": "2026-02-17"
+  },
+  {
     "name": "Opus 4.6",
     "id": "opus-4-6-adaptive-64k",
     "provider": "anthropic",
@@ -17,8 +71,8 @@
       "intphys2": 53.6,
       "erqa": 54.8,
       "mindcube": 67,
-      "art": 32,
-      "hle_calibration_error": 56.9,
+      "art": 49.5,
+      "hle_calibration_error": 46,
       "spatialviz": 55.7
     },
     "modelCardUrl": "https://www.anthropic.com/news/claude-opus-4-6",
@@ -44,7 +98,7 @@
       "mindcube": null,
       "terminal_bench": 43.2,
       "machiavelli": 60.9,
-      "art": 81.9,
+      "art": 90.87,
       "hle_calibration_error": 75.9
     },
     "modelCardUrl": "https://www.kimi.com/blog/kimi-k2-5.html",
@@ -59,7 +113,7 @@
     "provider": "google",
     "scores": {
       "hle": 36.6,
-      "arc_agi_2": 33.6,
+      "arc_agi_2": 30.8,
       "textquests": 36.4,
       "swebench_verified": 60.6,
       "masks": 38.3,
@@ -72,7 +126,7 @@
       "mindcube": 78.3,
       "terminal_bench": 40.1,
       "machiavelli": 62.4,
-      "art": 70.9,
+      "art": 92.87,
       "hle_calibration_error": 55.1
     },
     "modelCardUrl": "https://blog.google/products/gemini/gemini-3-flash",
@@ -100,7 +154,7 @@
       "mindcube": 77.3,
       "terminal_bench": 53.4,
       "machiavelli": 62.8,
-      "art": 60.7,
+      "art": 47.52,
       "hle_calibration_error": 57.2
     },
     "modelCardUrl": "https://blog.google/products/gemini/gemini-3",
@@ -126,13 +180,13 @@
       "intphys2": 56.3,
       "erqa": 54,
       "mindcube": 61.2,
-      "art": 33.6,
+      "art": 42.5,
       "hle_calibration_error": 44.5,
       "spatialviz": 43
     },
     "modelCardUrl": "https://www.anthropic.com/news/claude-opus-4-5",
     "model_size": "standard",
-    "flagship": true,
+    "flagship": false,
     "releaseDate": "2025-11-24"
   },
   {
@@ -141,7 +195,7 @@
     "provider": "openai",
     "scores": {
       "hle": 29.9,
-      "arc_agi_2": 43.3,
+      "arc_agi_2": 38.3,
       "textquests": 37,
       "swebench_verified": 71.8,
       "masks": 87.1,
@@ -154,7 +208,7 @@
       "mindcube": 61.7,
       "terminal_bench": 47.7,
       "machiavelli": 55.4,
-      "art": 44.9,
+      "art": 68.81,
       "hle_calibration_error": 43.7
     },
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5-2/",
@@ -181,7 +235,7 @@
       "mindcube": 62,
       "terminal_bench": 42.1,
       "machiavelli": 57.9,
-      "art": 57.8,
+      "art": 82.12,
       "hle_calibration_error": 47.8
     },
     "modelCardUrl": "https://openai.com/index/gpt-5-1",
@@ -207,7 +261,7 @@
       "mindcube": null,
       "terminal_bench": 31.8,
       "machiavelli": 54.8,
-      "art": 87.2,
+      "art": 92.81,
       "hle_calibration_error": 67.8
     },
     "modelCardUrl": "https://moonshotai.github.io/Kimi-K2/thinking.html",
@@ -235,7 +289,7 @@
       "mindcube": 59.7,
       "terminal_bench": 33.9,
       "machiavelli": 54.21,
-      "art": 54,
+      "art": null,
       "hle_calibration_error": 50
     },
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
@@ -261,13 +315,13 @@
       "intphys2": 56.3,
       "erqa": 50.3,
       "mindcube": 58.3,
-      "art": 40,
+      "art": 64.56,
       "hle_calibration_error": 64.11,
       "spatialviz": 41.6
     },
     "modelCardUrl": "https://www.anthropic.com/news/claude-sonnet-4-5",
     "model_size": "standard",
-    "flagship": true,
+    "flagship": false,
     "releaseDate": "2025-09-29"
   },
   {
@@ -289,7 +343,7 @@
       "mindcube": 64.7,
       "terminal_bench": 33,
       "machiavelli": 58.6,
-      "art": 65,
+      "art": 85.86,
       "hle_calibration_error": 56.4
     },
     "modelCardUrl": "https://x.ai/news/grok-4",
@@ -316,7 +370,7 @@
       "erqa": 46.3,
       "spatialviz": 38.5,
       "mindcube": 52.7,
-      "art": 77.5,
+      "art": 90.23,
       "hle_calibration_error": 72.1
     },
     "modelCardUrl": "https://x.ai/news/grok-4-1-fast",
@@ -343,7 +397,7 @@
       "erqa": 42.9,
       "spatialviz": 36.8,
       "mindcube": 50.6,
-      "art": 80.3,
+      "art": null,
       "hle_calibration_error": 68.7
     },
     "modelCardUrl": "https://x.ai/news/grok-4-fast",
@@ -370,7 +424,7 @@
       "mindcube": 59.6,
       "terminal_bench": 26.1,
       "machiavelli": 62.76,
-      "art": 90.6,
+      "art": 91.38,
       "hle_calibration_error": 72
     },
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
@@ -397,7 +451,7 @@
       "mindcube": 61.1,
       "terminal_bench": 22.2,
       "machiavelli": 56.15,
-      "art": 54.9,
+      "art": 84.28,
       "hle_calibration_error": 65
     },
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
@@ -424,7 +478,7 @@
       "mindcube": 53,
       "terminal_bench": 17.1,
       "machiavelli": 57.69,
-      "art": 91.7,
+      "art": 91.91,
       "hle_calibration_error": 80
     },
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
@@ -450,7 +504,7 @@
       "mindcube": null,
       "terminal_bench": 29.5,
       "machiavelli": 57.1,
-      "art": 89,
+      "art": 92.96,
       "hle_calibration_error": 58.8
     },
     "modelCardUrl": "https://api-docs.deepseek.com/news/news251201",
@@ -477,7 +531,7 @@
       "mindcube": null,
       "terminal_bench": 25,
       "machiavelli": 64.7,
-      "art": 80.9,
+      "art": null,
       "hle_calibration_error": 70.1
     },
     "modelCardUrl": "https://api-docs.deepseek.com/news/news250929",
@@ -505,7 +559,7 @@
       "mindcube": 49.2,
       "terminal_bench": 3.5,
       "machiavelli": 71.78,
-      "art": 93.6,
+      "art": 96.8,
       "hle_calibration_error": 83.4
     },
     "modelCardUrl": "https://arxiv.org/abs/2507.06261",
@@ -532,7 +586,7 @@
       "mindcube": 40.3,
       "terminal_bench": 9.1,
       "machiavelli": 54.2,
-      "art": 76.1,
+      "art": 88.46,
       "hle_calibration_error": 80
     },
     "model_size": "nano",
@@ -558,7 +612,7 @@
       "mindcube": 50.4,
       "terminal_bench": 29.8,
       "machiavelli": 52.2,
-      "art": 51.6,
+      "art": 69.67,
       "hle_calibration_error": 60.5,
       "spatialviz": 38.4
     },
@@ -584,7 +638,7 @@
       "spatialviz": 47.7,
       "mindcube": 57.6,
       "terminal_bench": 34.8,
-      "art": 62.7,
+      "art": null,
       "machiavelli": null
     },
     "modelCardUrl": "https://openai.com/index/introducing-o3-and-o4-mini",
@@ -602,7 +656,7 @@
       "swebench_verified": 15.2,
       "terminal_bench": 6.4,
       "textquests": 11.9,
-      "art": 86.4,
+      "art": null,
       "masks": 48.9,
       "vct_refusal": 0,
       "textquests_harm": 13.4,
@@ -632,7 +686,7 @@
       "mindcube": null,
       "terminal_bench": null,
       "machiavelli": null,
-      "art": 75.5
+      "art": null
     },
     "isTextOnlyModel": false,
     "model_size": "mini",
@@ -652,7 +706,7 @@
       "textquests_harm": 15.4,
       "vct_refusal": 0,
       "terminal_bench": 11.4,
-      "art": 90.1,
+      "art": 90.91,
       "machiavelli": 56,
       "hle_calibration_error": 73
     },
@@ -677,7 +731,7 @@
       "textquests_harm": 16,
       "enigmaeval": 2.2,
       "intphys2": 50.5,
-      "art": 65.5,
+      "art": 86.59,
       "hle_calibration_error": 75,
       "erqa": null,
       "mindcube": null,
@@ -702,7 +756,7 @@
       "textquests_harm": null,
       "enigmaeval": null,
       "intphys2": null,
-      "art": 63.6,
+      "art": null,
       "hle_calibration_error": 75,
       "erqa": null,
       "spatialviz": 33.9,
@@ -722,7 +776,7 @@
       "hle": 18.8,
       "hle_calibration_error": 71,
       "masks": 53.07,
-      "art": 85
+      "art": null
     },
     "modelCardUrl": "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/#gemini-2-5-pro",
     "model_size": "standard",
@@ -748,7 +802,7 @@
       "mindcube": 51.2,
       "terminal_bench": 12.1,
       "machiavelli": null,
-      "art": 71.8,
+      "art": null,
       "hle_calibration_error": 83
     },
     "modelCardUrl": "https://openai.com/index/openai-o1-system-card",
@@ -775,7 +829,7 @@
       "mindcube": 38,
       "terminal_bench": 7.8,
       "machiavelli": 56.8,
-      "art": 86.4,
+      "art": 90.71,
       "hle_calibration_error": 89
     },
     "modelCardUrl": "https://openai.com/index/hello-gpt-4o",

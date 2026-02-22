@@ -9,6 +9,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import DatasetDetailsDialog from "@/components/DatasetDetailsDialog";
 import { ModelDetailsTooltip } from "@/components/ModelDetailsTooltip";
 
+// Hardcoded label position overrides for specific models on the timeline chart.
+// 'default' is used in Index mode (all/none datasets selected).
+// 'datasetOverrides' apply when a specific dataset is actively selected.
+const LABEL_POSITION_OVERRIDES: Record<string, {
+  default: 'above' | 'below';
+  datasetOverrides?: Record<string, 'above' | 'below'>;
+}> = {
+  'Opus 4.5': {
+    default: 'below',
+    datasetOverrides: {
+      'hle': 'above',
+    },
+  },
+};
+
 interface TimelineChartProps {
   datasets: Dataset[];
   models: Model[];
@@ -458,8 +473,8 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
     const minDate = new Date(Math.min(...allModelPoints.map(p => p.timestamp)));
     const maxDate = new Date(Math.max(...allModelPoints.map(p => p.timestamp)));
     
-    // Add 35 days of extra space after the last model
-    const maxDateWithPadding = new Date(maxDate.getTime() + (35 * 24 * 60 * 60 * 1000));
+    const paddingDays = isMobile ? 45 : 35;
+    const maxDateWithPadding = new Date(maxDate.getTime() + (paddingDays * 24 * 60 * 60 * 1000));
     
     // Generate ticks every 2 months
     const ticks: number[] = [];
@@ -508,7 +523,7 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
       domain: [minDate.getTime(), maxDateWithPadding.getTime()],
       yearPositions
     };
-  }, [allModelPoints]);
+  }, [allModelPoints, isMobile]);
 
   // Create tick formatter for X-axis - show month abbreviations
   const formatXAxis = (timestamp: number) => {
@@ -518,6 +533,33 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
   };
 
   // Get hovered model data
+  const getLabelYOffset = React.useCallback((modelName: string, defaultYOffset: number): number => {
+    const override = LABEL_POSITION_OVERRIDES[modelName];
+    if (!override) return defaultYOffset;
+
+    const allDatasetIds = categoryGroups
+      ? Object.values(categoryGroups).flatMap(group => group.datasets.map(d => d.id))
+      : [];
+    const includedDatasetIds = Object.keys(includedDatasets).filter(id => includedDatasets[id]);
+    const isNoneSelected = includedDatasetIds.length === 0;
+    const isAllSelected = includedDatasetIds.length === allDatasetIds.length &&
+                           allDatasetIds.every(id => includedDatasetIds.includes(id));
+    const isIndexMode = isNoneSelected || isAllSelected;
+
+    let position = override.default;
+
+    if (!isIndexMode && override.datasetOverrides) {
+      for (const datasetId of includedDatasetIds) {
+        if (override.datasetOverrides[datasetId]) {
+          position = override.datasetOverrides[datasetId];
+          break;
+        }
+      }
+    }
+
+    return position === 'below' ? 24 : -16;
+  }, [categoryGroups, includedDatasets]);
+
   const hoveredModelData = hoveredModel 
     ? allModelPoints.find(m => m.name === hoveredModel)
     : null;
@@ -835,8 +877,8 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
                 // Special case: Hide o3-mini name on mobile
                 if (isMobile && payload.name === 'o3-mini') return <g />;
                 
-                // For safety: best = lowest, show below. For others: best = highest, show above
-                const yOffset = sectionType === 'safety' ? 24 : -16;
+                const defaultYOffset = sectionType === 'safety' ? 24 : -16;
+                const yOffset = getLabelYOffset(payload.name, defaultYOffset);
                 
                 // Smaller font size on mobile
                 const fontSize = isMobile ? "8" : "10";
@@ -890,8 +932,8 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
                   const { cx, cy, payload } = props;
                   if (!payload || !payload.name) return <g />;
                   
-                  // For safety: worst = highest, show above. For others: worst = lowest, show below
-                  const yOffset = sectionType === 'safety' ? -16 : 24;
+                  const defaultYOffset = sectionType === 'safety' ? -16 : 24;
+                  const yOffset = getLabelYOffset(payload.name, defaultYOffset);
                   
                   return (
                     <g>
@@ -999,14 +1041,34 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
         <div className="relative" style={{ height: '20px', marginTop: '-25px', marginBottom: '5px' }}>
           {xAxisConfig.yearPositions.map((yearPos, index) => {
             const totalTicks = xAxisConfig.ticks.length;
-            const leftPercent = (yearPos.position / (totalTicks - 1)) * 100;
+            const isLastYear = index === xAxisConfig.yearPositions.length - 1;
+            const leftPercent = totalTicks > 1 ? (yearPos.position / (totalTicks - 1)) * 100 : 50;
+            const leftMargin = isMobile ? 40 : 60;
+            const rightMargin = isMobile ? 12 : 120;
+
+            if (isLastYear) {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    position: 'absolute',
+                    right: `${rightMargin}px`,
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: '#6b7280'
+                  }}
+                >
+                  {yearPos.year}
+                </div>
+              );
+            }
             
             return (
               <div
                 key={index}
                 style={{
                   position: 'absolute',
-                  left: isMobile ? `calc(${leftPercent}% + 40px)` : `calc(${leftPercent}% + 60px)`,
+                  left: `calc(${leftPercent}% + ${leftMargin}px)`,
                   transform: 'translateX(-50%)',
                   fontSize: '13px',
                   fontWeight: 600,
