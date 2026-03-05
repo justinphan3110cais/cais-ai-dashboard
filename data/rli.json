@@ -1,15 +1,24 @@
 [
   {
+    "name": "Opus 4.6",
+    "provider": "anthropic",
+    "rate": 4.17
+  },
+  {
     "name": "Opus 4.5",
     "provider": "anthropic",
     "rate": 3.75
   },
   {
+    "name": "Manus 1.6 Max",
+    "provider": "manus",
+    "rate": 2.92
+  },
+  {
     "name": "GPT-5.2",
     "provider": "openai",
     "rate": 2.50
-  }
-  ,
+  },
   {
     "name": "Manus 1.5",
     "provider": "manus",
