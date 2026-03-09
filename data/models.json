@@ -213,7 +213,7 @@
     },
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5-2/",
     "model_size": "standard",
-    "flagship": true,
+    "flagship": false,
     "releaseDate": "2025-12-11"
   },
   {
@@ -861,6 +861,33 @@
     },
     "modelCardUrl": "https://deepmind.google/models/model-cards/gemini-3-1-flash-lite/",
     "model_size": "nano",
+    "flagship": true,
+    "releaseDate": "2026-03-03"
+  },
+  {
+    "name": "GPT-5.4",
+    "id": "gpt-5.4-high",
+    "provider": "openai",
+    "scores": {
+      "hle": 40.28,
+      "arc_agi_2": 65.0,
+      "textquests": 42.24,
+      "swebench_verified": null,
+      "terminal_bench": 59.09,
+      "masks": 90.3,
+      "vct_refusal": 13.9,
+      "machiavelli": 61.16,
+      "textquests_harm": 24.48,
+      "enigmaeval": 27.64,
+      "intphys2": 56.39,
+      "erqa": 64.75,
+      "mindcube": 70.38,
+      "art": 59.66,
+      "hle_calibration_error": 40.86,
+      "spatialviz": 69.32
+    },
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-5-4/",
+    "model_size": "standard",
     "flagship": true,
     "releaseDate": "2026-03-03"
   }

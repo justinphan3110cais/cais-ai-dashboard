@@ -411,8 +411,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
       'hle': 0,
       'arc_agi_2': 1,
       'textquests': 2,
-      'swebench_verified': 3,
-      'terminal_bench': 4
+      'terminal_bench': 3
     };
     
     return datasets

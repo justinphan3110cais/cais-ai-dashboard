@@ -302,31 +302,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
       alt: "Examples of abstract visual reasoning puzzles from ARC-AGI-2."
     }]
   },
-  {
-    id: "swebench_verified",
-    name: "SWE-Bench",
-    link: "https://www.swebench.com/bash-only.html",
-    description: "<a href='https://www.swebench.com' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-Bench Verified</a> <i>(Bash Only)</i> tests LLMs ability to solve 500 real Python GitHub issues. <a href='https://www.swebench.com' target='_blank' style='text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-bench Bash Only</a> only use a minimal bash shell (no tools or special scaffold structure).<br><br>Scoring high would show a model can reliably understand and resolve real-world software engineering issues.",
-    logo: swebench_logo.src,
-    category: "text",
-    capabilities: ["coding"],
-    paperLink: "https://arxiv.org/abs/2310.06770",
-    githubLink: "https://github.com/SWE-agent/SWE-agent",
-    huggingfaceLink: "https://huggingface.co/datasets/princeton-nlp/SWE-bench_Verified",
-    examples: [{
-      type: "image",
-      src: swebench_examples,
-      alt: "SWE-bench sources task instances from real-world Python repositories by connecting GitHub issues to merged pull request solutions that resolve related tests. Provided with the issue text and a codebase snapshot, models generate a patch that is evaluated against real tests."
-    }],
-    citation: `@inproceedings{
-    jimenez2024swebench,
-    title={{SWE}-bench: Can Language Models Resolve Real-world Github Issues?},
-    author={Carlos E Jimenez and John Yang and Alexander Wettig and Shunyu Yao and Kexin Pei and Ofir Press and Karthik R Narasimhan},
-    booktitle={The Twelfth International Conference on Learning Representations},
-    year={2024},
-    url={https://openreview.net/forum?id=VTF8yNQM66}
-}`
-  },
+  // NOTE: swebench_verified removed from UI display but data kept in models.json
   {
     id: "terminal_bench",
     name: "Terminal Bench",
