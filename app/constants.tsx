@@ -345,7 +345,7 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
       primaryClass={cs.AI},
       url={https://arxiv.org/abs/2507.23701}, 
 }`,
-    description: "<a href='https://textquests.ai/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>TextQuests</a> tests LLM agents on 25 classic exploratory text-based adventure games, which can take humans hundreds of precise actions and over 30 hours of gameplay to solve. Most questions revolve around exploratory, long-horizon problem solving, requiring trial-and-error reasoning and multi-step planning.<br><br>Scoring high would show an agent can sustain long-horizon reasoning and planning in exploratory environments.",
+    description: "<a href='https://textquests.ai/' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>TextQuests</a> tests LLM agents on 25 classic exploratory text-based adventure games, which can take humans hundreds of precise actions and over 30 hours of gameplay to solve, scoring high would show an agent can sustain long-horizon reasoning and planning in exploratory environments. Games revolve around exploratory, long-horizon problem solving, requiring trial-and-error reasoning and multi-step planning.",
     logo: textquests_logo,
     category: "text",
     capabilities: ["games"],
