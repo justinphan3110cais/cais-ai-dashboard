@@ -348,8 +348,34 @@
     },
     "modelCardUrl": "https://x.ai/news/grok-4",
     "model_size": "standard",
-    "flagship": true,
+    "flagship": false,
     "releaseDate": "2025-07-09"
+  },
+  {
+    "name": "Grok 4.2",
+    "id": "grok-4-2",
+    "provider": "xai",
+    "scores": {
+      "hle": 30.2,
+      "hle_calibration_error": 45.76,
+      "arc_agi_2": 55,
+      "textquests": 18.48,
+      "textquests_harm": 9.88,
+      "masks": 59,
+      "vct_refusal": 57.75,
+      "enigmaeval": 7.69,
+      "intphys2": 62.65,
+      "erqa": 59.08,
+      "spatialviz": 45.59,
+      "mindcube": 67.7,
+      "terminal_bench": 37.5,
+      "machiavelli": 54.88,
+      "art": 84.59
+    },
+    "modelCardUrl": "https://docs.x.ai/developers/models",
+    "model_size": "standard",
+    "flagship": true,
+    "releaseDate": "2026-03-09"
   },
   {
     "name": "Grok 4.1 Fast",
@@ -456,8 +482,34 @@
     },
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
     "model_size": "mini",
-    "flagship": true,
+    "flagship": false,
     "releaseDate": "2025-08-07"
+  },
+  {
+    "name": "GPT-5.4-mini",
+    "id": "gpt-5.4-mini",
+    "provider": "openai",
+    "scores": {
+      "hle": 23.52,
+      "hle_calibration_error": 55.24,
+      "arc_agi_2": 5.83,
+      "textquests": 29.6,
+      "textquests_harm": 15.4,
+      "masks": 84.1,
+      "vct_refusal": 20.66,
+      "enigmaeval": 6.93,
+      "intphys2": 51.98,
+      "erqa": 58,
+      "spatialviz": 59.58,
+      "mindcube": 56.54,
+      "terminal_bench": 40.91,
+      "machiavelli": 58.81,
+      "art": 74.33
+    },
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
+    "model_size": "mini",
+    "flagship": true,
+    "releaseDate": "2026-03-17"
   },
   {
     "name": "Gemini 2.5 Flash",
@@ -563,9 +615,35 @@
       "hle_calibration_error": 80
     },
     "model_size": "nano",
-    "flagship": true,
+    "flagship": false,
     "modelCardUrl": "https://openai.com/index/introducing-gpt-5/",
     "releaseDate": "2025-08-07"
+  },
+  {
+    "name": "GPT-5.4-Nano",
+    "id": "gpt-5.4-nano",
+    "provider": "openai",
+    "scores": {
+      "hle": 18.6,
+      "hle_calibration_error": 47.13,
+      "arc_agi_2": 3.33,
+      "textquests": 13.68,
+      "textquests_harm": 15.16,
+      "masks": 76.3,
+      "vct_refusal": 0.54,
+      "enigmaeval": 4.9,
+      "intphys2": 50.76,
+      "erqa": 45.45,
+      "spatialviz": 44.58,
+      "mindcube": 40.87,
+      "terminal_bench": 42.05,
+      "machiavelli": 58.08,
+      "art": 81.7
+    },
+    "modelCardUrl": "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
+    "model_size": "nano",
+    "flagship": true,
+    "releaseDate": "2026-03-17"
   },
   {
     "name": "Haiku 4.5",
