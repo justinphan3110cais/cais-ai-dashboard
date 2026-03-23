@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: 'CAIS AI Dashboard',
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.jpg',
         width: 3348,
         height: 1824,
         alt: 'CAIS AI Dashboard Preview',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "CAIS AI Dashboard",
     description: "Evaluating frontier AI systems on capability and safety benchmarks",
-    images: ['/og-image.png'],
+    images: ['/og-image.jpg'],
   },
 };
 
