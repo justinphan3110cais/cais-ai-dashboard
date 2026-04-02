@@ -252,7 +252,7 @@ export const DashboardTable = ({
   showAverage?: boolean;
   defaultShowId?: boolean;
 }) => {
-  const [showModelId, setShowModelId] = useState(defaultShowId ?? false);
+  const [showModelId, setShowModelId] = useState(false);
 
   // Helper function to get processed score (applies postprocessScore if it exists)
   const getProcessedScore = (dataset: Dataset, rawScore: number | null | undefined): number | null => {
