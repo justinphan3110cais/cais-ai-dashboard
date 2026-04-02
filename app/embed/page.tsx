@@ -124,6 +124,7 @@ function EmbedTableContent() {
         onShowDetails={handleShowDetails}
         showAverageArrow={true}
         showAverage={showAvg}
+        defaultShowId={true}
       />
       <DatasetDetailsDialog
         isOpen={datasetDialogOpen}

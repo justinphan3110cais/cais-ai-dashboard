@@ -235,7 +235,8 @@ export const DashboardTable = ({
   onShowDetails,
   onMobilePopup,
   showAverageArrow = false,
-  showAverage = true
+  showAverage = true,
+  defaultShowId = false
 }: {
   datasets: Dataset[];
   models: Model[];
@@ -249,8 +250,9 @@ export const DashboardTable = ({
   onMobilePopup?: (type: 'dataset-info', content: { description: string; datasetId: string }) => boolean;
   showAverageArrow?: boolean;
   showAverage?: boolean;
+  defaultShowId?: boolean;
 }) => {
-  const [showModelId, setShowModelId] = useState(false);
+  const [showModelId, setShowModelId] = useState(defaultShowId ?? false);
 
   // Helper function to get processed score (applies postprocessScore if it exists)
   const getProcessedScore = (dataset: Dataset, rawScore: number | null | undefined): number | null => {
@@ -294,22 +296,42 @@ export const DashboardTable = ({
             style={{ position: 'sticky', left: 0, top: 0, zIndex: 40 }}
           >
             <div className="font-semibold flex items-center gap-1">
-              <span className="hidden md:inline">Model</span>
-              <span className="md:hidden flex items-center">
-                <button
-                  onClick={() => setShowModelId(false)}
-                  className={`transition-colors ${!showModelId ? 'text-foreground underline underline-offset-2' : 'text-muted-foreground hover:text-foreground'}`}
-                >
-                  Model
-                </button>
-                <span className="text-muted-foreground mx-1">|</span>
-                <button
-                  onClick={() => setShowModelId(true)}
-                  className={`transition-colors ${showModelId ? 'text-foreground underline underline-offset-2' : 'text-muted-foreground hover:text-foreground'}`}
-                >
-                  ID
-                </button>
-              </span>
+              {defaultShowId ? (
+                <span className="flex items-center">
+                  <button
+                    onClick={() => setShowModelId(false)}
+                    className={`transition-colors ${!showModelId ? 'text-foreground underline underline-offset-2' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    Model
+                  </button>
+                  <span className="text-muted-foreground mx-1">|</span>
+                  <button
+                    onClick={() => setShowModelId(true)}
+                    className={`transition-colors ${showModelId ? 'text-foreground underline underline-offset-2' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    ID
+                  </button>
+                </span>
+              ) : (
+                <>
+                  <span className="hidden md:inline">Model</span>
+                  <span className="md:hidden flex items-center">
+                    <button
+                      onClick={() => setShowModelId(false)}
+                      className={`transition-colors ${!showModelId ? 'text-foreground underline underline-offset-2' : 'text-muted-foreground hover:text-foreground'}`}
+                    >
+                      Model
+                    </button>
+                    <span className="text-muted-foreground mx-1">|</span>
+                    <button
+                      onClick={() => setShowModelId(true)}
+                      className={`transition-colors ${showModelId ? 'text-foreground underline underline-offset-2' : 'text-muted-foreground hover:text-foreground'}`}
+                    >
+                      ID
+                    </button>
+                  </span>
+                </>
+              )}
             </div>
           </TableHead>
           {/* Average column - show second (after Model) */}
