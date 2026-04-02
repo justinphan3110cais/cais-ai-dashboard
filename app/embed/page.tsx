@@ -22,12 +22,13 @@ function EmbedTableContent() {
   const colParams = searchParams.getAll("cols");
   const modelParams = searchParams.getAll("models");
   const showAvg = searchParams.get("avg") === "true";
-  const sortKey = searchParams.get("sort") || "average";
   const sortDir = searchParams.get("dir") || "desc";
   const title = searchParams.get("title");
   const bgColor = searchParams.get("bg") || "bg-blue-50";
 
   const colIds = colParams.flatMap(c => c.split(",")).filter(Boolean);
+  // Default sort: if avg shown, sort by average; otherwise sort by first column
+  const defaultSortKey = searchParams.get("sort") || (showAvg ? "average" : (colIds.length > 0 ? colIds[0] : "average"));
   const modelIds = modelParams.flatMap(m => m.split(",")).filter(Boolean);
 
   // Filter datasets
@@ -52,7 +53,7 @@ function EmbedTableContent() {
 
   // Sort config
   const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: sortKey,
+    key: defaultSortKey,
     direction: sortDir as "asc" | "desc",
   });
 
@@ -121,7 +122,7 @@ function EmbedTableContent() {
         onSort={handleSort}
         expanded={true}
         onShowDetails={handleShowDetails}
-        showAverageArrow={showAvg}
+        showAverageArrow={true}
         showAverage={showAvg}
       />
       <DatasetDetailsDialog
