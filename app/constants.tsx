@@ -9,12 +9,14 @@ import kimi_logo from "@/assets/provider-logos/kimi_logo.png";
 import o1_logo from "@/assets/provider-logos/o1-logo.png";
 import xai_logo from "@/assets/provider-logos/xai_logo.svg";
 import manus_logo from "@/assets/provider-logos/manus_logo.svg";
+import zhipu_logo from "@/assets/provider-logos/zhipu_logo.svg";
 import hle_examples from "@/assets/dataset-examples/hle_examples.png";
 import textquests_logo from "@/assets/dataset-logos/textquests_logo.svg";
 import hle_logo from "@/assets/dataset-logos/hle_logo.svg";
 import arc_agi_logo from "@/assets/dataset-logos/arc_agi_logo.png";
 import vct_logo from "@/assets/dataset-logos/vct_logo.svg";
 import swebench_logo from "@/assets/dataset-logos/swebench_logo.png";
+import swebench_pro_logo from "@/assets/dataset-logos/swebench_pro_logo.svg";
 import mindcube_logo from "@/assets/dataset-logos/mindcube_logo.png";
 import terminalbench_logo from "@/assets/dataset-logos/terminalbench_logo.png";
 import erqa_logo from "@/assets/dataset-logos/erqa_logo.svg";
@@ -89,6 +91,7 @@ export const PROVIDER_INFO: Record<string, ProviderInfo> = {
   deepseek: { id: 'deepseek', displayName: 'DeepSeek', country: 'china', flag: '🇨🇳' },
   qwen: { id: 'qwen', displayName: 'Alibaba', country: 'china', flag: '🇨🇳' },
   meta: { id: 'meta', displayName: 'Meta', country: 'usa', flag: '🇺🇸' },
+  zhipu: { id: 'zhipu', displayName: 'Zhipu AI', country: 'china', flag: '🇨🇳' },
 };
 
 // Helper function to get provider info
@@ -249,6 +252,7 @@ export const PROVIDER_LOGO_MAP = {
   deepseek: { src: deepseek_logo, width: 18, height: 18 },
   moonshot: { src: kimi_logo, width: 18, height: 18 },
   manus: { src: manus_logo, width: 18, height: 18 },
+  zhipu: { src: zhipu_logo, width: 18, height: 18 },
 };
 
 // Utility function to get provider logo
@@ -303,6 +307,29 @@ export const TEXT_CAPABILITIES_DATASETS: Dataset[] = [
     }]
   },
   // NOTE: swebench_verified removed from UI display but data kept in models.json
+  {
+    id: "swebench_pro",
+    name: "SWE-Bench Pro",
+    link: "https://swebench.com/pro",
+    paperLink: "https://scale.com/blog/swe-bench-pro",
+    githubLink: "https://github.com/swe-bench/SWE-bench-Pro",
+    huggingfaceLink: "https://huggingface.co/datasets/swe-bench/SWE-bench_Pro",
+    description: "<a href='https://swebench.com/pro' target='_blank' style='font-weight: 500; text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px;'>SWE-Bench Pro</a> evaluates AI coding agents on realistic software engineering tasks sourced from 41 repositories across consumer apps, B2B services, and developer tools. Unlike SWE-bench Verified, it uses copyleft-licensed and private commercial codebases to resist contamination, preserves underspecified problem statements, and provides reliable end-to-end evaluation environments. With 1,865 total instances, top models score dramatically lower than on Verified, revealing true generalization challenges.",
+    logo: swebench_pro_logo,
+    category: "text",
+    capabilities: ["coding"],
+    examples: [{
+      type: "image",
+      src: swebench_examples,
+      alt: "Examples of real-world software engineering tasks from SWE-Bench Pro."
+    }],
+    citation: `@misc{aleithan2025swebenchpro,
+      title={SWE-Bench Pro},
+      author={Scale AI},
+      year={2025},
+      url={https://scale.com/blog/swe-bench-pro}
+}`
+  },
   {
     id: "terminal_bench",
     name: "Terminal Bench",

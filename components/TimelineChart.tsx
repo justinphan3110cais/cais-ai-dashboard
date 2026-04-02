@@ -13,13 +13,55 @@ import { ModelDetailsTooltip } from "@/components/ModelDetailsTooltip";
 // 'default' is used in Index mode (all/none datasets selected).
 // 'datasetOverrides' apply when a specific dataset is actively selected.
 const LABEL_POSITION_OVERRIDES: Record<string, {
-  default: 'above' | 'below';
-  datasetOverrides?: Record<string, 'above' | 'below'>;
+  default: 'above' | 'below' | 'hidden';
+  datasetOverrides?: Record<string, 'above' | 'below' | 'hidden'>;
+  categoryOverrides?: Record<string, 'above' | 'below' | 'hidden'>; // when all datasets in a category are selected
 }> = {
   'Opus 4.5': {
     default: 'below',
     datasetOverrides: {
       'hle': 'above',
+      'swebench_pro': 'above',
+    },
+  },
+  'Opus 4.6': {
+    default: 'above',
+    datasetOverrides: {
+      'swebench_pro': 'above',
+      'terminal_bench': 'above',
+    },
+  },
+  'Sonnet 4.6': {
+    default: 'above',
+    datasetOverrides: {
+      'swebench_pro': 'hidden',
+      'terminal_bench': 'below',
+      'hle': 'below',
+    },
+  },
+  'Kimi K2': {
+    default: 'above',
+    datasetOverrides: {
+      'hle': 'hidden',
+      'swebench_pro': 'below',
+    },
+  },
+  'GPT-5.4': {
+    default: 'above',
+    datasetOverrides: {
+      'swebench_pro': 'above',
+      'terminal_bench': 'below',
+    },
+    categoryOverrides: {
+      'coding': 'below',
+    },
+  },
+  'Kimi K2.5': {
+    default: 'above',
+    datasetOverrides: {
+      'swebench_pro': 'hidden',
+      'terminal_bench': 'hidden',
+      'hle': 'hidden',
     },
   },
   'Gemini 2.5 Pro': {
@@ -551,7 +593,7 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
   };
 
   // Get hovered model data
-  const getLabelYOffset = React.useCallback((modelName: string, defaultYOffset: number): number => {
+  const getLabelYOffset = React.useCallback((modelName: string, defaultYOffset: number): number | null => {
     const override = LABEL_POSITION_OVERRIDES[modelName];
     if (!override) return defaultYOffset;
 
@@ -565,8 +607,21 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
     const isIndexMode = isNoneSelected || isAllSelected;
 
     let position = override.default;
+    let matched = false;
 
-    if (!isIndexMode && override.datasetOverrides) {
+    // First check categoryOverrides (when all datasets in a category are selected)
+    if (!isIndexMode && categoryGroups && override.categoryOverrides) {
+      for (const [catId, group] of Object.entries(categoryGroups)) {
+        if (group.datasets.every(d => includedDatasets[d.id]) && override.categoryOverrides[catId]) {
+          position = override.categoryOverrides[catId];
+          matched = true;
+          break;
+        }
+      }
+    }
+
+    // Then check individual dataset overrides (only if no category override matched)
+    if (!isIndexMode && !matched && override.datasetOverrides) {
       for (const datasetId of includedDatasetIds) {
         if (override.datasetOverrides[datasetId]) {
           position = override.datasetOverrides[datasetId];
@@ -575,6 +630,7 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
       }
     }
 
+    if (position === 'hidden') return null;
     return position === 'below' ? 24 : -16;
   }, [categoryGroups, includedDatasets]);
 
@@ -897,11 +953,14 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
                 
                 const defaultYOffset = sectionType === 'safety' ? 24 : -16;
                 const yOffset = getLabelYOffset(payload.name, defaultYOffset);
-                
+
+                // Hidden label
+                if (yOffset === null) return <g />;
+
                 // Smaller font size on mobile
                 const fontSize = isMobile ? "8" : "10";
                 const strokeWidth = isMobile ? 2 : 3;
-                
+
                 return (
                   <g>
                     {/* Model name label - position depends on section type */}
@@ -952,7 +1011,9 @@ export const TimelineChart: React.FC<TimelineChartProps> = ({
                   
                   const defaultYOffset = sectionType === 'safety' ? -16 : 24;
                   const yOffset = getLabelYOffset(payload.name, defaultYOffset);
-                  
+
+                  if (yOffset === null) return <g />;
+
                   return (
                     <g>
                       {/* Model name label - position depends on section type */}

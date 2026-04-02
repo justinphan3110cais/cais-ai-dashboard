@@ -33,7 +33,7 @@ import { RemoteLaborIndex } from "@/components/RemoteLaborIndex";
 import DatasetDetailsDialog from "@/components/DatasetDetailsDialog";
 import { ModelDetailsTooltip } from "@/components/ModelDetailsTooltip";
 
-interface SortConfig {
+export interface SortConfig {
   key: string | null;
   direction: 'asc' | 'desc' | null;
 }
@@ -223,7 +223,7 @@ const DatasetHeader = ({
 
 
 
-const DashboardTable = ({ 
+export const DashboardTable = ({ 
   datasets, 
   models, 
   bgColor, 
@@ -234,8 +234,9 @@ const DashboardTable = ({
   onUpdateScore,
   onShowDetails,
   onMobilePopup,
-  showAverageArrow = false
-}: { 
+  showAverageArrow = false,
+  showAverage = true
+}: {
   datasets: Dataset[];
   models: Model[];
   bgColor: string;
@@ -247,6 +248,7 @@ const DashboardTable = ({
   onShowDetails: (datasetId: string, datasetName: string) => void;
   onMobilePopup?: (type: 'dataset-info', content: { description: string; datasetId: string }) => boolean;
   showAverageArrow?: boolean;
+  showAverage?: boolean;
 }) => {
   const [showModelId, setShowModelId] = useState(false);
 
@@ -311,6 +313,7 @@ const DashboardTable = ({
             </div>
           </TableHead>
           {/* Average column - show second (after Model) */}
+          {showAverage && (
           <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
             <button
               onClick={() => onSort('average')}
@@ -326,6 +329,7 @@ const DashboardTable = ({
               </div>
             </button>
           </TableHead>
+          )}
           {datasets.map((dataset, index) => (
             <TableHead 
               key={dataset.name} 
@@ -413,11 +417,13 @@ const DashboardTable = ({
                 </TableCell>
             
             {/* Average column - show second (after Model) */}
+            {showAverage && (
             <TableCell className={`text-center ${bgColor}/30 font-bold border-r border-gray-300`}>
               <span className="font-mono text-sm">
                 {formatValue(calculateAverage(model, datasets))}
               </span>
                 </TableCell>
+            )}
             
             {datasets.map((dataset, index) => {
               const rawScore = model.scores[dataset.id];

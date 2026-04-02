@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import caisLogo from "@/assets/cais_logo.svg";
+import caisLogo from "@/assets/CAIS_Brand_Mark_White.svg";
 
 export function Footer() {
   return (
@@ -13,9 +13,9 @@ export function Footer() {
             <Image
               src={caisLogo}
               alt="CAIS Logo"
-              width={96}
-              height={96}
-              className="h-12 w-auto"
+              width={128}
+              height={128}
+              className="h-16 w-auto"
             />
           </Link>
           <div className="flex-1 text-center lg:text-left">

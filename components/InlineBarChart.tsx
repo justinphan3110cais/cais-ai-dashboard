@@ -73,15 +73,29 @@ interface InlineBarChartProps {
   datasets: Dataset[];
   models: Model[];
   sectionType?: 'text' | 'vision' | 'safety';
+  showTimeline?: boolean;
+  showBars?: boolean;
+  showTitle?: boolean;
+  showModelFilter?: boolean;
+  showCategoryButtons?: boolean;
+  initialIncludedDatasets?: Record<string, boolean>;
+  initialSelectedModels?: string[]; // model names to pre-select on bar chart
 }
 
 export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   datasets,
   models,
-  sectionType = 'text'
+  sectionType = 'text',
+  showTimeline = true,
+  showBars = true,
+  showTitle = true,
+  showModelFilter = true,
+  showCategoryButtons = true,
+  initialIncludedDatasets,
+  initialSelectedModels,
 }) => {
   const [includedDatasets, setIncludedDatasets] = useState<Record<string, boolean>>(
-    datasets.reduce((acc, dataset) => ({ ...acc, [dataset.id]: false }), {})
+    initialIncludedDatasets || datasets.reduce((acc, dataset) => ({ ...acc, [dataset.id]: false }), {})
   );
 
   // Tooltip/Dialog states for bar chart
@@ -340,7 +354,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   // Chart filters
   const [chartFilters, setChartFilters] = useState({
     selectedProviders: [] as string[],
-    selectedModels: getInitialSelectedModels()
+    selectedModels: initialSelectedModels || getInitialSelectedModels()
   });
 
   // Toggle dataset inclusion - multi-select: clicking a category toggles it
@@ -350,7 +364,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
     
     if (categoryGroup) {
       // Toggle all datasets in this category
-      const allEnabled = categoryGroup.datasets.every(d => includedDatasets[d.id]);
+      const allEnabled = categoryGroup.datasets.some(d => includedDatasets[d.id]);
       setIncludedDatasets(prev => {
         const newState = { ...prev };
         categoryGroup.datasets.forEach(d => {
@@ -365,6 +379,45 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
         [datasetIdOrCategoryId]: !prev[datasetIdOrCategoryId]
       }));
     }
+  };
+
+  // Toggle a single dataset within a multi-dataset category (for sub-dataset buttons)
+  // Mirrors top-level category button behavior:
+  // - All enabled (average mode) + click one → select only that one
+  // - One selected + click same → go back to all enabled (average mode)
+  // - One selected + click different → select only the new one
+  const toggleSingleDataset = (datasetId: string) => {
+    // Find which category group this dataset belongs to
+    const parentGroup = Object.values(categoryGroups).find(group =>
+      group.datasets.some(d => d.id === datasetId)
+    );
+    if (!parentGroup) return;
+
+    const allEnabled = parentGroup.datasets.every(d => includedDatasets[d.id]);
+    const isOnlyOneSelected = !allEnabled &&
+      parentGroup.datasets.filter(d => includedDatasets[d.id]).length === 1 &&
+      includedDatasets[datasetId];
+
+    setIncludedDatasets(prev => {
+      const newState = { ...prev };
+      if (allEnabled) {
+        // Average mode → select only the clicked one
+        parentGroup.datasets.forEach(d => {
+          newState[d.id] = d.id === datasetId;
+        });
+      } else if (isOnlyOneSelected) {
+        // This one is already the only selected → go back to average mode
+        parentGroup.datasets.forEach(d => {
+          newState[d.id] = true;
+        });
+      } else {
+        // Another one is selected → switch to clicked one
+        parentGroup.datasets.forEach(d => {
+          newState[d.id] = d.id === datasetId;
+        });
+      }
+      return newState;
+    });
   };
 
   // Get available models based on section type (for dropdown)
@@ -695,10 +748,10 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
   return (
     <div className="border border-gray-200 rounded-lg p-2 sm:p-4 bg-white">
       {/* Shared Category Filter Buttons */}
-      <div className="mb-3">
+      {showCategoryButtons && (Object.keys(categoryGroups).length > 1 || Object.values(categoryGroups).some(g => g.datasets.length > 1)) && <div className="mb-3">
         <div className={`flex flex-wrap gap-1 justify-center items-center mx-auto ${
-          sectionType === 'vision' ? 'max-w-[340px] sm:max-w-[500px]' : 
-          sectionType === 'safety' ? 'max-w-[320px] sm:max-w-[450px]' : 
+          sectionType === 'vision' ? 'max-w-[340px] sm:max-w-[500px]' :
+          sectionType === 'safety' ? 'max-w-[320px] sm:max-w-[450px]' :
           'max-w-[250px] sm:max-w-[370px]'
         }`}>
           {Object.entries(categoryGroups)
@@ -710,23 +763,20 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               return a.order - b.order;
             })
             .map(([categoryId, group]) => {
-              // Check if all datasets in this group are enabled
-              const allEnabled = group.datasets.every(d => includedDatasets[d.id]);
-              // Get tooltip text - show all dataset names in the group
+              const allEnabled = group.datasets.some(d => includedDatasets[d.id]);
               const tooltipText = group.datasets.map(d => d.name).join(', ');
-              
+
               return (
                 <button
                   key={categoryId}
                   onClick={() => toggleDatasetInclusion(categoryId)}
                   className={`relative flex items-center gap-1 px-1.5 py-0.5 rounded border transition-all ${
-                    allEnabled 
-                      ? `${colors.borderSelected} ${colors.bg} shadow-sm` 
+                    allEnabled
+                      ? `${colors.borderSelected} ${colors.bg} shadow-sm`
                       : `${colors.border} bg-white hover:bg-gray-50 opacity-50 hover:opacity-75`
                   } cursor-pointer`}
                   title={tooltipText}
                 >
-                  {/* Logo */}
                   {group.logo && (
                     <Image
                       src={group.logo}
@@ -736,7 +786,6 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                       className="flex-shrink-0"
                     />
                   )}
-                  {/* Category */}
                   {group.category && (
                     <span className="text-[10px] text-foreground uppercase tracking-wide whitespace-nowrap leading-tight font-medium">
                       {group.category}
@@ -746,34 +795,133 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
               );
             })}
         </div>
-      </div>
+        {/* Sub-dataset buttons - shown below category buttons when a multi-dataset category is active */}
+        {(() => {
+          const activeMultiGroup = Object.entries(categoryGroups).find(([, group]) =>
+            group.datasets.length > 1 && group.datasets.some(d => includedDatasets[d.id])
+          );
+          if (!activeMultiGroup) return null;
+          const [, group] = activeMultiGroup;
+          const allSubEnabled = group.datasets.every(d => includedDatasets[d.id]);
+          return (
+            <div className="flex gap-1 justify-center mt-2">
+              {group.datasets.map(d => {
+                const isHighlighted = !allSubEnabled && includedDatasets[d.id];
+                return (
+                  <button
+                    key={d.id}
+                    onClick={() => toggleSingleDataset(d.id)}
+                    className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-dashed text-xs transition-all cursor-pointer ${
+                      isHighlighted
+                        ? 'border-black bg-gray-100 shadow-sm'
+                        : 'border-black/40 bg-white hover:bg-gray-50 opacity-50 hover:opacity-75'
+                    }`}
+                  >
+                    {d.logo && (
+                      <Image
+                        src={d.logo}
+                        alt={`${d.name} logo`}
+                        width={12}
+                        height={12}
+                        className="flex-shrink-0"
+                      />
+                    )}
+                    <span className="text-[10px] font-medium whitespace-nowrap">{d.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })()}
+      </div>}
 
       {/* Timeline Chart */}
-      <TimelineChart
+      {showTimeline && <TimelineChart
         datasets={datasets}
         models={models}
         includedDatasets={includedDatasets}
         sectionType={sectionType}
         categoryGroups={categoryGroups}
         onToggleDataset={toggleDatasetInclusion}
-      />
+      />}
 
       {/* Shared Title and Model Selector Row */}
-      <div className="mt-2 mb-2 relative">
+      {(showTitle || showBars) && <div className="mt-1 mb-0 relative">
+        {/* Model filter - right side of title row */}
+        {showModelFilter && <div className="absolute right-0 top-1/2 -translate-y-1/2 z-20">
+          <ChartFilterBar
+            filters={chartFilters}
+            onFiltersChange={setChartFilters}
+            availableModels={availableModels}
+          />
+        </div>}
         {/* Centered Title */}
-        <div className="w-full">
+        {showTitle && <div className="w-full">
           {/* Get selected category info */}
           {(() => {
             const includedDatasetsIds = Object.keys(includedDatasets).filter(id => includedDatasets[id]);
             const allDatasetsIds = datasets.map(d => d.id);
-            const enabledCategories = Object.entries(categoryGroups).filter(([, group]) => 
-              group.datasets.every(d => includedDatasets[d.id])
+            const enabledCategories = Object.entries(categoryGroups).filter(([, group]) =>
+              group.datasets.some(d => includedDatasets[d.id])
             );
-            const isAllSelected = includedDatasetsIds.length === allDatasetsIds.length && 
+            const isAllSelected = includedDatasetsIds.length === allDatasetsIds.length &&
                                  allDatasetsIds.every(id => includedDatasetsIds.includes(id));
             const isNoneSelected = includedDatasetsIds.length === 0;
-            
-            // If exactly one category selected (not all)
+
+            // If only 1 dataset total, always show its name (not index mode)
+            if (allDatasetsIds.length === 1) {
+              const dataset = datasets[0];
+              return (
+                <div className="flex items-center justify-center gap-2">
+                  {dataset.logo && (
+                    <Image
+                      src={dataset.logo}
+                      alt={`${dataset.name} logo`}
+                      width={28}
+                      height={28}
+                      className="flex-shrink-0"
+                    />
+                  )}
+                  <h3 className="text-2xl font-semibold text-foreground">
+                    {dataset.name}
+                  </h3>
+                </div>
+              );
+            }
+
+            // If only 1 category total, show category name instead of section index
+            if (Object.keys(categoryGroups).length === 1) {
+              const [, group] = Object.entries(categoryGroups)[0];
+              // Check if a single sub-dataset is selected
+              const enabledSubDatasets = group.datasets.filter(d => includedDatasets[d.id]);
+              const singleSubDataset = enabledSubDatasets.length === 1 ? enabledSubDatasets[0] : null;
+              const displayName = singleSubDataset ? singleSubDataset.name : group.category;
+              const displayLogo = singleSubDataset ? singleSubDataset.logo : group.logo;
+              const displayDatasets = singleSubDataset ? [singleSubDataset] : group.datasets;
+              return (
+                <div className="flex items-center justify-center gap-2">
+                  {displayLogo && (
+                    <Image
+                      src={displayLogo}
+                      alt={`${displayName} logo`}
+                      width={28}
+                      height={28}
+                      className="flex-shrink-0"
+                    />
+                  )}
+                  <h3
+                    className="text-lg font-semibold text-foreground cursor-pointer hover:opacity-80 transition-opacity"
+                    onMouseEnter={(e) => handleMouseEnterTitle(displayDatasets, displayName, e)}
+                    onMouseLeave={handleMouseLeaveTitle}
+                    onClick={() => handleTitleClick(displayDatasets)}
+                  >
+                    {displayName}
+                  </h3>
+                </div>
+              );
+            }
+
+            // If exactly one category has any selected datasets (not all/none)
             if (enabledCategories.length === 1 && !isAllSelected && !isNoneSelected) {
               const [, group] = enabledCategories[0];
               // Single dataset category
@@ -821,26 +969,32 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                 );
               } else {
                 // Merged category (like Coding, Deception)
+                // If only one sub-dataset selected, show that dataset's name/logo
+                const enabledSubDatasets = group.datasets.filter(d => includedDatasets[d.id]);
+                const singleSubDataset = enabledSubDatasets.length === 1 ? enabledSubDatasets[0] : null;
+                const displayName = singleSubDataset ? singleSubDataset.name : group.category;
+                const displayLogo = singleSubDataset ? singleSubDataset.logo : group.logo;
+                const displayDatasets = singleSubDataset ? [singleSubDataset] : group.datasets;
                 return (
-                  <div 
+                  <div
                     className="flex items-center justify-center gap-2"
                   >
-                    {group.logo && (
+                    {displayLogo && (
                       <Image
-                        src={group.logo}
-                        alt={`${group.category} logo`}
+                        src={displayLogo}
+                        alt={`${displayName} logo`}
                         width={28}
                         height={28}
                         className="flex-shrink-0"
                       />
                     )}
-                    <h3 
+                    <h3
                       className="text-lg font-semibold text-foreground cursor-pointer hover:opacity-80 transition-opacity"
-                      onMouseEnter={(e) => handleMouseEnterTitle(group.datasets, group.category, e)}
+                      onMouseEnter={(e) => handleMouseEnterTitle(displayDatasets, singleSubDataset ? group.category : displayName, e)}
                       onMouseLeave={handleMouseLeaveTitle}
-                      onClick={() => handleTitleClick(group.datasets)}
+                      onClick={() => handleTitleClick(displayDatasets)}
                     >
-                      {group.category}
+                      {displayName}
                     </h3>
                   </div>
                 );
@@ -875,31 +1029,21 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                     {averageTitle}
                   </h3>
                 </div>
-                <p className={`text-base mt-1 ${sectionType === 'safety' ? 'text-muted-foreground' : 'invisible'}`}>
-                  {sectionType === 'safety' ? 'Lower is Better' : 'placeholder'}
-                </p>
+                {sectionType === 'safety' && (
+                  <p className="text-base mt-1 text-muted-foreground">Lower is Better</p>
+                )}
               </div>
             );
           })()}
-        </div>
+        </div>}
 
-        {/* Absolute positioned Model Selector on the right */}
-        <div className="absolute right-0 top-full mt-2 sm:mt-4 z-20 pointer-events-auto">
-          <ChartFilterBar 
-            filters={chartFilters}
-            onFiltersChange={setChartFilters}
-            availableModels={availableModels}
-          />
-        </div>
-      </div>
+      </div>}
 
       {/* Bar Chart Content */}
-      {chartsData.length > 0 && filteredModels.length > 0 ? (
+      {showBars && (chartsData.length > 0 && filteredModels.length > 0 ? (
         <>
-
-          {/* Bar Chart */}
               <div 
-                className={`overflow-visible mt-6 mx-auto ${isMobile ? 'h-96' : 'h-80'}`}
+                className={`overflow-visible mt-1 mx-auto ${isMobile ? 'h-96' : 'h-80'}`}
                 style={{ maxWidth: isMobile ? `${averageData.length * 38 + 50}px` : `${averageData.length * 75 + 50}px` }}
               >
                 <ResponsiveContainer width="100%" height="100%">
@@ -907,7 +1051,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                     data={averageData}
                     barCategoryGap="0%"
                     margin={{
-                      top: isMobile ? 60 : 35,
+                      top: isMobile ? 40 : 35,
                       right: isMobile ? 0 : 10,
                       left: isMobile ? 10 : 30,
                       bottom: 0,
@@ -930,7 +1074,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
                         const restName = words.slice(1).join(' ');
                         
                         // Smaller font on mobile
-                        const fontSize = isMobile ? '7px' : '11px';
+                        const fontSize = isMobile ? '8.5px' : '11px';
                         // Reduced line spacing on mobile
                         const lineSpacing = isMobile ? 10 : 15;
                         
@@ -1028,7 +1172,7 @@ export const InlineBarChart: React.FC<InlineBarChartProps> = ({
             <p className="text-sm">No flagship models or datasets selected</p>
           </div>
         </div>
-      )}
+      ))}
 
       {/* Desktop Tooltip for Bar Chart */}
       {!isMobile && hoveredBarModel && barTooltipPosition && (() => {

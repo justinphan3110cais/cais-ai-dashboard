@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import caisLogo from '@/assets/cais_icon_black_text.svg';
-import caisLogoShort from '@/assets/cais_logo.svg';
+import caisLogo from '@/assets/CAIS_Lockup_Color.svg';
+import caisLogoShort from '@/assets/CAIS_Brand_Mark_Color.svg';
 import textLogoColored from '@/assets/dataset-logos/text_logo_colored.svg';
 import visionLogoColored from '@/assets/dataset-logos/vision_logo_colored.svg';
 import safetyLogoColored from '@/assets/dataset-logos/safety_logo.svg';
@@ -111,8 +111,8 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate, globalViewMo
             <Image
               src={caisLogo}
               alt="Center for AI Safety"
-              width={100}
-              height={20}
+              width={160}
+              height={32}
               className="hidden sm:block flex-shrink-0"
             />
             {/* Mobile logo - shorter version */}
