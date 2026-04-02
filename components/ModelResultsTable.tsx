@@ -114,8 +114,7 @@ const DatasetHeader = ({
             </div>
           )}
           {/* Dataset Name and Logo */}
-          <div className="relative flex items-center justify-center w-full">
-            <div className="flex items-center gap-1 justify-center">
+          <div className="flex items-center gap-1 justify-center w-full">
               {dataset.logo && (
                 <Image
                   src={dataset.logo}
@@ -128,10 +127,9 @@ const DatasetHeader = ({
               <span className="text-xs font-medium text-center">
                 {dataset.name === "Humanity's Last Exam" ? "HLE" : (dataset.displayName || dataset.name)}
               </span>
-            </div>
-            {getSortIcon() && (
-              <span className="absolute right-0 text-xs">{getSortIcon()}</span>
-            )}
+              {getSortIcon() && (
+                <span className="text-xs">{getSortIcon()}</span>
+              )}
           </div>
         </div>
       </button>
@@ -163,8 +161,7 @@ const DatasetHeader = ({
                 </div>
               )}
               {/* Dataset Name and Logo */}
-              <div className="relative flex items-center justify-center w-full">
-                <div className="flex items-center gap-1 justify-center">
+              <div className="flex items-center gap-1 justify-center w-full">
                   {dataset.logo && (
                     <Image
                       src={dataset.logo}
@@ -177,10 +174,9 @@ const DatasetHeader = ({
                   <span className="text-xs font-medium text-center">
                     {dataset.displayName || dataset.name}
                   </span>
-                </div>
-                {getSortIcon() && (
-                  <span className="absolute right-0 text-xs">{getSortIcon()}</span>
-                )}
+                  {getSortIcon() && (
+                    <span className="text-xs">{getSortIcon()}</span>
+                  )}
               </div>
             </div>
           </button>
