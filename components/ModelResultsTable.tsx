@@ -284,13 +284,13 @@ export const DashboardTable = ({
 
   const tableContent = (
         <Table
-          className={compact ? "w-auto" : "min-w-[800px]"}
+          className={compact ? "" : "min-w-[800px]"}
           style={{ touchAction: 'pan-x pan-y' }}
         >
       <TableHeader className="sticky top-0 bg-background z-40">
             <TableRow>
           <TableHead 
-            className={`${compact ? '' : 'w-[200px]'} border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
+            className={`${compact ? 'w-auto' : 'w-[200px]'} border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
             style={{ position: 'sticky', left: 0, top: 0, zIndex: 40 }}
           >
             <div className="font-semibold flex items-center gap-1">
