@@ -232,7 +232,8 @@ export const DashboardTable = ({
   onMobilePopup,
   showAverageArrow = false,
   showAverage = true,
-  defaultShowId = false
+  defaultShowId = false,
+  compact = false
 }: {
   datasets: Dataset[];
   models: Model[];
@@ -247,6 +248,7 @@ export const DashboardTable = ({
   showAverageArrow?: boolean;
   showAverage?: boolean;
   defaultShowId?: boolean;
+  compact?: boolean;
 }) => {
   const [showModelId, setShowModelId] = useState(false);
 
@@ -281,14 +283,14 @@ export const DashboardTable = ({
   };
 
   const tableContent = (
-        <Table 
-          className="min-w-[800px]" 
+        <Table
+          className={compact ? "" : "min-w-[800px]"}
           style={{ touchAction: 'pan-x pan-y' }}
         >
       <TableHeader className="sticky top-0 bg-background z-40">
             <TableRow>
           <TableHead 
-            className={`w-[200px] border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
+            className={`${compact ? '' : 'w-[200px]'} border-r border-gray-300 border-b-2 border-b-gray-300 sticky left-0 ${bgColor}`}
             style={{ position: 'sticky', left: 0, top: 0, zIndex: 40 }}
           >
             <div className="font-semibold flex items-center gap-1">
@@ -332,7 +334,7 @@ export const DashboardTable = ({
           </TableHead>
           {/* Average column - show second (after Model) */}
           {showAverage && (
-          <TableHead className={`text-center ${bgColor} min-w-[80px] font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
+          <TableHead className={`text-center ${bgColor} ${compact ? '' : 'min-w-[80px]'} font-bold border-b-2 border-b-gray-300 border-r border-gray-300`}>
             <button
               onClick={() => onSort('average')}
               className="w-full text-center hover:text-blue-600 transition-colors cursor-pointer"
@@ -351,7 +353,7 @@ export const DashboardTable = ({
           {datasets.map((dataset, index) => (
             <TableHead 
               key={dataset.name} 
-              className={`text-center ${bgColor} min-w-[100px] w-auto border-b-2 border-b-gray-300 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''} py-1`}
+              className={`text-center ${bgColor} ${compact ? '' : 'min-w-[100px]'} w-auto border-b-2 border-b-gray-300 ${index < datasets.length - 1 ? 'border-r border-gray-300' : ''} py-1`}
             >
               <DatasetHeader dataset={dataset} onSort={onSort} sortConfig={sortConfig} onShowDetails={onShowDetails} onMobilePopup={onMobilePopup} />
             </TableHead>
@@ -365,7 +367,7 @@ export const DashboardTable = ({
             className={`border-b border-gray-200 ${getRowStyling()} ${model.modelCardUrl ? 'group' : ''}`}
           >
               <TableCell 
-                className={`text-center border-r border-gray-300 sticky left-0 bg-white min-w-[180px]`}
+                className={`text-center border-r border-gray-300 sticky left-0 bg-white ${compact ? '' : 'min-w-[180px]'}`}
                 style={{ position: 'sticky', left: 0, zIndex: 30, backgroundColor: 'white' }}
               >              <div className="flex items-center gap-2 pr-2">
                 <Image
