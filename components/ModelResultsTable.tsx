@@ -284,7 +284,7 @@ export const DashboardTable = ({
 
   const tableContent = (
         <Table
-          className={compact ? "" : "min-w-[800px]"}
+          className={compact ? "w-auto" : "min-w-[800px]"}
           style={{ touchAction: 'pan-x pan-y' }}
         >
       <TableHeader className="sticky top-0 bg-background z-40">
